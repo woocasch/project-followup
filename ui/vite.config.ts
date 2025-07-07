@@ -1,5 +1,5 @@
 import react from '@vitejs/plugin-react';
-import { type UserConfig, defineConfig } from 'vite';
+import { defineConfig, type UserConfig } from 'vite';
 import tsconfigPaths from 'vite-tsconfig-paths';
 
 // https://vitejs.dev/config/

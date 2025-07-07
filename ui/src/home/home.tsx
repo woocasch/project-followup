@@ -1,5 +1,5 @@
 import './home.scss';
 
-export default function HomeComponent() {
+export default function HomePage() {
   return <h2>Home</h2>;
 }

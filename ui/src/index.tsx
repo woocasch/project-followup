@@ -2,7 +2,7 @@ import ReactDOM from 'react-dom/client';
 import '@assets/reset.scss';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import AppLayoutComponent from './AppLayout';
-import HomeComponent from './home/home';
+import HomePage from './home/home';
 
 const router = createBrowserRouter([
   {
@@ -11,7 +11,7 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: HomeComponent,
+        Component: HomePage,
       },
     ],
   },

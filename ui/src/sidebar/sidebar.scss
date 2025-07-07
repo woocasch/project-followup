@@ -1,0 +1,26 @@
+.sidebar {
+    position: relative;
+
+    .trigger-button {
+        width: 1.5em;
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .placeholder {
+        width: 2em;
+    }
+
+    .menu {
+        width: 200px;
+    }
+
+    .menu.closed {
+        display: none;
+    }
+
+    .menu.opened {
+        display: block;
+    }
+}

@@ -1,8 +1,10 @@
 import ReactDOM from 'react-dom/client';
-import '@assets/reset.scss';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import AppLayoutComponent from './AppLayout';
 import HomePage from './home/home';
+import '@assets/reset.scss';
+import '@assets/themes.scss';
+import '@assets/main.scss';
 
 const router = createBrowserRouter([
   {

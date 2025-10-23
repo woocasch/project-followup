@@ -21,7 +21,12 @@
 
     /* aliases */
     "paths": {
-      "@assets/*": ["./src/assets/*"]
+      "@root/*": ["./src/*"],
+      "@assets/*": ["./src/assets/*"],
+      "@components/*": ["./src/components/*"],
+      "@projects/*": ["./src/projects/*"],
+      "@infrastructure/*": ["./src/infrastructure/*"],
+      "@home/*": ["./src/home/*"]
     }
   },
   "include": ["src"]

@@ -3,10 +3,10 @@ import { theme } from '../theme';
 
 const StyledFooter = styled.footer(`
     width: 100%;
-    line-height: ${theme.colors.spacing.xlarge};
+    line-height: ${theme.sizes.spacing.xlarge};
     text-align: center;
     background-color: ${theme.colors.background.secondary};
-    padding: ${theme.colors.spacing.small};
+    padding: ${theme.sizes.spacing.small};
     margin-top: auto;
 `);
 

@@ -19,10 +19,10 @@ const AppLayout = styled.div(`
 
 const Header = styled.header(`
   background-color: ${theme.colors.background.secondary};
-  padding: ${theme.colors.spacing.small};
+  padding: ${theme.sizes.spacing.small};
   width: 100%;
   display: grid;
-  line-height: ${theme.colors.spacing.large};
+  line-height: ${theme.sizes.spacing.large};
   grid-template-columns: 1fr auto;
   grid-area: header;
 `);

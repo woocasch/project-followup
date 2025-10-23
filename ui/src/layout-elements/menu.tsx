@@ -3,9 +3,9 @@ import { theme } from "../theme";
 import { NavLink } from "react-router";
 
 const MenuItem = styled.li(`
-  padding: ${theme.colors.spacing.small};
-  margin-right: ${theme.colors.spacing.small};
-  border-radius: ${theme.colors.borderRadius.medium};
+  padding: ${theme.sizes.spacing.small};
+  margin-right: ${theme.sizes.spacing.small};
+  border-radius: ${theme.sizes.borderRadius.medium};
   &:hover {
     background-color: ${theme.colors.primary.light};
   }
@@ -26,13 +26,10 @@ export default function Menu() {
     return (
         <MenuElement>
             <MenuItem>
-                <NavLink to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Home</NavLink>
+                <NavLink to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Start</NavLink>
             </MenuItem>
             <MenuItem>
-                <NavLink to="/about" style={{ textDecoration: 'none', color: 'inherit' }}>About</NavLink>
-            </MenuItem>
-            <MenuItem>
-                <NavLink to="/contact" style={{ textDecoration: 'none', color: 'inherit' }}>Contact</NavLink>
+                <NavLink to="/projects" style={{ textDecoration: 'none', color: 'inherit' }}>Projects</NavLink>
             </MenuItem>
         </MenuElement>
     );

@@ -70,6 +70,8 @@ export const theme = {
             infoLight: 'var(--color-info-light)',
             infoDark: 'var(--color-info-dark)',
         },
+    },
+    sizes: {
         shadows: {
             small: 'var(--shadow-sm)',
             normal: 'var(--shadow)',

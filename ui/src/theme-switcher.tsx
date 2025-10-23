@@ -10,7 +10,7 @@ interface ThemeRepresentationProps {
 function ThemeRepresentation(props: ThemeRepresentationProps) {
     const { currentTheme: theme, onClick: onClick } = props;
 
-    if (availableThemes.length == 1) {
+    if (availableThemes.length === 1) {
         return null;
     }
 

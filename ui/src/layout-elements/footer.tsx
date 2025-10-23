@@ -3,12 +3,11 @@ import { theme } from '../theme';
 
 const StyledFooter = styled.footer(`
     width: 100%;
-    height: 3em;
-    line-height: 3em;
-    position: absolute;
-    bottom: 0;
+    line-height: ${theme.colors.spacing.xlarge};
     text-align: center;
-    background-color: ${theme.colors.panelheader};
+    background-color: ${theme.colors.background.secondary};
+    padding: ${theme.colors.spacing.small};
+    margin-top: auto;
 `);
 
 export default function Footer(){

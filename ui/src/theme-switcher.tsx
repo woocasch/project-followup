@@ -1,5 +1,5 @@
 import { Theme, useTheme } from './theme';
-import { Sun } from 'lucide-react';
+import { Sun, Moon } from 'lucide-react';
 import { availableThemes } from './theme';
 
 interface ThemeRepresentationProps {
@@ -16,7 +16,7 @@ function ThemeRepresentation(props: ThemeRepresentationProps) {
 
     return (<>
         {theme == Theme.Light ? <Sun onClick={onClick} /> : null}
-        {/* {theme == Theme.Dark ? <Moon onClick={onClick} /> : null} */}
+        {theme == Theme.Dark ? <Moon onClick={onClick} /> : null}
     </>)
 }
 

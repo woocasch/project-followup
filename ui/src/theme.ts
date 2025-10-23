@@ -1,3 +1,5 @@
+import { localStorageService, type LocalStorageService } from './infrastructure/local-storage.service';
+
 export const theme = {
     colors: {
         primary: {
@@ -17,7 +19,7 @@ export const theme = {
             light: 'var(--color-accent-light)',
             dark: 'var(--color-accent-dark)',
         },
-        background:{
+        background: {
             primary: 'var(--color-bg-primary)',
             secondary: 'var(--color-bg-secondary)',
             tertiary: 'var(--color-bg-tertiary)',
@@ -101,7 +103,7 @@ export const theme = {
             xxlarge: 'var(--font-size-2xl)',
             xxxlarge: 'var(--font-size-3xl)',
             xxxxlarge: 'var(--font-size-4xl)',
-            normal:  'var(--font-weight-normal)',
+            normal: 'var(--font-weight-normal)',
             medium: 'var(--font-weight-medium)',
             semibold: 'var(--font-weight-semibold)',
             bold: 'var(--font-weight-bold)',
@@ -124,15 +126,20 @@ export enum Theme {
 export const availableThemes: Theme[] = [Theme.Light, Theme.Dark];
 
 export const useTheme = () => {
+    const storage: LocalStorageService = localStorageService;
+    const ThemeStorageKey = 'APP:SETTINGS:THEME';
     const [theme, setThemeState] = useState<Theme>(() => {
         if (document.body.dataset.theme) {
             return <Theme>document.body.dataset.theme;
         }
-        return Theme.Light;
+
+        const storedTheme = storage.getItem<Theme>(ThemeStorageKey);
+        return storedTheme || Theme.Light;
     });
 
     useEffect(() => {
         document.body.dataset.theme = theme;
+        storage.setItem<Theme>(ThemeStorageKey, theme);
     }, [theme]);
 
     const setTheme = (name: Theme) => {

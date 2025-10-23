@@ -9,6 +9,6 @@ export default defineConfig({
     environment: 'jsdom',
     // hey! 👋 over here
     globals: true,
-    setupFiles: './vite.setup.js',
+    setupFiles: './vite.setup.ts',
   },
 } as UserConfig);

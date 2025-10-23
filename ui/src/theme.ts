@@ -63,7 +63,7 @@ export const theme = {
             warning: 'var(--color-warning)',
             warningLight: 'var(--color-warning-light)',
             warningDark: 'var(--color-warning-dark)',
-            errror: 'var(--color-error)',
+            error: 'var(--color-error)',
             errorLight: 'var(--color-error-light)',
             errorDark: 'var(--color-error-dark)',
             info: 'var(--color-info)',

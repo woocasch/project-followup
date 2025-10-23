@@ -1,0 +1,8 @@
+body {
+    background-color: var(--color-bg-primary);
+    color: var(--color-text-secondary);
+
+    a, a:link, a.hover, a:active, a.visited {
+        color: var(--color-text-secondary);
+    }
+}

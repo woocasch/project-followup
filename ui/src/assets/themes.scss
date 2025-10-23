@@ -1,0 +1,227 @@
+body[data-theme='light'] {
+  // Primary colors - Green dominant palette
+  --color-primary: #22c55e;           // Vibrant green
+  --color-primary-light: #4ade80;     // Lighter green
+  --color-primary-dark: #16a34a;      // Darker green
+  --color-primary-contrast: #ffffff;   // White text on green backgrounds
+  
+  // Secondary colors - Complementary palette
+  --color-secondary: #059669;         // Emerald green
+  --color-secondary-light: #10b981;   // Light emerald
+  --color-secondary-dark: #047857;    // Dark emerald
+  --color-secondary-contrast: #ffffff;
+  
+  // Accent colors
+  --color-accent: #84cc16;            // Lime green accent
+  --color-accent-light: #a3e635;     // Light lime
+  --color-accent-dark: #65a30d;      // Dark lime
+  
+  // Background colors
+  --color-bg-primary: #ffffff;        // Pure white
+  --color-bg-secondary: #f8fafc;     // Very light gray
+  --color-bg-tertiary: #f1f5f9;      // Light gray
+  --color-bg-accent: #ecfdf5;        // Very light green tint
+  
+  // Surface colors
+  --color-surface: #ffffff;
+  --color-surface-raised: #ffffff;
+  --color-surface-overlay: rgba(255, 255, 255, 0.95);
+  
+  // Text colors
+  --color-text-primary: #1f2937;     // Dark gray
+  --color-text-secondary: #6b7280;   // Medium gray
+  --color-text-tertiary: #9ca3af;    // Light gray
+  --color-text-inverse: #ffffff;     // White text
+  --color-text-success: #059669;     // Green for success messages
+  --color-text-warning: #d97706;     // Orange for warnings
+  --color-text-error: #dc2626;       // Red for errors
+  --color-text-info: #2563eb;        // Blue for info
+  
+  // Border colors
+  --color-border-primary: #d1d5db;   // Light gray border
+  --color-border-secondary: #e5e7eb; // Very light gray border
+  --color-border-accent: #22c55e;    // Green accent border
+  --color-border-success: #10b981;
+  --color-border-warning: #f59e0b;
+  --color-border-error: #ef4444;
+  --color-border-info: #3b82f6;
+  
+  // Interactive states
+  --color-hover: rgba(34, 197, 94, 0.1);    // Light green hover
+  --color-active: rgba(34, 197, 94, 0.2);   // Green active state
+  --color-focus: rgba(34, 197, 94, 0.3);    // Green focus state
+  --color-disabled: #f3f4f6;                // Light gray disabled
+  --color-disabled-text: #9ca3af;           // Gray disabled text
+  
+  // Status colors with green emphasis
+  --color-success: #10b981;
+  --color-success-light: #d1fae5;
+  --color-success-dark: #047857;
+  --color-warning: #f59e0b;
+  --color-warning-light: #fef3c7;
+  --color-warning-dark: #d97706;
+  --color-error: #ef4444;
+  --color-error-light: #fee2e2;
+  --color-error-dark: #dc2626;
+  --color-info: #3b82f6;
+  --color-info-light: #dbeafe;
+  --color-info-dark: #2563eb;
+  
+  // Shadows
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  --shadow-green: 0 4px 14px 0 rgba(34, 197, 94, 0.15);
+  
+  // Border radius
+  --radius-sm: 0.25rem;
+  --radius: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+  
+  // Spacing (optional - can be useful for consistent spacing)
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  // Typography
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  // Transitions
+  --transition-fast: 150ms ease-in-out;
+  --transition: 200ms ease-in-out;
+  --transition-slow: 300ms ease-in-out;
+}
+
+body[data-theme='dark'] {
+  // Primary colors - Neutral gray palette for dark theme
+  --color-primary: #787878;           // Medium gray primary
+  --color-primary-light: #a3a3a3;     // Lighter gray
+  --color-primary-dark: #525252;      // Darker gray
+  --color-primary-contrast: #ffffff;   // White text on gray backgrounds
+  
+  // Secondary colors - Complementary gray palette
+  --color-secondary: #6b7280;         // Cool gray
+  --color-secondary-light: #9ca3af;   // Light cool gray
+  --color-secondary-dark: #4b5563;    // Dark cool gray
+  --color-secondary-contrast: #ffffff;
+  
+  // Accent colors - Subtle neutral accents
+  --color-accent: #8b8b8b;            // Light gray accent
+  --color-accent-light: #b5b5b5;     // Very light gray
+  --color-accent-dark: #5a5a5a;      // Dark gray accent
+  
+  // Background colors - Dark theme backgrounds
+  --color-bg-primary: #0a0a0a;        // Pure black
+  --color-bg-secondary: #1a1a1a;     // Very dark gray
+  --color-bg-tertiary: #262626;      // Dark gray
+  --color-bg-accent: #0f1419;        // Very dark blue-gray tint
+  
+  // Surface colors
+  --color-surface: #1a1a1a;
+  --color-surface-raised: #262626;
+  --color-surface-overlay: rgba(26, 26, 26, 0.95);
+  
+  // Text colors - Light colors for dark backgrounds
+  --color-text-primary: #ffffff;     // Pure white
+  --color-text-secondary: #d4d4d8;   // Light gray
+  --color-text-tertiary: #a1a1aa;    // Medium gray
+  --color-text-inverse: #0a0a0a;     // Dark text for light backgrounds
+  --color-text-success: #22c55e;     // Green for success messages (kept from light theme)
+  --color-text-warning: #fbbf24;     // Bright yellow for warnings
+  --color-text-error: #f87171;       // Bright red for errors
+  --color-text-info: #60a5fa;        // Bright blue for info
+  
+  // Border colors - Neutral borders for dark theme
+  --color-border-primary: #404040;   // Medium gray border
+  --color-border-secondary: #262626; // Dark gray border
+  --color-border-accent: #787878;    // Gray accent border
+  --color-border-success: #22c55e;
+  --color-border-warning: #fbbf24;
+  --color-border-error: #f87171;
+  --color-border-info: #60a5fa;
+  
+  // Interactive states - Gray tinted for dark theme
+  --color-hover: rgba(120, 120, 120, 0.15);   // Gray hover
+  --color-active: rgba(120, 120, 120, 0.25);  // Gray active state
+  --color-focus: rgba(120, 120, 120, 0.35);   // Gray focus state
+  --color-disabled: #404040;                  // Dark gray disabled
+  --color-disabled-text: #737373;             // Medium gray disabled text
+  
+  // Status colors (balanced for dark theme)
+  --color-success: #22c55e;
+  --color-success-light: #1a1a1a;
+  --color-success-dark: #4ade80;
+  --color-warning: #fbbf24;
+  --color-warning-light: #1a1a1a;
+  --color-warning-dark: #fde047;
+  --color-error: #f87171;
+  --color-error-light: #1a1a1a;
+  --color-error-dark: #fca5a5;
+  --color-info: #60a5fa;
+  --color-info-light: #1a1a1a;
+  --color-info-dark: #93c5fd;
+  
+  // Shadows - Darker shadows for dark theme
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.15);
+  --shadow-gray: 0 4px 14px 0 rgba(120, 120, 120, 0.25);
+  
+  // Border radius (same as light theme)
+  --radius-sm: 0.25rem;
+  --radius: 0.375rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+  --radius-xl: 1rem;
+  --radius-full: 9999px;
+  
+  // Spacing (same as light theme)
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing: 1rem;
+  --spacing-md: 1.5rem;
+  --spacing-lg: 2rem;
+  --spacing-xl: 3rem;
+  
+  // Typography (same as light theme)
+  --font-size-xs: 0.75rem;
+  --font-size-sm: 0.875rem;
+  --font-size: 1rem;
+  --font-size-lg: 1.125rem;
+  --font-size-xl: 1.25rem;
+  --font-size-2xl: 1.5rem;
+  --font-size-3xl: 1.875rem;
+  --font-size-4xl: 2.25rem;
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  // Transitions (same as light theme)
+  --transition-fast: 150ms ease-in-out;
+  --transition: 200ms ease-in-out;
+  --transition-slow: 300ms ease-in-out;
+}

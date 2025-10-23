@@ -10,7 +10,7 @@ const StyledFooter = styled.footer(`
     margin-top: auto;
 `);
 
-export default function Footer(){
+export default function Footer() {
     return <StyledFooter>
     Project Follow-Up app supported by <a href="https://lukasznowakowski.it">https://lukasznowakowski.it</a>.
     </StyledFooter>;

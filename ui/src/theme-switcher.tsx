@@ -15,8 +15,8 @@ function ThemeRepresentation(props: ThemeRepresentationProps) {
     }
 
     return (<>
-        {theme == Theme.Light ? <Sun onClick={onClick} /> : null}
-        {theme == Theme.Dark ? <Moon onClick={onClick} /> : null}
+        {theme === Theme.Light ? <Sun onClick={onClick} /> : null}
+        {theme === Theme.Dark ? <Moon onClick={onClick} /> : null}
     </>)
 }
 

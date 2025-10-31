@@ -28,14 +28,14 @@ export class WebProjectListService implements ProjectsListService {
                 resolve([
                     {
                         id: '1',
-                        name: 'Project 1',
-                        description: 'Description for Project 1',
+                        name: 'Connect application to logging infrastructure',
+                        description: 'Prepare our application to send logs to the central logging system.',
                         membersCount: 3,
                     },
                     {
                         id: '2',
-                        name: 'Project 2',
-                        description: 'Description for Project 2',
+                        name: 'Migrate nuget packages to .NET Standard 2.0',
+                        description: 'Rework packages to be compatible with .NET Standard 2.0 for better cross-platform support. Mark packages that have to be in .NET Framework 4.8 to be decomissioned.',
                         membersCount: 5,
                     },
                 ]);

@@ -29,6 +29,9 @@ const ProjectName = styled.span(`
     font-size: ${theme.sizes.typography.large};
     font-weight: ${theme.sizes.typography.bold};
     grid-row: span 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `);
 
 const MembersCount = styled.span(`

@@ -1,8 +1,8 @@
 import styled from '@emotion/styled';
 import { theme } from '@root/theme';
 import * as Data from '../projects-list.data';
-import { ProjectMemberDisplay } from './project-member-display';
 import { useNavigate } from 'react-router';
+import { User, ClipboardCheck } from 'lucide-react';
 
 interface ProjectCardComponentProps {
     project: Data.ProjectListItem;
@@ -20,18 +20,40 @@ const ProjectHeaderContainer = styled.div(`
     margin-bottom: ${theme.sizes.spacing.small};
     text-align: center;
     background-color: ${theme.colors.background.secondary};
-    line-height: ${theme.sizes.spacing.xlarge};
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    grid-template-rows: 1fr 1fr;
+`);
+
+const ProjectName = styled.span(`
+    font-size: ${theme.sizes.typography.large};
+    font-weight: ${theme.sizes.typography.bold};
+    grid-row: span 2;
+`);
+
+const MembersCount = styled.span(`
+    font-size: ${theme.sizes.typography.small};
+    margin-left: ${theme.sizes.spacing.small};
+    grid-row: 1;
+    grid-column: 2;
+    svg {
+        height: ${theme.sizes.typography.small};
+    }
+`);
+
+const TasksCount = styled.span(`
+    font-size: ${theme.sizes.typography.small};
+    margin-left: ${theme.sizes.spacing.small};
+    grid-row: 2;
+    grid-column: 2;
+    svg {
+        height: ${theme.sizes.typography.small};
+    }
 `);
 
 const ProjectContentContainer = styled.div(`
     padding-right: ${theme.sizes.spacing.medium};
     padding-left: ${theme.sizes.spacing.medium};
-`);
-
-const ProjectMembersContainer = styled.div(`
-    display: flex;
-    flex-direction: column;
-    gap: ${theme.sizes.spacing.small};
 `);
 
 export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
@@ -42,15 +64,12 @@ export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
 
     return <ProjectCardContainer>
         <ProjectHeaderContainer onClick={OpenProject}>
-            {project.name}
+            <ProjectName>{project.name}</ProjectName>
+            <MembersCount><User />{project.membersCount}</MembersCount>
+            <TasksCount><ClipboardCheck />42</TasksCount>
         </ProjectHeaderContainer>
         <ProjectContentContainer>
-            <div>{project.description}</div>
-            <ProjectMembersContainer>
-                {project.members.map(member => (
-                    <ProjectMemberDisplay key={member.id} member={member} />
-                ))}
-            </ProjectMembersContainer>
+            {project.description}
         </ProjectContentContainer>
     </ProjectCardContainer>;
 }

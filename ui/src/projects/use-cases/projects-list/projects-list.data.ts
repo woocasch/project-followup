@@ -13,7 +13,7 @@ export interface ProjectListItem {
     id: string;
     name: string;
     description: string;
-    members: ProjectMember[];
+    membersCount: number;
 }
 
 export interface ProjectsListService {
@@ -30,63 +30,13 @@ export class WebProjectListService implements ProjectsListService {
                         id: '1',
                         name: 'Project 1',
                         description: 'Description for Project 1',
-                        members: [
-                            {
-                                id: '1',
-                                name: 'Member 1',
-                                roles: [
-                                    { id: '1', name: 'Developer' },
-                                    { id: '2', name: 'Designer' },
-                                ],
-                            },
-                            {
-                                id: '2',
-                                name: 'Member 2',
-                                roles: [
-                                    { id: '1', name: 'Developer' },
-                                    { id: '2', name: 'Designer' },
-                                ],
-                            },
-                            {
-                                id: '3',
-                                name: 'Member 3',
-                                roles: [
-                                    { id: '1', name: 'Developer' },
-                                    { id: '2', name: 'Designer' },
-                                ],
-                            },
-                        ],
+                        membersCount: 3,
                     },
                     {
                         id: '2',
                         name: 'Project 2',
                         description: 'Description for Project 2',
-                        members: [
-                            {
-                                id: '1',
-                                name: 'Member 1',
-                                roles: [
-                                    { id: '1', name: 'Developer' },
-                                    { id: '2', name: 'Designer' },
-                                ],
-                            },
-                            {
-                                id: '2',
-                                name: 'Member 2',
-                                roles: [
-                                    { id: '1', name: 'Developer' },
-                                    { id: '2', name: 'Designer' },
-                                ],
-                            },
-                            {
-                                id: '3',
-                                name: 'Member 3',
-                                roles: [
-                                    { id: '1', name: 'Developer' },
-                                    { id: '2', name: 'Designer' },
-                                ],
-                            },
-                        ],
+                        membersCount: 5,
                     },
                 ]);
             }, 1000);

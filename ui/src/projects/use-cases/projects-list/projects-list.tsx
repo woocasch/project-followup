@@ -11,7 +11,7 @@ const ProjectsContainer = styled.div(`
     gap: ${theme.sizes.spacing.medium};
 `);
 
-export default function ProjectsListPage() {
+export default function ProjectsListComponent() {
     const [projects, setProjects] = useState<Data.ProjectListItem[]>([]);
 
     useEffect(() => {
@@ -23,7 +23,7 @@ export default function ProjectsListPage() {
         <ProjectsContainer>
             {projects.map(project => (
                 <ProjectCardComponent key={project.id} project={project} />
-))}
+            ))}
         </ProjectsContainer>
     </div>
 }

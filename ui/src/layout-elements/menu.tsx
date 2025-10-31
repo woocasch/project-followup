@@ -28,9 +28,6 @@ export default function Menu() {
             <MenuItem>
                 <NavLink to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Start</NavLink>
             </MenuItem>
-            <MenuItem>
-                <NavLink to="/projects" style={{ textDecoration: 'none', color: 'inherit' }}>Projects</NavLink>
-            </MenuItem>
         </MenuElement>
     );
 }

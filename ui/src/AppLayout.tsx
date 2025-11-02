@@ -18,11 +18,9 @@ const AppLayout = styled.div(`
 `);
 
 const Header = styled.header(`
-  background-color: ${theme.colors.background.secondary};
-  padding: ${theme.sizes.spacing.small};
+  background-color: ${theme.colors.primary};
   width: 100%;
   display: grid;
-  line-height: ${theme.sizes.spacing.large};
   grid-template-columns: 1fr auto;
   grid-area: header;
 `);

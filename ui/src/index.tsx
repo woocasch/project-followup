@@ -2,10 +2,10 @@ import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import AppLayoutComponent from './AppLayout';
 import HomePage from '@home/home';
-import ProjectsListPage from '@projects/use-cases/projects-list/projects-list';
 import '@assets/reset.scss';
-import '@assets/themes.scss';
+import '@assets/themes/light.scss';
 import '@assets/main.scss';
+import StylingPage from './styling';
 
 const router = createBrowserRouter([
   {
@@ -17,8 +17,8 @@ const router = createBrowserRouter([
         Component: HomePage,
       },
       {
-        path: '/projects',
-        Component: ProjectsListPage,
+        path: '/styling',
+        Component: StylingPage,
       },
       {
         path: '*',

@@ -48,7 +48,8 @@ const CardHeaderStyled = styled.div(`
 `);
 
 const CardContentStyled = styled.div(`
-    background-color: ${theme.colors.surface};
+    background-color: ${theme.colors.secondary};
+    padding: ${theme.spaces.xsmall};
 `);
 
 const CardFooterStyled = styled.div(`

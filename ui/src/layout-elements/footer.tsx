@@ -4,7 +4,7 @@ import { theme } from '../theme';
 const StyledFooter = styled.footer(`
     width: 100%;
     text-align: center;
-    background-color: ${theme.colors.surface};
+    background-color: ${theme.colors.primary};
     margin-top: auto;
 `);
 

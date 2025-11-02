@@ -4,6 +4,7 @@ import AppLayoutComponent from './AppLayout';
 import HomePage from '@home/home';
 import '@assets/reset.scss';
 import '@assets/themes/light.scss';
+import '@assets/themes/dark.scss';
 import '@assets/main.scss';
 import StylingPage from './styling';
 

@@ -1,0 +1,28 @@
+body[data-theme="dark"] {
+    // Main buttons, active elements
+    --colors-primary: hsl(0, 0%, 20%);
+    // Secondary accents
+    --colors-secondary: hsl(0, 0%, 30%);
+    // Positive messages
+    --colors-success: hsl(141, 70%, 45%);
+    // Warnings
+    --colors-warning: hsl(48, 100%, 50%);
+    // Errors and critical messages
+    --colors-error: hsl(0, 70%, 50%);
+    // Background color
+    --colors-background: hsl(0, 0%, 40%);
+    // Cards, panels
+    --colors-surface: hsl(0, 0%, 95%);
+    // Primary text
+    --colors-text-primary: hsl(0, 0%, 90%);
+    // Secondary text
+    --colors-text-secondary: hsl(0, 0%, 30%);
+    // Spaces
+    --spaces-xsmall: 0.25em;
+    // Border radius
+    --borderRadius-xsmall: 0.25em;
+    --borderRadius-small: 0.5em;
+    --borderRadius-medium: 0.75em;
+    --borderRadius-large: 1em;
+    --borderRadius-xlarge: 1.25em;
+}

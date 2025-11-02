@@ -60,7 +60,7 @@ export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
 
     return <ProjectCardContainer>
         <ProjectHeaderContainer onClick={OpenProject}>
-            {project.name}
+            {title}
         </ProjectHeaderContainer>
         <ProjectContentContainer>
             <div>{project.description}</div>

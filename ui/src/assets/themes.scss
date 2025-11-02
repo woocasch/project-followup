@@ -1,79 +1,79 @@
 body[data-theme='light'] {
   // Primary colors - Green dominant palette
-  --color-primary: #22c55e;           // Vibrant green
-  --color-primary-light: #4ade80;     // Lighter green
-  --color-primary-dark: #16a34a;      // Darker green
-  --color-primary-contrast: #ffffff;   // White text on green backgrounds
+  --color-primary: hsl(142, 71%, 45%);
+  --color-primary-light: hsl(142, 76%, 59%);
+  --color-primary-dark: hsl(142, 76%, 36%);
+  --color-primary-contrast: hsl(0, 0%, 100%);
   
   // Secondary colors - Complementary palette
-  --color-secondary: #059669;         // Emerald green
-  --color-secondary-light: #10b981;   // Light emerald
-  --color-secondary-dark: #047857;    // Dark emerald
-  --color-secondary-contrast: #ffffff;
+  --color-secondary: hsl(160, 84%, 39%);
+  --color-secondary-light: hsl(160, 84%, 39%);
+  --color-secondary-dark: hsl(161, 94%, 30%);
+  --color-secondary-contrast: hsl(0, 0%, 100%);
   
   // Accent colors
-  --color-accent: #84cc16;            // Lime green accent
-  --color-accent-light: #a3e635;     // Light lime
-  --color-accent-dark: #65a30d;      // Dark lime
+  --color-accent: hsl(78, 80%, 45%);
+  --color-accent-light: hsl(78, 80%, 60%);
+  --color-accent-dark: hsl(78, 80%, 35%);
   
   // Background colors
-  --color-bg-primary: #ffffff;        // Pure white
-  --color-bg-secondary: #f8fafc;     // Very light gray
-  --color-bg-tertiary: #f1f5f9;      // Light gray
-  --color-bg-accent: #ecfdf5;        // Very light green tint
+  --color-bg-primary: hsl(0, 0%, 100%);
+  --color-bg-secondary: hsl(210, 40%, 98%);
+  --color-bg-tertiary: hsl(214, 32%, 95%);
+  --color-bg-accent: hsl(151, 81%, 96%);
   
   // Surface colors
-  --color-surface: #ffffff;
-  --color-surface-raised: #ffffff;
-  --color-surface-overlay: rgba(255, 255, 255, 0.95);
+  --color-surface: hsl(0, 0%, 100%);
+  --color-surface-raised: hsl(0, 0%, 100%);
+  --color-surface-overlay: hsla(0, 0%, 100%, 0.95);
   
   // Text colors
-  --color-text-primary: #1f2937;     // Dark gray
-  --color-text-secondary: #6b7280;   // Medium gray
-  --color-text-tertiary: #9ca3af;    // Light gray
-  --color-text-inverse: #ffffff;     // White text
-  --color-text-success: #059669;     // Green for success messages
-  --color-text-warning: #d97706;     // Orange for warnings
-  --color-text-error: #dc2626;       // Red for errors
-  --color-text-info: #2563eb;        // Blue for info
+  --color-text-primary: hsl(218, 30%, 17%);
+  --color-text-secondary: hsl(220, 13%, 46%);
+  --color-text-tertiary: hsl(220, 14%, 65%);
+  --color-text-inverse: hsl(0, 0%, 100%);
+  --color-text-success: hsl(160, 84%, 39%);
+  --color-text-warning: hsl(27, 95%, 43%);
+  --color-text-error: hsl(0, 73%, 51%);
+  --color-text-info: hsl(221, 83%, 53%);
   
   // Border colors
-  --color-border-primary: #d1d5db;   // Light gray border
-  --color-border-secondary: #e5e7eb; // Very light gray border
-  --color-border-accent: #22c55e;    // Green accent border
-  --color-border-success: #10b981;
-  --color-border-warning: #f59e0b;
-  --color-border-error: #ef4444;
-  --color-border-info: #3b82f6;
+  --color-border-primary: hsl(214, 14%, 83%);
+  --color-border-secondary: hsl(220, 13%, 91%);
+  --color-border-accent: hsl(142, 71%, 45%);
+  --color-border-success: hsl(160, 84%, 39%);
+  --color-border-warning: hsl(38, 92%, 50%);
+  --color-border-error: hsl(0, 79%, 59%);
+  --color-border-info: hsl(221, 91%, 60%);
   
   // Interactive states
-  --color-hover: rgba(34, 197, 94, 0.1);    // Light green hover
-  --color-active: rgba(34, 197, 94, 0.2);   // Green active state
-  --color-focus: rgba(34, 197, 94, 0.3);    // Green focus state
-  --color-disabled: #f3f4f6;                // Light gray disabled
-  --color-disabled-text: #9ca3af;           // Gray disabled text
+  --color-hover: hsla(142, 71%, 45%, 0.1);
+  --color-active: hsla(142, 71%, 45%, 0.2);
+  --color-focus: hsla(142, 71%, 45%, 0.3);
+  --color-disabled: hsl(220, 13%, 95%);
+  --color-disabled-text: hsl(220, 14%, 65%);
   
   // Status colors with green emphasis
-  --color-success: #10b981;
-  --color-success-light: #d1fae5;
-  --color-success-dark: #047857;
-  --color-warning: #f59e0b;
-  --color-warning-light: #fef3c7;
-  --color-warning-dark: #d97706;
-  --color-error: #ef4444;
-  --color-error-light: #fee2e2;
-  --color-error-dark: #dc2626;
-  --color-info: #3b82f6;
-  --color-info-light: #dbeafe;
-  --color-info-dark: #2563eb;
+  --color-success: hsl(160, 84%, 39%);
+  --color-success-light: hsl(151, 81%, 91%);
+  --color-success-dark: hsl(161, 94%, 30%);
+  --color-warning: hsl(38, 92%, 50%);
+  --color-warning-light: hsl(48, 96%, 89%);
+  --color-warning-dark: hsl(27, 95%, 43%);
+  --color-error: hsl(0, 79%, 59%);
+  --color-error-light: hsl(0, 93%, 94%);
+  --color-error-dark: hsl(0, 73%, 51%);
+  --color-info: hsl(221, 91%, 60%);
+  --color-info-light: hsl(214, 95%, 93%);
+  --color-info-dark: hsl(221, 83%, 53%);
   
   // Shadows
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-green: 0 4px 14px 0 rgba(34, 197, 94, 0.15);
+  --shadow-sm: 0 1px 2px 0 hsla(0, 0%, 0%, 0.05);
+  --shadow: 0 1px 3px 0 hsla(0, 0%, 0%, 0.1), 0 1px 2px 0 hsla(0, 0%, 0%, 0.06);
+  --shadow-md: 0 4px 6px -1px hsla(0, 0%, 0%, 0.1), 0 2px 4px -1px hsla(0, 0%, 0%, 0.06);
+  --shadow-lg: 0 10px 15px -3px hsla(0, 0%, 0%, 0.1), 0 4px 6px -2px hsla(0, 0%, 0%, 0.05);
+  --shadow-xl: 0 20px 25px -5px hsla(0, 0%, 0%, 0.1), 0 10px 10px -5px hsla(0, 0%, 0%, 0.04);
+  --shadow-green: 0 4px 14px 0 hsla(142, 71%, 45%, 0.15);
   
   // Border radius
   --radius-sm: 0.25rem;
@@ -114,80 +114,80 @@ body[data-theme='light'] {
 
 body[data-theme='dark'] {
   // Primary colors - Neutral gray palette for dark theme
-  --color-primary: #787878;           // Medium gray primary
-  --color-primary-light: #a3a3a3;     // Lighter gray
-  --color-primary-dark: #525252;      // Darker gray
-  --color-primary-contrast: #ffffff;   // White text on gray backgrounds
+  --color-primary: hsl(0, 0%, 47%);
+  --color-primary-light: hsl(0, 0%, 64%);
+  --color-primary-dark: hsl(0, 0%, 32%);
+  --color-primary-contrast: hsl(0, 0%, 100%);
   
   // Secondary colors - Complementary gray palette
-  --color-secondary: #6b7280;         // Cool gray
-  --color-secondary-light: #9ca3af;   // Light cool gray
-  --color-secondary-dark: #4b5563;    // Dark cool gray
-  --color-secondary-contrast: #ffffff;
+  --color-secondary: hsl(220, 13%, 46%);
+  --color-secondary-light: hsl(220, 14%, 65%);
+  --color-secondary-dark: hsl(217, 19%, 35%);
+  --color-secondary-contrast: hsl(0, 0%, 100%);
   
   // Accent colors - Subtle neutral accents
-  --color-accent: #8b8b8b;            // Light gray accent
-  --color-accent-light: #b5b5b5;     // Very light gray
-  --color-accent-dark: #5a5a5a;      // Dark gray accent
+  --color-accent: hsl(0, 0%, 55%);
+  --color-accent-light: hsl(0, 0%, 71%);
+  --color-accent-dark: hsl(0, 0%, 35%);
   
   // Background colors - Dark theme backgrounds
-  --color-bg-primary: #0a0a0a;        // Pure black
-  --color-bg-secondary: #1a1a1a;     // Very dark gray
-  --color-bg-tertiary: #262626;      // Dark gray
-  --color-bg-accent: #0f1419;        // Very dark blue-gray tint
+  --color-bg-primary: hsl(0, 0%, 4%);
+  --color-bg-secondary: hsl(0, 0%, 10%);
+  --color-bg-tertiary: hsl(0, 0%, 15%);
+  --color-bg-accent: hsl(203, 23%, 8%);
   
   // Surface colors
-  --color-surface: #1a1a1a;
-  --color-surface-raised: #262626;
-  --color-surface-overlay: rgba(26, 26, 26, 0.95);
+  --color-surface: hsl(0, 0%, 10%);
+  --color-surface-raised: hsl(0, 0%, 15%);
+  --color-surface-overlay: hsla(0, 0%, 10%, 0.95);
   
   // Text colors - Light colors for dark backgrounds
-  --color-text-primary: #ffffff;     // Pure white
-  --color-text-secondary: #d4d4d8;   // Light gray
-  --color-text-tertiary: #a1a1aa;    // Medium gray
-  --color-text-inverse: #0a0a0a;     // Dark text for light backgrounds
-  --color-text-success: #22c55e;     // Green for success messages (kept from light theme)
-  --color-text-warning: #fbbf24;     // Bright yellow for warnings
-  --color-text-error: #f87171;       // Bright red for errors
-  --color-text-info: #60a5fa;        // Bright blue for info
+  --color-text-primary: hsl(0, 0%, 100%);
+  --color-text-secondary: hsl(240, 5%, 84%);
+  --color-text-tertiary: hsl(240, 5%, 65%);
+  --color-text-inverse: hsl(0, 0%, 4%);
+  --color-text-success: hsl(142, 71%, 45%);
+  --color-text-warning: hsl(45, 93%, 58%);
+  --color-text-error: hsl(0, 91%, 71%);
+  --color-text-info: hsl(213, 94%, 68%);
   
   // Border colors - Neutral borders for dark theme
-  --color-border-primary: #404040;   // Medium gray border
-  --color-border-secondary: #262626; // Dark gray border
-  --color-border-accent: #787878;    // Gray accent border
-  --color-border-success: #22c55e;
-  --color-border-warning: #fbbf24;
-  --color-border-error: #f87171;
-  --color-border-info: #60a5fa;
+  --color-border-primary: hsl(0, 0%, 25%);
+  --color-border-secondary: hsl(0, 0%, 15%);
+  --color-border-accent: hsl(0, 0%, 47%);
+  --color-border-success: hsl(142, 71%, 45%);
+  --color-border-warning: hsl(45, 93%, 58%);
+  --color-border-error: hsl(0, 91%, 71%);
+  --color-border-info: hsl(213, 94%, 68%);
   
   // Interactive states - Gray tinted for dark theme
-  --color-hover: rgba(120, 120, 120, 0.15);   // Gray hover
-  --color-active: rgba(120, 120, 120, 0.25);  // Gray active state
-  --color-focus: rgba(120, 120, 120, 0.35);   // Gray focus state
-  --color-disabled: #404040;                  // Dark gray disabled
-  --color-disabled-text: #737373;             // Medium gray disabled text
+  --color-hover: hsla(0, 0%, 47%, 0.15);
+  --color-active: hsla(0, 0%, 47%, 0.25);
+  --color-focus: hsla(0, 0%, 47%, 0.35);
+  --color-disabled: hsl(0, 0%, 25%);
+  --color-disabled-text: hsl(0, 0%, 45%);
   
   // Status colors (balanced for dark theme)
-  --color-success: #22c55e;
-  --color-success-light: #1a1a1a;
-  --color-success-dark: #4ade80;
-  --color-warning: #fbbf24;
-  --color-warning-light: #1a1a1a;
-  --color-warning-dark: #fde047;
-  --color-error: #f87171;
-  --color-error-light: #1a1a1a;
-  --color-error-dark: #fca5a5;
-  --color-info: #60a5fa;
-  --color-info-light: #1a1a1a;
-  --color-info-dark: #93c5fd;
+  --color-success: hsl(142, 71%, 45%);
+  --color-success-light: hsl(0, 0%, 10%);
+  --color-success-dark: hsl(142, 76%, 59%);
+  --color-warning: hsl(45, 93%, 58%);
+  --color-warning-light: hsl(0, 0%, 10%);
+  --color-warning-dark: hsl(48, 96%, 65%);
+  --color-error: hsl(0, 91%, 71%);
+  --color-error-light: hsl(0, 0%, 10%);
+  --color-error-dark: hsl(0, 93%, 82%);
+  --color-info: hsl(213, 94%, 68%);
+  --color-info-light: hsl(0, 0%, 10%);
+  --color-info-dark: hsl(213, 97%, 81%);
   
   // Shadows - Darker shadows for dark theme
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 10px 10px -5px rgba(0, 0, 0, 0.15);
-  --shadow-gray: 0 4px 14px 0 rgba(120, 120, 120, 0.25);
+  --shadow-sm: 0 1px 2px 0 hsla(0, 0%, 0%, 0.3);
+  --shadow: 0 1px 3px 0 hsla(0, 0%, 0%, 0.4), 0 1px 2px 0 hsla(0, 0%, 0%, 0.2);
+  --shadow-md: 0 4px 6px -1px hsla(0, 0%, 0%, 0.4), 0 2px 4px -1px hsla(0, 0%, 0%, 0.2);
+  --shadow-lg: 0 10px 15px -3px hsla(0, 0%, 0%, 0.4), 0 4px 6px -2px hsla(0, 0%, 0%, 0.2);
+  --shadow-xl: 0 20px 25px -5px hsla(0, 0%, 0%, 0.4), 0 10px 10px -5px hsla(0, 0%, 0%, 0.15);
+  --shadow-gray: 0 4px 14px 0 hsla(0, 0%, 47%, 0.25);
   
   // Border radius (same as light theme)
   --radius-sm: 0.25rem;

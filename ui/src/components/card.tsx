@@ -17,11 +17,11 @@ interface CardProps extends DisplaySettings {
     children: ReactNode;
 }
 
-interface CardSectionProps {
+interface CardSectionProps extends DisplaySettings {
     children: ReactNode;
 }
 
-const CardContainer = (hasBorder: boolean, size: Size) => {
+function CalculateBorderRadius(size: Size) {
     let radiusValue = theme.borderRadius.medium;
     switch (size) {
         case Size.Small:
@@ -34,17 +34,28 @@ const CardContainer = (hasBorder: boolean, size: Size) => {
             radiusValue = theme.borderRadius.xlarge;
             break;
     }
-
-    return styled.div(`
-    overflow: hidden;
-    border-radius: ${radiusValue};
-    ${hasBorder && `border: 1px solid black;`}
-`);
+    return radiusValue;
 }
+
+interface CardContainerProps {
+    size: Size;
+    hasBorder: boolean;
+}
+
+const CardContainer = styled('div')<CardContainerProps>`
+        overflow: hidden;
+        border-radius: ${(props: CardContainerProps) => CalculateBorderRadius(props.size)};
+
+        & .header, & .content, & .footer {
+            padding-top: 0.25em;
+            padding-bottom: 0.25em;
+            padding-right: calc(${(props: CardContainerProps) => CalculateBorderRadius(props.size)} + 0.25em);
+            padding-left: calc(${(props: CardContainerProps) => CalculateBorderRadius(props.size)} + 0.25em);
+        }
+    `;
 
 const CardHeaderStyled = styled.div(`
     background-color: ${theme.colors.primary};
-    padding: ${theme.spaces.xsmall};
 `);
 
 const CardContentStyled = styled.div(`
@@ -58,21 +69,20 @@ const CardFooterStyled = styled.div(`
 `);
 
 function CardHeader({ children }: CardSectionProps) {
-    return <CardHeaderStyled>{children}</CardHeaderStyled>;
+    return <CardHeaderStyled className='header'>{children}</CardHeaderStyled>;
 }
 
 function CardContent({ children }: CardSectionProps) {
-    return <CardContentStyled>{children}</CardContentStyled>;
+    return <CardContentStyled className='content'>{children}</CardContentStyled>;
 }
 
 function CardFooter({ children }: CardSectionProps) {
-    return <CardFooterStyled>{children}</CardFooterStyled>;
+    return <CardFooterStyled className='footer'>{children}</CardFooterStyled>;
 }
 
 function CardRoot(props: CardProps) {
     const { children, hasBorder = false, size = Size.Medium } = props;
-    const Container = CardContainer(hasBorder, size);
-    return <Container>{children}</Container>;
+    return <CardContainer hasBorder={hasBorder} size={size}>{children}</CardContainer>;
 }
 
 export const Card = Object.assign(CardRoot, {

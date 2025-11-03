@@ -14,6 +14,10 @@ export const theme = {
     },
     spaces: {
         xsmall: 'var(--spaces-xsmall)',
+        small: 'var(--spaces-small)',
+        medium: 'var(--spaces-medium)',
+        large: 'var(--spaces-large)',
+        xlarge: 'var(--spaces-xlarge)',
     },
     borderRadius: {
         xsmall: 'var(--borderRadius-xsmall)',

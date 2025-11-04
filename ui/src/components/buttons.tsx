@@ -1,12 +1,20 @@
 import { theme } from "@root/theme";
 import styled from "@emotion/styled";
 import type { ReactNode } from "react";
+import { type LucideIcon } from "lucide-react";
 
 export type ButtonVariant = "button" | "success" | "warning" | "error";
 
 export interface ButtonProps {
     children: ReactNode;
     variant?: ButtonVariant;
+    title?: string;
+    onClick?: () => void;
+}
+
+export interface IconButtonProps {
+    icon: LucideIcon;
+    onClick?: () => void;
 }
 
 function getBackgroundColor(variant?: ButtonVariant) {
@@ -36,10 +44,27 @@ function getFontColor(variant?: ButtonVariant) {
 }
 
 export function Button(props: ButtonProps) {
+    const {
+        children,
+        variant = "button",
+        title = '',
+        onClick = () => {}
+    } = props;
+
     const ButtonStyled = styled.button`
-        background-color: ${getBackgroundColor(props.variant)};
-        color: ${getFontColor(props.variant)};
+        background-color: ${getBackgroundColor(variant)};
+        color: ${getFontColor(variant)};
         padding: ${theme.spaces.xsmall};
     `;
-    return <ButtonStyled>{props.children}</ButtonStyled>;
+    return <ButtonStyled onClick={onClick} title={title}>{children}</ButtonStyled>;
+}
+
+export function IconButton(props: IconButtonProps) {
+    const {
+        icon: Icon,
+        onClick = () => {}
+    } = props;
+    const StyledIcon = styled(Icon)`
+        display: inline`;
+    return <StyledIcon onClick={onClick} />;
 }

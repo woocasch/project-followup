@@ -1,5 +1,6 @@
 import styled from "@emotion/styled";
-import { Card, PageHeader, CardSize, Button } from "./components";
+import { Card, PageHeader, CardSize, Button, IconButton } from "./components";
+import { Calendar } from "lucide-react";
 import { theme } from "./theme";
 
 const CardsContainer = styled.div(`
@@ -26,8 +27,8 @@ export default function StylingPage() {
                         <p>This is the card content</p>
                     </Card.Content>
                     <Card.Footer>
-                        <Button>Variant: Button</Button>
-                        <Button variant="warning">Variant: Warning</Button>
+                        <Button onClick={() => alert('Button clicked!')}>Variant: Button</Button>
+                        <Button variant="warning" onClick={() => alert('Warning clicked!')}>Variant: Warning</Button>
                     </Card.Footer>
                 </Card>
                 <Card size={CardSize.Medium}>
@@ -38,7 +39,8 @@ export default function StylingPage() {
                         <p>This is the card content</p>
                     </Card.Content>
                     <Card.Footer>
-                        <Button variant="success">Variant: Success</Button>
+                        <Button variant="success" onClick={() => alert('Success clicked!')}>Variant: Success</Button>
+                        <IconButton icon={Calendar} onClick={() => alert('Calendar clicked!')} />
                     </Card.Footer>
                 </Card>
                 <Card size={CardSize.Large}>
@@ -49,7 +51,7 @@ export default function StylingPage() {
                         <p>This is the card content</p>
                     </Card.Content>
                     <Card.Footer>
-                        <Button variant="error">Variant: Error</Button>
+                        <Button variant="error" onClick={() => alert('Error clicked!')}>Variant: Error</Button>
                     </Card.Footer>
                 </Card>
             </CardsContainer>

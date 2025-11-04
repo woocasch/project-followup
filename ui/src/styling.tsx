@@ -1,5 +1,5 @@
 import styled from "@emotion/styled";
-import { Card, PageHeader, CardSize } from "./components";
+import { Card, PageHeader, CardSize, Button } from "./components";
 import { theme } from "./theme";
 
 const CardsContainer = styled.div(`
@@ -26,7 +26,8 @@ export default function StylingPage() {
                         <p>This is the card content</p>
                     </Card.Content>
                     <Card.Footer>
-                        <button>Action</button>
+                        <Button>Variant: Button</Button>
+                        <Button variant="warning">Variant: Warning</Button>
                     </Card.Footer>
                 </Card>
                 <Card size={CardSize.Medium}>
@@ -37,7 +38,7 @@ export default function StylingPage() {
                         <p>This is the card content</p>
                     </Card.Content>
                     <Card.Footer>
-                        <button>Action</button>
+                        <Button variant="success">Variant: Success</Button>
                     </Card.Footer>
                 </Card>
                 <Card size={CardSize.Large}>
@@ -48,7 +49,7 @@ export default function StylingPage() {
                         <p>This is the card content</p>
                     </Card.Content>
                     <Card.Footer>
-                        <button>Action</button>
+                        <Button variant="error">Variant: Error</Button>
                     </Card.Footer>
                 </Card>
             </CardsContainer>

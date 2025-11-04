@@ -5,12 +5,15 @@ body[data-theme="light"] {
     --colors-secondary: hsl(231, 70%, 65%);
     // Positive messages
     --colors-success: hsl(141, 70%, 45%);
+    --colors-success-text: hsl(0, 0%, 10%);
     // Warnings
     --colors-warning: hsl(48, 100%, 50%);
+    --colors-warning-text: hsl(0, 0%, 10%);
     // Errors and critical messages
     --colors-error: hsl(0, 70%, 50%);
+    --colors-error-text: hsl(0, 0%, 10%);
     // Background color
-    --colors-background: hsl(0, 0%, 100%);
+    --colors-background: hsl(231, 70%, 90%);
     // Cards, panels
     --colors-surface: hsl(0, 0%, 95%);
     // Primary text

@@ -1,10 +1,11 @@
 // import type { MouseEvent } from 'react';
+
+import styled from '@emotion/styled';
 import { Outlet } from 'react-router';
 import Footer from './layout-elements/footer';
-import ThemeSwitcher from './theme-switcher';
-import styled from '@emotion/styled';
-import { theme } from './theme';
 import Menu from './layout-elements/menu';
+import { theme } from './theme';
+import ThemeSwitcher from './theme-switcher';
 
 const AppLayout = styled.div(`
   width: 100%;
@@ -18,13 +19,12 @@ const AppLayout = styled.div(`
 `);
 
 const Header = styled.header(`
-  background-color: ${theme.colors.background.secondary};
-  padding: ${theme.sizes.spacing.small};
+  background-color: ${theme.colors.primary};
   width: 100%;
   display: grid;
-  line-height: ${theme.sizes.spacing.large};
   grid-template-columns: 1fr auto;
   grid-area: header;
+  padding: ${theme.spaces.small};
 `);
 
 const Main = styled.main(`

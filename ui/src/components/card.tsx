@@ -50,8 +50,8 @@ const CardContainer = styled('div')<CardContainerProps>`
         & .header, & .content, & .footer {
             padding-top: 0.25em;
             padding-bottom: 0.25em;
-            padding-right: calc(${(props: CardContainerProps) => CalculateBorderRadius(props.size)} + 0.25em);
-            padding-left: calc(${(props: CardContainerProps) => CalculateBorderRadius(props.size)} + 0.25em);
+            padding-right: calc(${(props: CardContainerProps) => calculateBorderRadius(props.size)} + 0.25em);
+            padding-left: calc(${(props: CardContainerProps) => calculateBorderRadius(props.size)} + 0.25em);
         }
     `;
 

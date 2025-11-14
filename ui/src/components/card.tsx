@@ -45,6 +45,7 @@ interface CardContainerProps {
 const CardContainer = styled('div')<CardContainerProps>`
         overflow: hidden;
         border-radius: ${(props: CardContainerProps) => CalculateBorderRadius(props.size)};
+        ${(props) => props.hasBorder && `border: 1px solid ${theme.colors.primary};`}
 
         & .header, & .content, & .footer {
             padding-top: 0.25em;

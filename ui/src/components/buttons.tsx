@@ -57,8 +57,13 @@ export function Button(props: ButtonProps) {
     onClick = () => {},
   } = props;
 
+  const ButtonStyled = styled.button`
+        background-color: ${getBackgroundColor(variant)};
+        color: ${getFontColor(variant)};
+        padding: ${theme.spaces.xsmall};
+    `;
   return (
-    <ButtonStyled variant={variant} onClick={onClick} title={title}>
+    <ButtonStyled onClick={onClick} title={title}>
       {children}
     </ButtonStyled>
   );
@@ -66,7 +71,5 @@ export function Button(props: ButtonProps) {
 
 export function IconButton(props: IconButtonProps) {
   const { icon: Icon, onClick = () => {} } = props;
-  const StyledIcon = styled(Icon)`
-        display: inline`;
-  return <StyledIcon onClick={onClick} />;
+  return <Icon onClick={onClick} style={{ display: 'inline' }} />;
 }

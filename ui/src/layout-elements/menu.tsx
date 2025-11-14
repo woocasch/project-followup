@@ -1,8 +1,6 @@
 import styled from '@emotion/styled';
 import { NavLink } from 'react-router';
 
-const MenuItem = styled.li(`
-`);
 const MenuElement = styled.ul(`
   list-style: none;
   padding: 0;
@@ -12,21 +10,14 @@ const MenuElement = styled.ul(`
 `);
 
 export default function Menu() {
-  return (
-    <MenuElement>
-      <MenuItem>
-        <NavLink to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
-          Start
-        </NavLink>
-      </MenuItem>
-      <MenuItem>
-        <NavLink
-          to="/styling"
-          style={{ textDecoration: 'none', color: 'inherit' }}
-        >
-          Styling guidelines
-        </NavLink>
-      </MenuItem>
-    </MenuElement>
-  );
+    return (
+        <MenuElement>
+            <li>
+                <NavLink to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Start</NavLink>
+            </li>
+            <li>
+                <NavLink to="/styling" style={{ textDecoration: 'none', color: 'inherit' }}>Styling guidelines</NavLink>
+            </li>
+        </MenuElement>
+    );
 }

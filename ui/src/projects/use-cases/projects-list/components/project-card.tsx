@@ -38,15 +38,10 @@ const ButtonsContainer = styled.div(`
 `);
 
 export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
-  const navigate = useNavigate();
-  function openProject() {
-    navigate(`/projects/${project.id}`);
-  }
-
   return (
     <Card size={CardSize.Medium}>
       <Card.Header>
-        <ProjectHeaderContainer onClick={openProject}>
+        <ProjectHeaderContainer>
           {project.name}
         </ProjectHeaderContainer>
       </Card.Header>

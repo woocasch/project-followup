@@ -1,10 +1,11 @@
 // import type { MouseEvent } from 'react';
+
+import styled from '@emotion/styled';
 import { Outlet } from 'react-router';
 import Footer from './layout-elements/footer';
-import ThemeSwitcher from './theme-switcher';
-import styled from '@emotion/styled';
-import { theme } from './theme';
 import Menu from './layout-elements/menu';
+import { theme } from './theme';
+import ThemeSwitcher from './theme-switcher';
 
 const AppLayout = styled.div(`
   width: 100%;

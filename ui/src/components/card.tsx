@@ -3,54 +3,54 @@ import { theme } from '@root/theme';
 import type { ReactNode } from 'react';
 
 export enum Size {
-    Small = "small",
-    Medium = "medium",
-    Large = "large"
+  Small = 'small',
+  Medium = 'medium',
+  Large = 'large',
 }
 
 interface DisplaySettings {
-    hasBorder?: boolean;
-    size?: Size;
+  hasBorder?: boolean;
+  size?: Size;
 }
 
 interface CardProps extends DisplaySettings {
-    children: ReactNode;
+  children: ReactNode;
 }
 
 interface CardSectionProps extends DisplaySettings {
-    children: ReactNode;
+  children: ReactNode;
 }
 
-function CalculateBorderRadius(size: Size) {
-    let radiusValue = theme.borderRadius.medium;
-    switch (size) {
-        case Size.Small:
-            radiusValue = theme.borderRadius.xsmall;
-            break;
-        case Size.Medium:
-            radiusValue = theme.borderRadius.medium;
-            break;
-        case Size.Large:
-            radiusValue = theme.borderRadius.xlarge;
-            break;
-    }
-    return radiusValue;
+function calculateBorderRadius(size: Size) {
+  let radiusValue = theme.borderRadius.medium;
+  switch (size) {
+    case Size.Small:
+      radiusValue = theme.borderRadius.xsmall;
+      break;
+    case Size.Medium:
+      radiusValue = theme.borderRadius.medium;
+      break;
+    case Size.Large:
+      radiusValue = theme.borderRadius.xlarge;
+      break;
+  }
+  return radiusValue;
 }
 
 interface CardContainerProps {
-    size: Size;
-    hasBorder: boolean;
+  size: Size;
+  hasBorder: boolean;
 }
 
 const CardContainer = styled('div')<CardContainerProps>`
         overflow: hidden;
-        border-radius: ${(props: CardContainerProps) => CalculateBorderRadius(props.size)};
+        border-radius: ${(props: CardContainerProps) => calculateBorderRadius(props.size)};
 
         & .header, & .content, & .footer {
             padding-top: 0.25em;
             padding-bottom: 0.25em;
-            padding-right: calc(${(props: CardContainerProps) => CalculateBorderRadius(props.size)} + 0.25em);
-            padding-left: calc(${(props: CardContainerProps) => CalculateBorderRadius(props.size)} + 0.25em);
+            padding-right: calc(${(props: CardContainerProps) => calculateBorderRadius(props.size)} + 0.25em);
+            padding-left: calc(${(props: CardContainerProps) => calculateBorderRadius(props.size)} + 0.25em);
         }
     `;
 
@@ -69,24 +69,28 @@ const CardFooterStyled = styled.div(`
 `);
 
 function CardHeader({ children }: CardSectionProps) {
-    return <CardHeaderStyled className='header'>{children}</CardHeaderStyled>;
+  return <CardHeaderStyled className="header">{children}</CardHeaderStyled>;
 }
 
 function CardContent({ children }: CardSectionProps) {
-    return <CardContentStyled className='content'>{children}</CardContentStyled>;
+  return <CardContentStyled className="content">{children}</CardContentStyled>;
 }
 
 function CardFooter({ children }: CardSectionProps) {
-    return <CardFooterStyled className='footer'>{children}</CardFooterStyled>;
+  return <CardFooterStyled className="footer">{children}</CardFooterStyled>;
 }
 
 function CardRoot(props: CardProps) {
-    const { children, hasBorder = false, size = Size.Medium } = props;
-    return <CardContainer hasBorder={hasBorder} size={size}>{children}</CardContainer>;
+  const { children, hasBorder = false, size = Size.Medium } = props;
+  return (
+    <CardContainer hasBorder={hasBorder} size={size}>
+      {children}
+    </CardContainer>
+  );
 }
 
 export const Card = Object.assign(CardRoot, {
-    Header: CardHeader,
-    Content: CardContent,
-    Footer: CardFooter,
+  Header: CardHeader,
+  Content: CardContent,
+  Footer: CardFooter,
 });

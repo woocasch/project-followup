@@ -1,4 +1,4 @@
-import styled from "@emotion/styled";
+import styled from '@emotion/styled';
 import { theme } from '../theme';
 
 const StyledFooter = styled.footer(`
@@ -9,7 +9,10 @@ const StyledFooter = styled.footer(`
 `);
 
 export default function Footer() {
-    return <StyledFooter>
-    Project Follow-Up app supported by <a href="https://lukasznowakowski.it">https://lukasznowakowski.it</a>.
-    </StyledFooter>;
+  return (
+    <StyledFooter>
+      Project Follow-Up app supported by{' '}
+      <a href="https://lukasznowakowski.it">https://lukasznowakowski.it</a>.
+    </StyledFooter>
+  );
 }

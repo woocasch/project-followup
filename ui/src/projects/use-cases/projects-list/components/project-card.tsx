@@ -40,9 +40,7 @@ export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
   return (
     <Card size={CardSize.Medium}>
       <Card.Header>
-        <ProjectHeaderContainer>
-          {project.name}
-        </ProjectHeaderContainer>
+        <ProjectHeaderContainer>{project.name}</ProjectHeaderContainer>
       </Card.Header>
       <Card.Content>
         <ProjectContentContainer>{project.description}</ProjectContentContainer>

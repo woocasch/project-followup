@@ -16,6 +16,7 @@ const ProjectsContainer = styled.div(`
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: ${theme.spaces.medium};
+    align-items: start;
 `);
 
 export default function ProjectsListComponent() {
@@ -35,9 +36,7 @@ export default function ProjectsListComponent() {
       </HeaderContainer>
       <ProjectsContainer>
         {projects.map((project) => (
-          <div key={project.id}>
-            <ProjectCardComponent project={project} />
-          </div>
+            <ProjectCardComponent key={project.id} project={project} />
         ))}
       </ProjectsContainer>
     </div>

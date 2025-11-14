@@ -17,7 +17,7 @@ interface CardProps extends DisplaySettings {
     children: ReactNode;
 }
 
-interface CardSectionProps extends DisplaySettings {
+interface CardSectionProps {
     children: ReactNode;
 }
 

@@ -32,4 +32,11 @@ public class ProjectsController : ControllerBase
         var result = new FetchListResult(projects);
         return Results.Ok(result);
     }
+
+    [HttpPost]
+    public IResult Create(
+        CreatePayload payload)
+    {
+        return Results.Accepted();
+    }
 }

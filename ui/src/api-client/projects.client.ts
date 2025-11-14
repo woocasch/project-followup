@@ -10,6 +10,12 @@ export class ProjectsClient implements model.ProjectsApi {
             }
             return response.data;
     }
+
+    async create(payload: model.CreatePayload): Promise<boolean> {
+        const response = await axios.post(
+            `https://localhost:7037/api/Projects`, payload);
+        return response.status === 202;
+    }
 }
 
 export const projectsApi: model.ProjectsApi = new ProjectsClient();

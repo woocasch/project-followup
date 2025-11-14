@@ -24,6 +24,7 @@ const Header = styled.header(`
   display: grid;
   grid-template-columns: 1fr auto;
   grid-area: header;
+  padding: ${theme.spaces.small};
 `);
 
 const Main = styled.main(`

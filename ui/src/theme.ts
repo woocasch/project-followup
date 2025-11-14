@@ -58,7 +58,7 @@ export const useTheme = () => {
   useEffect(() => {
     document.body.dataset.theme = theme;
     storage.setItem<Theme>(ThemeStorageKey, theme);
-  }, [theme]);
+  }, [theme, storage]);
 
   const setTheme = (name: Theme) => {
     if (availableThemes.includes(name)) {

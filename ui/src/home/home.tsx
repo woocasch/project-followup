@@ -1,4 +1,3 @@
-import { PageHeader } from '@root/components';
 import './home.scss';
 
 export default function HomePage() {

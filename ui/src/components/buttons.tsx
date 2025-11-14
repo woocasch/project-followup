@@ -43,6 +43,12 @@ function getFontColor(variant?: ButtonVariant) {
   }
 }
 
+const ButtonStyled = styled.button<{ variant?: ButtonVariant }>`
+    background-color: ${(props) => getBackgroundColor(props.variant)};
+    color: ${(props) => getFontColor(props.variant)};
+    padding: ${theme.spaces.xsmall};
+`;
+
 export function Button(props: ButtonProps) {
   const {
     children,

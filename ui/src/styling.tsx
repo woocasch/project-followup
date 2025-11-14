@@ -74,6 +74,53 @@ export default function StylingPage() {
           </Card>
         </CardsContainer>
       </div>
+      <div>
+        <h3>Cards with Borders</h3>
+        <CardsContainer>
+          <Card size={CardSize.Small} hasBorder={true}>
+            <Card.Header>
+              <h2>Card Small</h2>
+            </Card.Header>
+            <Card.Content>
+              <p>This card has a border</p>
+            </Card.Content>
+            <Card.Footer>
+              <Button onClick={() => alert('Button clicked!')}>
+                With Border
+              </Button>
+            </Card.Footer>
+          </Card>
+          <Card size={CardSize.Medium} hasBorder={true}>
+            <Card.Header>
+              <h2>Card Medium</h2>
+            </Card.Header>
+            <Card.Content>
+              <p>This card has a border</p>
+            </Card.Content>
+            <Card.Footer>
+              <Button
+                variant="success"
+                onClick={() => alert('Success clicked!')}
+              >
+                With Border
+              </Button>
+            </Card.Footer>
+          </Card>
+          <Card size={CardSize.Large} hasBorder={true}>
+            <Card.Header>
+              <h2>Card Large</h2>
+            </Card.Header>
+            <Card.Content>
+              <p>This card has a border</p>
+            </Card.Content>
+            <Card.Footer>
+              <Button variant="error" onClick={() => alert('Error clicked!')}>
+                With Border
+              </Button>
+            </Card.Footer>
+          </Card>
+        </CardsContainer>
+      </div>
     </div>
   );
 }

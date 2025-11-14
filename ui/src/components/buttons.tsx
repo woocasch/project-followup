@@ -43,6 +43,12 @@ function getFontColor(variant?: ButtonVariant) {
   }
 }
 
+const ButtonStyled = styled.button<{ variant?: ButtonVariant }>`
+    background-color: ${(props) => getBackgroundColor(props.variant)};
+    color: ${(props) => getFontColor(props.variant)};
+    padding: ${theme.spaces.xsmall};
+`;
+
 export function Button(props: ButtonProps) {
   const {
     children,
@@ -65,7 +71,5 @@ export function Button(props: ButtonProps) {
 
 export function IconButton(props: IconButtonProps) {
   const { icon: Icon, onClick = () => {} } = props;
-  const StyledIcon = styled(Icon)`
-        display: inline`;
-  return <StyledIcon onClick={onClick} />;
+  return <Icon onClick={onClick} style={{ display: 'inline' }} />;
 }

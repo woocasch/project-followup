@@ -6,6 +6,8 @@ const StyledFooter = styled.footer(`
     text-align: center;
     background-color: ${theme.colors.primary};
     margin-top: auto;
+    padding: ${theme.spaces.small};
+    line-height: 1.5;
 `);
 
 export default function Footer() {

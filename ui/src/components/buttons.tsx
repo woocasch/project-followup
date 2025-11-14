@@ -3,11 +3,18 @@ import { theme } from '@root/theme';
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-export type ButtonVariant = 'button' | 'success' | 'warning' | 'error';
+export type ButtonVariant =
+  | 'button'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'action';
+export type ButtonType = 'standard' | 'rounded';
 
 export interface ButtonProps {
   children: ReactNode;
   variant?: ButtonVariant;
+  buttonType?: ButtonType;
   title?: string;
   onClick?: () => void;
 }
@@ -25,6 +32,8 @@ function getBackgroundColor(variant?: ButtonVariant) {
       return theme.colors.warning;
     case 'error':
       return theme.colors.error;
+    case 'action':
+      return theme.colors.surface;
     default:
       return theme.colors.background;
   }
@@ -43,22 +52,32 @@ function getFontColor(variant?: ButtonVariant) {
   }
 }
 
-const ButtonStyled = styled.button<{ variant?: ButtonVariant }>`
+const ButtonStyled = styled.button<{
+  variant?: ButtonVariant;
+  buttonType?: ButtonType;
+}>`
     background-color: ${(props) => getBackgroundColor(props.variant)};
     color: ${(props) => getFontColor(props.variant)};
     padding: ${theme.spaces.xsmall};
+    border-radius: ${(props) => (props.buttonType === 'rounded' ? theme.borderRadius.small : (theme.borderRadius.none ?? '0'))};
 `;
 
 export function Button(props: ButtonProps) {
   const {
     children,
     variant = 'button',
+    buttonType = 'standard',
     title = '',
     onClick = () => {},
   } = props;
 
   return (
-    <ButtonStyled variant={variant} onClick={onClick} title={title}>
+    <ButtonStyled
+      variant={variant}
+      buttonType={buttonType}
+      onClick={onClick}
+      title={title}
+    >
       {children}
     </ButtonStyled>
   );

@@ -6,9 +6,6 @@ import { ProjectCardComponent } from './components';
 import { PageHeader } from '@components/index';
 
 const ProjectsContainer = styled.div(`
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: ${theme.sizes.spacing.medium};
 `);
 
 export default function ProjectsListComponent() {

@@ -2,8 +2,10 @@ import { Button, PageHeader } from '@components/index';
 import styled from '@emotion/styled';
 import { theme } from '@root/theme';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 import { ProjectCardComponent } from './components';
-import * as Data from './projects-list.data';
+import type * as model from './projects-list.model';
+import projectsListService from './projects-list.service';
 
 const HeaderContainer = styled.div(`
     display: grid;
@@ -20,23 +22,32 @@ const ProjectsContainer = styled.div(`
 `);
 
 export default function ProjectsListComponent() {
-  const [projects, setProjects] = useState<Data.ProjectListItem[]>([]);
+  const [projects, setProjects] = useState<model.ProjectListItem[]>([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    Data.projectsListService.getProjectsList().then(setProjects);
+    projectsListService.getProjectsList().then(setProjects);
   }, []);
+
+  function onCreateProjectClick() {
+    navigate('/projects/create');
+  }
 
   return (
     <div>
       <HeaderContainer>
         <PageHeader>Projects</PageHeader>
-        <Button variant="action" buttonType="rounded">
+        <Button
+          variant="action"
+          buttonType="rounded"
+          onClick={onCreateProjectClick}
+        >
           Create project
         </Button>
       </HeaderContainer>
       <ProjectsContainer>
         {projects.map((project) => (
-            <ProjectCardComponent key={project.id} project={project} />
+          <ProjectCardComponent key={project.id} project={project} />
         ))}
       </ProjectsContainer>
     </div>

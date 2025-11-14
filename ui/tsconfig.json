@@ -27,7 +27,7 @@
       "@projects/*": ["./src/projects/*"],
       "@infrastructure/*": ["./src/infrastructure/*"],
       "@home/*": ["./src/home/*"],
-      "@apiClient/*": ["./src/api-client/*"],
+      "@apiClient/*": ["./src/api-client/*"]
     }
   },
   "include": ["src"]

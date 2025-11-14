@@ -21,7 +21,7 @@ interface CardSectionProps {
   children: ReactNode;
 }
 
-function CalculateBorderRadius(size: Size) {
+function calculateBorderRadius(size: Size) {
   let radiusValue = theme.borderRadius.medium;
   switch (size) {
     case Size.Small:
@@ -44,14 +44,14 @@ interface CardContainerProps {
 
 const CardContainer = styled('div')<CardContainerProps>`
         overflow: hidden;
-        border-radius: ${(props: CardContainerProps) => CalculateBorderRadius(props.size)};
+        border-radius: ${(props: CardContainerProps) => calculateBorderRadius(props.size)};
         ${(props) => props.hasBorder && `border: 1px solid ${theme.colors.primary};`}
 
         & .header, & .content, & .footer {
             padding-top: 0.25em;
             padding-bottom: 0.25em;
-            padding-right: calc(${(props: CardContainerProps) => CalculateBorderRadius(props.size)} + 0.25em);
-            padding-left: calc(${(props: CardContainerProps) => CalculateBorderRadius(props.size)} + 0.25em);
+            padding-right: calc(${(props: CardContainerProps) => calculateBorderRadius(props.size)} + 0.25em);
+            padding-left: calc(${(props: CardContainerProps) => calculateBorderRadius(props.size)} + 0.25em);
         }
     `;
 

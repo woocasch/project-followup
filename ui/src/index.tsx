@@ -6,6 +6,7 @@ import AppLayoutComponent from './AppLayout';
 import '@assets/reset.scss';
 import '@assets/themes/light.scss';
 import '@assets/themes/dark.scss';
+import '@assets/themes/sizes.scss';
 import '@assets/main.scss';
 import StylingPage from './styling';
 

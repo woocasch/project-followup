@@ -10,14 +10,21 @@ const MenuElement = styled.ul(`
 `);
 
 export default function Menu() {
-    return (
-        <MenuElement>
-            <li>
-                <NavLink to="/" style={{ textDecoration: 'none', color: 'inherit' }}>Start</NavLink>
-            </li>
-            <li>
-                <NavLink to="/styling" style={{ textDecoration: 'none', color: 'inherit' }}>Styling guidelines</NavLink>
-            </li>
-        </MenuElement>
-    );
+  return (
+    <MenuElement>
+      <li>
+        <NavLink to="/" style={{ textDecoration: 'none', color: 'inherit' }}>
+          Start
+        </NavLink>
+      </li>
+      <li>
+        <NavLink
+          to="/styling"
+          style={{ textDecoration: 'none', color: 'inherit' }}
+        >
+          Styling guidelines
+        </NavLink>
+      </li>
+    </MenuElement>
+  );
 }

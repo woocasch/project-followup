@@ -57,13 +57,8 @@ export function Button(props: ButtonProps) {
     onClick = () => {},
   } = props;
 
-  const ButtonStyled = styled.button`
-        background-color: ${getBackgroundColor(variant)};
-        color: ${getFontColor(variant)};
-        padding: ${theme.spaces.xsmall};
-    `;
   return (
-    <ButtonStyled onClick={onClick} title={title}>
+    <ButtonStyled variant={variant} onClick={onClick} title={title}>
       {children}
     </ButtonStyled>
   );

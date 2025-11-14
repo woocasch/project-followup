@@ -37,7 +37,7 @@ export class WebProjectListService implements ProjectsListService {
             id: '2',
             name: 'Migrate nuget packages to .NET Standard 2.0',
             description:
-              'Rework packages to be compatible with .NET Standard 2.0 for better cross-platform support. Mark packages that have to be in .NET Framework 4.8 to be decomissioned.',
+              'Rework packages to be compatible with .NET Standard 2.0 for better cross-platform support. Mark packages that have to be in .NET Framework 4.8 to be decommissioned.',
             membersCount: 5,
           },
         ]);

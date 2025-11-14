@@ -1,5 +1,5 @@
-import styled from "@emotion/styled";
-import { NavLink } from "react-router";
+import styled from '@emotion/styled';
+import { NavLink } from 'react-router';
 
 const MenuElement = styled.ul(`
   list-style: none;

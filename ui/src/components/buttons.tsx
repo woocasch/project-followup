@@ -64,7 +64,5 @@ export function IconButton(props: IconButtonProps) {
         icon: Icon,
         onClick = () => {}
     } = props;
-    const StyledIcon = styled(Icon)`
-        display: inline`;
-    return <StyledIcon onClick={onClick} />;
+    return <Icon onClick={onClick} style={{ display: 'inline' }} />;
 }

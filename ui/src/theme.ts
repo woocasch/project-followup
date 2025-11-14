@@ -1,159 +1,76 @@
-import { localStorageService, type LocalStorageService } from './infrastructure/local-storage.service';
+import {
+  type LocalStorageService,
+  localStorageService,
+} from './infrastructure/local-storage.service';
 
 export const theme = {
-    colors: {
-        primary: {
-            basic: 'var(--color-primary)',
-            light: 'var(--color-primary-light)',
-            dark: 'var(--color-primary-dark)',
-            contrast: 'var(--color-primary-contrast)',
-        },
-        secondary: {
-            basic: 'var(--color-secondary)',
-            light: 'var(--color-secondary-light)',
-            dark: 'var(--color-secondary-dark)',
-            contrast: 'var(--color-secondary-contrast)',
-        },
-        accent: {
-            basic: 'var(--color-accent)',
-            light: 'var(--color-accent-light)',
-            dark: 'var(--color-accent-dark)',
-        },
-        background: {
-            primary: 'var(--color-bg-primary)',
-            secondary: 'var(--color-bg-secondary)',
-            tertiary: 'var(--color-bg-tertiary)',
-            accent: 'var(--color-bg-accent)',
-        },
-        surface: {
-            basic: 'var(--color-surface)',
-            raised: 'var(--color-surface-raised)',
-            overlay: 'var(--color-surface-overlay)',
-        },
-        text: {
-            primary: 'var(--color-text-primary)',
-            secondary: 'var(--color-text-secondary)',
-            tertiary: 'var(--color-text-tertiary)',
-            inverse: 'var(--color-text-inverse)',
-            success: 'var(--color-text-success)',
-            warning: 'var(--color-text-warning)',
-            error: 'var(--color-text-error)',
-            info: 'var(--color-text-info)',
-        },
-        border: {
-            primary: 'var(--color-border-primary)',
-            secondary: 'var(--color-border-secondary)',
-            accent: 'var(--color-border-accent)',
-            success: 'var(--color-border-success)',
-            warning: 'var(--color-border-warning)',
-            error: 'var(--color-border-error)',
-            info: 'var(--color-border-info)',
-        },
-        interactiveStates: {
-            hover: 'var(--color-interactive-hover)',
-            active: 'var(--color-interactive-active)',
-            focus: 'var(--color-interactive-focus)',
-            disabled: 'var(--color-interactive-disabled)',
-            disabledText: 'var(--color-interactive-disabled-text)',
-        },
-        status: {
-            success: 'var(--color-success)',
-            successLight: 'var(--color-success-light)',
-            successDark: 'var(--color-success-dark)',
-            warning: 'var(--color-warning)',
-            warningLight: 'var(--color-warning-light)',
-            warningDark: 'var(--color-warning-dark)',
-            error: 'var(--color-error)',
-            errorLight: 'var(--color-error-light)',
-            errorDark: 'var(--color-error-dark)',
-            info: 'var(--color-info)',
-            infoLight: 'var(--color-info-light)',
-            infoDark: 'var(--color-info-dark)',
-        },
-    },
-    sizes: {
-        shadows: {
-            small: 'var(--shadow-sm)',
-            normal: 'var(--shadow)',
-            medium: 'var(--shadow-md)',
-            large: 'var(--shadow-lg)',
-            xlarge: 'var(--shadow-xl)',
-            green: 'var(--shadow-green)',
-        },
-        borderRadius: {
-            small: 'var(--radius-sm)',
-            standard: 'var(--radius)',
-            medium: 'var(--radius-md)',
-            large: 'var(--radius-lg)',
-            xlarge: 'var(--radius-xl)',
-            full: 'var(--radius-full)',
-        },
-        spacing: {
-            xsmall: 'var(--spacing-xs)',
-            small: 'var(--spacing-sm)',
-            standard: 'var(--spacing)',
-            medium: 'var(--spacing-md)',
-            large: 'var(--spacing-lg)',
-            xlarge: 'var(--spacing-xl)',
-        },
-        typography: {
-            xsmall: 'var(--font-size-xs)',
-            small: 'var(--font-size-sm)',
-            standard: 'var(--font-size)',
-            large: 'var(--font-size-lg)',
-            xlarge: 'var(--font-size-xl)',
-            xxlarge: 'var(--font-size-2xl)',
-            xxxlarge: 'var(--font-size-3xl)',
-            xxxxlarge: 'var(--font-size-4xl)',
-            normal: 'var(--font-weight-normal)',
-            medium: 'var(--font-weight-medium)',
-            semibold: 'var(--font-weight-semibold)',
-            bold: 'var(--font-weight-bold)',
-        },
-        transitions: {
-            fast: 'var(--transition-fast)',
-            standard: 'var(--transition)',
-            slow: 'var(--transition-slow)',
-        },
-    },
-}
+  colors: {
+    primary: 'var(--colors-primary)',
+    secondary: 'var(--colors-secondary)',
+    success: 'var(--colors-success)',
+    successText: 'var(--colors-success-text)',
+    warning: 'var(--colors-warning)',
+    warningText: 'var(--colors-warning-text)',
+    error: 'var(--colors-error)',
+    errorText: 'var(--colors-error-text)',
+    background: 'var(--colors-background)',
+    surface: 'var(--colors-surface)',
+    textPrimary: 'var(--colors-text-primary)',
+    textSecondary: 'var(--colors-text-secondary)',
+  },
+  spaces: {
+    xsmall: 'var(--spaces-xsmall)',
+    small: 'var(--spaces-small)',
+    medium: 'var(--spaces-medium)',
+    large: 'var(--spaces-large)',
+    xlarge: 'var(--spaces-xlarge)',
+  },
+  borderRadius: {
+    xsmall: 'var(--borderRadius-xsmall)',
+    small: 'var(--borderRadius-small)',
+    medium: 'var(--borderRadius-medium)',
+    large: 'var(--borderRadius-large)',
+    xlarge: 'var(--borderRadius-xlarge)',
+  },
+};
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export enum Theme {
-    Light = "light",
-    Dark = "dark"
+  Light = 'light',
+  Dark = 'dark',
 }
 
 export const availableThemes: Theme[] = [Theme.Light, Theme.Dark];
 
 export const useTheme = () => {
-    const storage: LocalStorageService = localStorageService;
-    const ThemeStorageKey = 'APP:SETTINGS:THEME';
-    const [theme, setThemeState] = useState<Theme>(() => {
-        if (document.body.dataset.theme) {
-            return <Theme>document.body.dataset.theme;
-        }
+  const storage: LocalStorageService = localStorageService;
+  const ThemeStorageKey = 'APP:SETTINGS:THEME';
+  const [theme, setThemeState] = useState<Theme>(() => {
+    if (document.body.dataset.theme) {
+      return <Theme>document.body.dataset.theme;
+    }
 
-        const storedTheme = storage.getItem<Theme>(ThemeStorageKey);
-        return storedTheme || Theme.Light;
-    });
+    const storedTheme = storage.getItem<Theme>(ThemeStorageKey);
+    return storedTheme || Theme.Light;
+  });
 
-    useEffect(() => {
-        document.body.dataset.theme = theme;
-        storage.setItem<Theme>(ThemeStorageKey, theme);
-    }, [theme]);
+  useEffect(() => {
+    document.body.dataset.theme = theme;
+    storage.setItem<Theme>(ThemeStorageKey, theme);
+  }, [theme, storage]);
 
-    const setTheme = (name: Theme) => {
-        if (availableThemes.includes(name)) {
-            setThemeState(name);
-        }
-    };
+  const setTheme = (name: Theme) => {
+    if (availableThemes.includes(name)) {
+      setThemeState(name);
+    }
+  };
 
-    const nextTheme = () => {
-        const index = (availableThemes.indexOf(<Theme>theme) + 1) % availableThemes.length;
-        setThemeState(availableThemes[index]);
-    };
+  const nextTheme = () => {
+    const index =
+      (availableThemes.indexOf(<Theme>theme) + 1) % availableThemes.length;
+    setThemeState(availableThemes[index]);
+  };
 
-    return { theme, setTheme, nextTheme };
+  return { theme, setTheme, nextTheme };
 };

@@ -1,8 +1,8 @@
 body {
-    background-color: var(--color-bg-primary);
-    color: var(--color-text-secondary);
+    background-color: var(--colors-background);
+    color: var(--colors-text-primary);
 
     a, a:link, a.hover, a:active, a.visited {
-        color: var(--color-text-secondary);
+        color: var(--colors-text-primary);
     }
 }

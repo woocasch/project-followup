@@ -3,7 +3,6 @@ import ProjectsListComponent from '@root/projects/use-cases/projects-list/projec
 
 export default function HomePage() {
   return (<div>
-    <h2>Home</h2>
     <ProjectsListComponent />
   </div>);
 }

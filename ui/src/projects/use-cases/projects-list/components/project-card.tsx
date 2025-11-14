@@ -11,16 +11,6 @@ interface ProjectCardComponentProps {
 
 const ProjectHeaderContainer = styled.div(`
     font-size: ${theme.fontSizes.small};
-    display: grid;
-    grid-template-columns: 1fr auto auto;
-    grid-template-rows: 1fr 1fr;
-`);
-
-const ProjectName = styled.span(`
-    grid-row: span 2;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 `);
 
 const MembersCount = styled.span(`
@@ -56,7 +46,7 @@ export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
     return <Card size={CardSize.Medium}>
         <Card.Header>
             <ProjectHeaderContainer onClick={OpenProject}>
-                <ProjectName>{project.name}</ProjectName>
+                {project.name}
             </ProjectHeaderContainer>
         </Card.Header>
         <Card.Content>

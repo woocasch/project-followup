@@ -2,6 +2,9 @@ import { Button, PageHeader, Text } from '@components/index';
 import styled from '@emotion/styled';
 import { theme } from '@root/theme';
 import { useState } from 'react';
+import * as model from './create-project/create-project.model';
+import createProjectService from './create-project/create-project.service';
+import { useNavigate } from 'react-router';
 
 const CreateProjectForm = styled.div(`
   display: grid;
@@ -27,6 +30,26 @@ const ButtonsContainer = styled.div(`
 export default function CreateProject() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const navigate = useNavigate();
+
+  function onCreateClick() {
+    const request: model.CreateProjectRequest = {
+      title,
+      description,
+    };
+    createProjectService.createProject(request)
+    .then(r => {
+      if (r.success) {
+        navigate('/projects');
+        return;
+      }
+    });
+  }
+
+  function onCancelClick() {
+    setTitle('');
+    setDescription('');
+  }
 
   return (
     <div>
@@ -44,10 +67,14 @@ export default function CreateProject() {
           label="Project Description"
         />
         <ButtonsContainer>
-          <Button variant="action" buttonType="rounded">
+          <Button variant="action" buttonType="rounded" onClick={onCreateClick}>
             Create
           </Button>
-          <Button variant="warning" buttonType="rounded">
+          <Button
+            variant="warning"
+            buttonType="rounded"
+            onClick={onCancelClick}
+          >
             Cancel
           </Button>
         </ButtonsContainer>

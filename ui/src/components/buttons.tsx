@@ -3,7 +3,12 @@ import { theme } from '@root/theme';
 import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 
-export type ButtonVariant = 'button' | 'success' | 'warning' | 'error' | 'action';
+export type ButtonVariant =
+  | 'button'
+  | 'success'
+  | 'warning'
+  | 'error'
+  | 'action';
 export type ButtonType = 'standard' | 'rounded';
 
 export interface ButtonProps {
@@ -47,7 +52,10 @@ function getFontColor(variant?: ButtonVariant) {
   }
 }
 
-const ButtonStyled = styled.button<{ variant?: ButtonVariant, buttonType?: ButtonType }>`
+const ButtonStyled = styled.button<{
+  variant?: ButtonVariant;
+  buttonType?: ButtonType;
+}>`
     background-color: ${(props) => getBackgroundColor(props.variant)};
     color: ${(props) => getFontColor(props.variant)};
     padding: ${theme.spaces.xsmall};
@@ -62,9 +70,14 @@ export function Button(props: ButtonProps) {
     title = '',
     onClick = () => {},
   } = props;
-  
+
   return (
-    <ButtonStyled variant={variant} buttonType={buttonType} onClick={onClick} title={title}>
+    <ButtonStyled
+      variant={variant}
+      buttonType={buttonType}
+      onClick={onClick}
+      title={title}
+    >
       {children}
     </ButtonStyled>
   );

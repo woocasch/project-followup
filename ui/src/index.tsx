@@ -2,7 +2,6 @@ import HomePage from '@home/home';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import AppLayoutComponent from './AppLayout';
-import HomePage from '@home/home';
 import '@assets/reset.scss';
 import '@assets/themes/light.scss';
 import '@assets/themes/dark.scss';

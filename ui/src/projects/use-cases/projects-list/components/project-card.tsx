@@ -1,12 +1,12 @@
+import { Button, Card, CardSize } from '@components/index';
 import styled from '@emotion/styled';
-import { Card, CardSize, Button } from '@components/index';
-import * as Data from '../projects-list.data';
-import { useNavigate } from 'react-router';
-import { User, ClipboardCheck } from 'lucide-react';
 import { theme } from '@root/theme';
+import { ClipboardCheck, User } from 'lucide-react';
+import { useNavigate } from 'react-router';
+import type * as Data from '../projects-list.data';
 
 interface ProjectCardComponentProps {
-    project: Data.ProjectListItem;
+  project: Data.ProjectListItem;
 }
 
 const ProjectHeaderContainer = styled.div(`
@@ -38,29 +38,35 @@ const ButtonsContainer = styled.div(`
 `);
 
 export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
-    const navigate = useNavigate();
-    function OpenProject() {
-        navigate(`/projects/${project.id}`);
-    }
+  const navigate = useNavigate();
+  function openProject() {
+    navigate(`/projects/${project.id}`);
+  }
 
-    return <Card size={CardSize.Medium}>
-        <Card.Header>
-            <ProjectHeaderContainer onClick={OpenProject}>
-                {project.name}
-            </ProjectHeaderContainer>
-        </Card.Header>
-        <Card.Content>
-            <ProjectContentContainer>
-                {project.description}
-            </ProjectContentContainer>
-        </Card.Content>
-        <Card.Footer>
-            <ButtonsContainer>
-                <Button>Follow-up meeting</Button>
-                <Button>Project details</Button>
-                <MembersCount><User />{project.membersCount}</MembersCount>
-                <TasksCount><ClipboardCheck />42</TasksCount>
-            </ButtonsContainer>
-        </Card.Footer>
-    </Card>;
+  return (
+    <Card size={CardSize.Medium}>
+      <Card.Header>
+        <ProjectHeaderContainer onClick={openProject}>
+          {project.name}
+        </ProjectHeaderContainer>
+      </Card.Header>
+      <Card.Content>
+        <ProjectContentContainer>{project.description}</ProjectContentContainer>
+      </Card.Content>
+      <Card.Footer>
+        <ButtonsContainer>
+          <Button>Follow-up meeting</Button>
+          <Button>Project details</Button>
+          <MembersCount>
+            <User />
+            {project.membersCount}
+          </MembersCount>
+          <TasksCount>
+            <ClipboardCheck />
+            42
+          </TasksCount>
+        </ButtonsContainer>
+      </Card.Footer>
+    </Card>
+  );
 }

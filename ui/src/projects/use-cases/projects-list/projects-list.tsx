@@ -1,10 +1,9 @@
-import { useEffect, useState } from 'react';
+import { Button, PageHeader } from '@components/index';
 import styled from '@emotion/styled';
-import { Button } from '@components/index';
 import { theme } from '@root/theme';
-import * as Data from './projects-list.data';
+import { useEffect, useState } from 'react';
 import { ProjectCardComponent } from './components';
-import { PageHeader } from '@components/index';
+import * as Data from './projects-list.data';
 
 const HeaderContainer = styled.div(`
     display: grid;
@@ -20,23 +19,27 @@ const ProjectsContainer = styled.div(`
 `);
 
 export default function ProjectsListComponent() {
-    const [projects, setProjects] = useState<Data.ProjectListItem[]>([]);
+  const [projects, setProjects] = useState<Data.ProjectListItem[]>([]);
 
-    useEffect(() => {
-        Data.projectsListService.getProjectsList().then(setProjects);
-    }, []);
+  useEffect(() => {
+    Data.projectsListService.getProjectsList().then(setProjects);
+  }, []);
 
-    return <div>
-        <HeaderContainer>
-            <PageHeader>Projects</PageHeader>
-            <Button variant='action' buttonType='rounded'>Create project</Button>
-        </HeaderContainer>
-        <ProjectsContainer>
-            {projects.map(project => (
-                <div key={project.id}>
-                    <ProjectCardComponent project={project} />
-                </div>
-            ))}
-        </ProjectsContainer>
+  return (
+    <div>
+      <HeaderContainer>
+        <PageHeader>Projects</PageHeader>
+        <Button variant="action" buttonType="rounded">
+          Create project
+        </Button>
+      </HeaderContainer>
+      <ProjectsContainer>
+        {projects.map((project) => (
+          <div key={project.id}>
+            <ProjectCardComponent project={project} />
+          </div>
+        ))}
+      </ProjectsContainer>
     </div>
+  );
 }

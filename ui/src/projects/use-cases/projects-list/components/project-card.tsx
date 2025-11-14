@@ -2,7 +2,6 @@ import { Button, Card, CardSize } from '@components/index';
 import styled from '@emotion/styled';
 import { theme } from '@root/theme';
 import { ClipboardCheck, User } from 'lucide-react';
-import { useNavigate } from 'react-router';
 import type * as Data from '../projects-list.data';
 
 interface ProjectCardComponentProps {

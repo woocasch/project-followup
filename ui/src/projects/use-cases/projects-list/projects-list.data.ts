@@ -1,3 +1,5 @@
+import { projectsApi } from '@apiClient/projects.client';
+
 export interface ProjectRole {
   id: string;
   name: string;
@@ -22,27 +24,19 @@ export interface ProjectsListService {
 
 export class WebProjectListService implements ProjectsListService {
   async getProjectsList(): Promise<ProjectListItem[]> {
-    // Simulate an API call
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve([
-          {
-            id: '1',
-            name: 'Connect application to logging infrastructure',
-            description:
-              'Prepare our application to send logs to the central logging system.',
-            membersCount: 3,
-          },
-          {
-            id: '2',
-            name: 'Migrate nuget packages to .NET Standard 2.0',
-            description:
-              'Rework packages to be compatible with .NET Standard 2.0 for better cross-platform support. Mark packages that have to be in .NET Framework 4.8 to be decommissioned.',
-            membersCount: 5,
-          },
-        ]);
-      }, 1000);
-    });
+    const result = await projectsApi.fetchProjectsList();
+    if (result && result.projects) {
+      return result.projects.map(p => {
+        return {
+          id: p.id,
+          name: p.title,
+          description: p.description,
+          membersCount: p.membersCount,
+        };
+      });
+    }
+
+    return [];
   }
 }
 

@@ -6,6 +6,9 @@ import { ProjectCardComponent } from './components';
 import { PageHeader } from '@components/index';
 
 const ProjectsContainer = styled.div(`
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: ${theme.spaces.medium};
 `);
 
 export default function ProjectsListComponent() {
@@ -19,7 +22,9 @@ export default function ProjectsListComponent() {
         <PageHeader>Projects List Page</PageHeader>
         <ProjectsContainer>
             {projects.map(project => (
-                <ProjectCardComponent key={project.id} project={project} />
+                <div>
+                    <ProjectCardComponent key={project.id} project={project} />
+                </div>
             ))}
         </ProjectsContainer>
     </div>

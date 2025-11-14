@@ -32,6 +32,11 @@ export const theme = {
     large: 'var(--borderRadius-large)',
     xlarge: 'var(--borderRadius-xlarge)',
   },
+  fontSizes: {
+    small: 'var(--fontSize-small)',
+    medium: 'var(--fontSize-medium)',
+    large: 'var(--fontSize-large)',
+  },
 };
 
 import { useEffect, useState } from 'react';

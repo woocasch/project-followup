@@ -1,29 +1,50 @@
 import styled from '@emotion/styled';
-import { theme } from '@root/theme';
+import { Card, CardSize, Button } from '@components/index';
 import * as Data from '../projects-list.data';
 import { useNavigate } from 'react-router';
 import { User, ClipboardCheck } from 'lucide-react';
+import { theme } from '@root/theme';
 
 interface ProjectCardComponentProps {
     project: Data.ProjectListItem;
 }
 
-const ProjectCardContainer = styled.div(`
-`);
-
 const ProjectHeaderContainer = styled.div(`
+    font-size: ${theme.fontSizes.small};
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    grid-template-rows: 1fr 1fr;
 `);
 
 const ProjectName = styled.span(`
+    grid-row: span 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 `);
 
 const MembersCount = styled.span(`
+    svg {
+        height: 0.8em;
+    }
 `);
 
 const TasksCount = styled.span(`
+    svg {
+        height: 0.8em;
+    }
 `);
 
 const ProjectContentContainer = styled.div(`
+    font-size: ${theme.fontSizes.medium};
+`);
+
+const ButtonsContainer = styled.div(`
+    font-size: ${theme.fontSizes.small};
+    display: grid;
+    grid-template-columns: repeat(4, auto);
+    gap: ${theme.spaces.xsmall};
+    align-items: center;
 `);
 
 export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
@@ -32,14 +53,24 @@ export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
         navigate(`/projects/${project.id}`);
     }
 
-    return <ProjectCardContainer>
-        <ProjectHeaderContainer onClick={OpenProject}>
-            <ProjectName>{project.name}</ProjectName>
-            <MembersCount><User />{project.membersCount}</MembersCount>
-            <TasksCount><ClipboardCheck />42</TasksCount>
-        </ProjectHeaderContainer>
-        <ProjectContentContainer>
-            {project.description}
-        </ProjectContentContainer>
-    </ProjectCardContainer>;
+    return <Card size={CardSize.Medium}>
+        <Card.Header>
+            <ProjectHeaderContainer onClick={OpenProject}>
+                <ProjectName>{project.name}</ProjectName>
+            </ProjectHeaderContainer>
+        </Card.Header>
+        <Card.Content>
+            <ProjectContentContainer>
+                {project.description}
+            </ProjectContentContainer>
+        </Card.Content>
+        <Card.Footer>
+            <ButtonsContainer>
+                <Button>Follow-up meeting</Button>
+                <Button>Project details</Button>
+                <MembersCount><User />{project.membersCount}</MembersCount>
+                <TasksCount><ClipboardCheck />42</TasksCount>
+            </ButtonsContainer>
+        </Card.Footer>
+    </Card>;
 }

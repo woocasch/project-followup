@@ -7,13 +7,14 @@ import createProjectService from './create-project/create-project.service';
 import { useNavigate } from 'react-router';
 
 const CreateProjectForm = styled.div(`
+  margin: auto;
+  margin-top: ${theme.spaces.large};
   display: grid;
   grid-template-columns: 135px auto;
   gap: 1em;
   align-items: center;
   width: 50%;
   max-width: 50%;
-  margin: auto;
 
   &>label {
     text-align: right;

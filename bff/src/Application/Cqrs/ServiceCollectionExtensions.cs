@@ -8,7 +8,7 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services)
     {
         services.AddScoped<IMediator, Mediator>();
-        services.AddScoped<ICommandHandlerFactory, CommandHandlerFactory>();
+        services.AddScoped<IHandlerFactory, HandlerFactory>();
         return services;
     }
 
@@ -19,6 +19,17 @@ public static class ServiceCollectionExtensions
     {
         var key = NamingConventions.CommandHandlerName<TCommand>();
         services.AddKeyedTransient<Cqrs.ICommandHandler, THandler>(key);
+        return services;
+    }
+
+    public static IServiceCollection RegisterQueryHandler<TQuery, TResult, THandler>(
+        this IServiceCollection services)
+        where TResult : notnull
+        where TQuery : IQuery<TResult>
+        where THandler : class, IQueryHandler<TResult>
+    {
+        var key = NamingConventions.QueryHandlerName<TQuery, TResult>();
+        services.AddKeyedTransient<IQueryHandler<TResult>, THandler>(key);
         return services;
     }
 }

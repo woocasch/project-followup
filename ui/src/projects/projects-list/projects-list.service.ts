@@ -10,7 +10,9 @@ export class ProjectsListWebService implements model.ProjectsListService {
           id: p.id,
           name: p.title,
           description: p.description,
-          membersCount: p.membersCount,
+          usersCount: p.usersCount,
+          tasksCompleted: p.tasksCompleted,
+          tasksTotal: p.tasksTotal,
         };
       });
     }

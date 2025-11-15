@@ -10,6 +10,7 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services)
     {
         services.RegisterCommandHandler<CreateProjectCommand, CreateProjectCommandHandler>();
+        services.RegisterQueryHandler<FetchProjectsQuery, FetchProjectsResult, FetchProjectsQueryHandler>();
         return services;
     }
 }

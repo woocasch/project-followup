@@ -19,32 +19,27 @@ public class ProjectsController : ControllerBase
     }
 
     [HttpGet]
-    public IResult FetchList()
+    public async Task<IResult> FetchList(CancellationToken cancellationToken)
     {
-        var projects = new List<ProjectListItem>
-        {
-            new(
-                Guid.NewGuid(),
-                "Project Alpha",
-                "Description for Project Alpha",
-                usersCount: 5,
-                tasksCompleted: 10,
-                tasksTotal: 20),
-            new(
-                Guid.NewGuid(),
-                "Project Beta",
-                "Description for Project Beta",
-                usersCount: 3,
-                tasksCompleted: 7,
-                tasksTotal: 15),
-        };
-        var result = new FetchListResult(projects);
-        return Results.Ok(result);
+        // TODO: Retrieve user id from token.
+        var query = new FetchProjectsQuery(Guid.NewGuid());
+        var result = await this.mediator.Fetch(query, cancellationToken);
+        var projects = result.Projects
+            .Select(p => new ProjectListItem(
+                p.Id,
+                p.Title,
+                p.Description,
+                p.UsersCount,
+                p.TasksCompleted,
+                p.TasksTotal))
+            .ToList();
+        var output = new FetchListOutput(projects);
+        return Results.Ok(output);
     }
 
     [HttpPost]
     public async Task<IResult> Create(
-        CreatePayload payload,
+        CreateInput payload,
         CancellationToken cancellationToken)
     {
         var projectId = Guid.NewGuid();
@@ -52,7 +47,7 @@ public class ProjectsController : ControllerBase
             projectId,
             payload.Title,
             payload.Description,
-            // Get user id from token
+            // TODO: Get user id from token
             Guid.NewGuid());
         var result = await this.mediator.Send(command, cancellationToken);
         if (!result.IsSuccess)

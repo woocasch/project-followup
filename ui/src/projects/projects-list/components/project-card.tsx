@@ -2,10 +2,10 @@ import { Button, Card, CardSize } from '@components/index';
 import styled from '@emotion/styled';
 import { theme } from '@root/theme';
 import { ClipboardCheck, User } from 'lucide-react';
-import type * as Data from '../projects-list.service';
+import type * as model from '../projects-list.model';
 
 interface ProjectCardComponentProps {
-  project: Data.ProjectListItem;
+  project: model.ProjectListItem;
 }
 
 const ProjectHeaderContainer = styled.div(`
@@ -51,11 +51,11 @@ export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
           <Button>Project details</Button>
           <MembersCount>
             <User />
-            {project.membersCount}
+            {project.usersCount}
           </MembersCount>
           <TasksCount>
             <ClipboardCheck />
-            42
+            {project.tasksCompleted}/{project.tasksTotal}
           </TasksCount>
         </ButtonsContainer>
       </Card.Footer>

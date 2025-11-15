@@ -2,7 +2,7 @@ export interface ProjectListItem {
   id: string;
   title: string;
   description: string;
-  membersCount: number;
+  usersCount: number;
   tasksCompleted: number;
   tasksTotal: number;
 }

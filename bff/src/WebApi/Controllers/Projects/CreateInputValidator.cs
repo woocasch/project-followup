@@ -3,13 +3,13 @@
 using System.Text.RegularExpressions;
 using FluentValidation;
 
-public sealed partial class CreatePayloadValidator : AbstractValidator<CreatePayload>
+public sealed partial class CreateInputValidator : AbstractValidator<CreateInput>
 {
     private static readonly Regex TitleRegex = TitleValidationRegex();
 
     private static readonly Regex DescriptionRegex = DescriptionValidationRegex();
 
-    public CreatePayloadValidator()
+    public CreateInputValidator()
     {
         RuleFor(x => x.Title)
             .NotNull().WithErrorCode("Required")

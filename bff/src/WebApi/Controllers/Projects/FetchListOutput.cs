@@ -2,9 +2,9 @@
 
 using System.Collections.ObjectModel;
 
-public class FetchListResult
+public class FetchListOutput
 {
-    public FetchListResult(IEnumerable<ProjectListItem> projects)
+    public FetchListOutput(IEnumerable<ProjectListItem> projects)
     {
         this.Projects = new([.. projects]);
     }

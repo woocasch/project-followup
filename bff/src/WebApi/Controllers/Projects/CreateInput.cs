@@ -1,8 +1,8 @@
 ﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 
-public class CreatePayload
+public class CreateInput
 {
-    public CreatePayload(string title, string description)
+    public CreateInput(string title, string description)
     {
         this.Title = title;
         this.Description = description;

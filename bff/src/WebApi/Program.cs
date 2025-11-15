@@ -28,7 +28,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-builder.Services.AddScoped<IValidator<CreatePayload>, CreatePayloadValidator>();
+builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
 
 var app = builder.Build();
 

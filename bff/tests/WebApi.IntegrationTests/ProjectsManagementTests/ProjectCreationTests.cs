@@ -10,7 +10,7 @@ using ProjectFollowUp.BFF.WebApi.Validation;
 
 public class ProjectCreationTests : TestBase
 {
-    private CreatePayload payload = null!;
+    private CreateInput payload = null!;
 
     private HttpRequestMessage request = null!;
 
@@ -119,7 +119,7 @@ public class ProjectCreationTests : TestBase
 
     private void PayloadIsCreated(string title, string description)
     {
-        this.payload = new CreatePayload(title, description);
+        this.payload = new CreateInput(title, description);
     }
 
     private void RequestIsCreated()

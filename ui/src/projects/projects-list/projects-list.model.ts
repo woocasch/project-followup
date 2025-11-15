@@ -13,7 +13,9 @@ export interface ProjectListItem {
   id: string;
   name: string;
   description: string;
-  membersCount: number;
+  usersCount: number;
+  tasksCompleted: number;
+  tasksTotal: number;
 }
 
 export interface ProjectsListService {

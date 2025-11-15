@@ -7,6 +7,8 @@ public sealed partial class CreatePayloadValidator : AbstractValidator<CreatePay
 {
     private static readonly Regex TitleRegex = TitleValidationRegex();
 
+    private static readonly Regex DescriptionRegex = DescriptionValidationRegex();
+
     public CreatePayloadValidator()
     {
         RuleFor(x => x.Title)
@@ -18,10 +20,14 @@ public sealed partial class CreatePayloadValidator : AbstractValidator<CreatePay
         RuleFor(x => x.Description)
             .NotNull().WithErrorCode("Required")
             .NotEmpty().WithErrorCode("Required")
-            .MaximumLength(500).WithErrorCode("MaxLength500");
+            .MaximumLength(500).WithErrorCode("MaxLength500")
+            .Matches(DescriptionRegex).WithErrorCode("ForbiddenCharacters");
     }
 
     // Allow letters (including accents), marks, numbers and punctuation. Do not allow symbols (\p{S}) or line breaks.
-    [GeneratedRegex("^[\\p{L}\\p{M}\\p{N}\\p{P} ]+$", RegexOptions.Compiled)]
+    [GeneratedRegex(@"^[\p{L}\p{M}\p{N}\p{P} ]+$", RegexOptions.Compiled)]
     private static partial Regex TitleValidationRegex();
+
+    [GeneratedRegex(@"^[\p{L}\p{M}\p{N}\p{P}\s]+$", RegexOptions.Compiled)]
+    private static partial Regex DescriptionValidationRegex();
 }

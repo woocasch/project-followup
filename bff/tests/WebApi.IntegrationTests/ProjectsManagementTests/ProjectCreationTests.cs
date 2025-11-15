@@ -48,6 +48,38 @@ public class ProjectCreationTests : TestBase
     }
 
     [Fact]
+    public void WhenProjectTitleContainsLineBreakThenBadRequestIsReturned()
+    {
+        var titleWithLineBreak = "This is a title with a line break.\nHere is the second line.";
+        this.Given(t => t.PayloadIsCreated(titleWithLineBreak, "Valid description"))
+            .And(t => t.RequestIsCreated())
+            .When(t => t.RequestIsSent())
+            .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.BadRequest))
+            .And(t => t.ResponseBodyShouldBe<ValidationErrorsDetails>())
+            .And(t => t.ResponseBodyShouldBe<ValidationErrorsDetails>(body =>
+                body.Errors.Any(entry =>
+                    entry.PropertyName == "Title" &&
+                    entry.Code == "ForbiddenCharacters")))
+            .BDDfy();
+    }
+
+    [Fact]
+    public void WhenProjectTitleContainsWindowsLineBreakThenAcceptedIsReturned()
+    {
+        var titleWithLineBreak = "This is a title with a line break.\r\nHere is the second line.";
+        this.Given(t => t.PayloadIsCreated(titleWithLineBreak, "Valid description"))
+            .And(t => t.RequestIsCreated())
+            .When(t => t.RequestIsSent())
+            .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.BadRequest))
+            .And(t => t.ResponseBodyShouldBe<ValidationErrorsDetails>())
+            .And(t => t.ResponseBodyShouldBe<ValidationErrorsDetails>(body =>
+                body.Errors.Any(entry =>
+                    entry.PropertyName == "Title" &&
+                    entry.Code == "ForbiddenCharacters")))
+            .BDDfy();
+    }
+
+    [Fact]
     public void WhenProjectDescriptionIsLongerThanAllowedThenBadRequestIsReturned()
     {
         var longDescription = new string('A', 501);
@@ -60,6 +92,28 @@ public class ProjectCreationTests : TestBase
                 body.Errors.Any(entry =>
                     entry.PropertyName == "Description" &&
                     entry.Code == "MaxLength500")))
+            .BDDfy();
+    }
+
+    [Fact]
+    public void WhenProjectDescriptionContainsLineBreakThenAcceptedIsReturned()
+    {
+        var descriptionWithLineBreak = "This is a description with a line break.\nHere is the second line.";
+        this.Given(t => t.PayloadIsCreated("Valid Title", descriptionWithLineBreak))
+            .And(t => t.RequestIsCreated())
+            .When(t => t.RequestIsSent())
+            .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.Accepted))
+            .BDDfy();
+    }
+
+    [Fact]
+    public void WhenProjectDescriptionContainsWindowsLineBreakThenAcceptedIsReturned()
+    {
+        var descriptionWithLineBreak = "This is a description with a line break.\r\nHere is the second line.";
+        this.Given(t => t.PayloadIsCreated("Valid Title", descriptionWithLineBreak))
+            .And(t => t.RequestIsCreated())
+            .When(t => t.RequestIsSent())
+            .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.Accepted))
             .BDDfy();
     }
 

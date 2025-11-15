@@ -9,17 +9,9 @@ using ProjectFollowUp.BFF.WebApi;
 // ReSharper disable once ClassNeverInstantiated.Global
 public sealed class WebApiFactory : WebApplicationFactory<WebApiProgram>, IAsyncLifetime
 {
-    private static bool started = false;
-
     public async Task InitializeAsync()
     {
-        if (started)
-        {
-            throw new InvalidOperationException("It was already started");   
-        }
-
         await Task.Yield();
-        started = true;
     }
 
     async Task IAsyncLifetime.DisposeAsync()

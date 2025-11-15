@@ -2,11 +2,19 @@ using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
+using FluentValidation;
+
+using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
+using ProjectFollowUp.BFF.WebApi.Validation;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
+builder.Services.AddValidation();
+
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
@@ -17,7 +25,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
     options.SerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
-builder.Services.AddCors();
+builder.Services.AddScoped<IValidator<CreatePayload>, CreatePayloadValidator>();
 
 var app = builder.Build();
 

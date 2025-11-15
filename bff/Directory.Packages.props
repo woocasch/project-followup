@@ -4,10 +4,10 @@
   <PropertyGroup>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
   </PropertyGroup>
-
   <!-- Central Package Management: move package versions here. Projects should reference packages without the Version attribute. -->
   <ItemGroup>
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
+    <PackageVersion Include="FluentValidation" Version="12.1.0" />
     <PackageVersion Include="Microsoft.AspNetCore.Mvc.Testing" Version="10.0.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="Shouldly" Version="4.3.0" />

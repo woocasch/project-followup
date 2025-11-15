@@ -27,7 +27,7 @@ public class ProjectCreationTests : TestBase
         this.Given(t => t.PayloadIsCreated(nameof(WhenValidProjectIsCreatedThenCorrectStatusIsReturned), "Description"))
             .And(t => t.RequestIsCreated())
             .When(t => t.RequestIsSent())
-            .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.Accepted))
+            .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.Created))
             .BDDfy();
     }
 
@@ -64,7 +64,7 @@ public class ProjectCreationTests : TestBase
     }
 
     [Fact]
-    public void WhenProjectTitleContainsWindowsLineBreakThenAcceptedIsReturned()
+    public void WhenProjectTitleContainsWindowsLineBreakThenCreatedIsReturned()
     {
         var titleWithLineBreak = "This is a title with a line break.\r\nHere is the second line.";
         this.Given(t => t.PayloadIsCreated(titleWithLineBreak, "Valid description"))
@@ -96,24 +96,24 @@ public class ProjectCreationTests : TestBase
     }
 
     [Fact]
-    public void WhenProjectDescriptionContainsLineBreakThenAcceptedIsReturned()
+    public void WhenProjectDescriptionContainsLineBreakThenCreatedIsReturned()
     {
         var descriptionWithLineBreak = "This is a description with a line break.\nHere is the second line.";
         this.Given(t => t.PayloadIsCreated("Valid Title", descriptionWithLineBreak))
             .And(t => t.RequestIsCreated())
             .When(t => t.RequestIsSent())
-            .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.Accepted))
+            .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.Created))
             .BDDfy();
     }
 
     [Fact]
-    public void WhenProjectDescriptionContainsWindowsLineBreakThenAcceptedIsReturned()
+    public void WhenProjectDescriptionContainsWindowsLineBreakThenCreatedIsReturned()
     {
         var descriptionWithLineBreak = "This is a description with a line break.\r\nHere is the second line.";
         this.Given(t => t.PayloadIsCreated("Valid Title", descriptionWithLineBreak))
             .And(t => t.RequestIsCreated())
             .When(t => t.RequestIsSent())
-            .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.Accepted))
+            .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.Created))
             .BDDfy();
     }
 

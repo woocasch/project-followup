@@ -4,6 +4,7 @@ using System.Text.Json.Serialization;
 
 using FluentValidation;
 
+using ProjectFollowUp.BFF.Application;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 using ProjectFollowUp.BFF.WebApi.Validation;
 
@@ -14,6 +15,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 
 builder.Services.AddValidation();
+
+builder.Services.AddApplication();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

@@ -59,7 +59,7 @@ const ButtonStyled = styled.button<{
     background-color: ${(props) => getBackgroundColor(props.variant)};
     color: ${(props) => getFontColor(props.variant)};
     padding: ${theme.spaces.xsmall};
-    border-radius: ${(props) => (props.buttonType === 'rounded' ? theme.borderRadius.small : (theme.borderRadius.none ?? '0'))};
+    border-radius: ${(props) => (props.buttonType === 'rounded' ? theme.borderRadius.small : '0')};
 `;
 
 export function Button(props: ButtonProps) {

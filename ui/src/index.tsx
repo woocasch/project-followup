@@ -1,10 +1,12 @@
 import HomePage from '@home/home';
+import CreateProject from '@projects/create-project';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import AppLayoutComponent from './AppLayout';
 import '@assets/reset.scss';
 import '@assets/themes/light.scss';
 import '@assets/themes/dark.scss';
+import '@assets/themes/sizes.scss';
 import '@assets/main.scss';
 import StylingPage from './styling';
 
@@ -16,6 +18,19 @@ const router = createBrowserRouter([
       {
         index: true,
         Component: HomePage,
+      },
+      {
+        path: '/projects',
+        children: [
+          {
+            index: true,
+            Component: HomePage,
+          },
+          {
+            path: 'create',
+            Component: CreateProject,
+          },
+        ],
       },
       {
         path: '/styling',

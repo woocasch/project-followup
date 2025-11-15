@@ -36,6 +36,8 @@ export const theme = {
     small: 'var(--fontSize-small)',
     medium: 'var(--fontSize-medium)',
     large: 'var(--fontSize-large)',
+    xlarge: 'var(--fontSize-xlarge)',
+    xxlarge: 'var(--fontSize-xxlarge)',
   },
 };
 

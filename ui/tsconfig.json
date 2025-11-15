@@ -26,7 +26,8 @@
       "@components/*": ["./src/components/*"],
       "@projects/*": ["./src/projects/*"],
       "@infrastructure/*": ["./src/infrastructure/*"],
-      "@home/*": ["./src/home/*"]
+      "@home/*": ["./src/home/*"],
+      "@apiClient/*": ["./src/api-client/*"]
     }
   },
   "include": ["src"]

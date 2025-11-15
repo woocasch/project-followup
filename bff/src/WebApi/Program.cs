@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -40,3 +41,11 @@ app.UseCors(options =>
         .AllowCredentials());
 
 app.Run();
+
+namespace ProjectFollowUp.BFF.WebApi
+{
+    [CompilerGenerated]
+    public class WebApiProgram
+    {
+    }
+}

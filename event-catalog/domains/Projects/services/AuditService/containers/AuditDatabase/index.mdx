@@ -1,0 +1,27 @@
+---
+id: AuditDatabase
+name: Audit database
+version: 0.0.1
+container_type: database
+technology: Engine TBD
+authoritative: true
+access_mode: readWrite
+classification: internal
+summary: Audit database for monitoring of operations performed.
+---
+
+## Architecture diagram
+
+<NodeGraph />
+
+### What is this?
+A database containing domain audit information.
+
+### What does it store?
+Information about operations done on domain's entities.
+
+### Who writes to it?
+- **AuditService** is the owner of the database and is the only one able to write it.
+
+### Who reads from it?
+- **AuditService** is using this database to provide audit data.

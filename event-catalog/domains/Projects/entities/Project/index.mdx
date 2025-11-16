@@ -1,0 +1,28 @@
+---
+id: Project
+name: Project
+version: 1.0.0
+identifier: projectId
+aggregateRoot: true 
+summary: Represents a project being tracked int the application.
+properties:
+  - name: projectId
+    type: UUID
+    required: true
+    description: Unique identifier of the project
+  - name: title
+    type: string
+    required: true
+    description: Title of the project
+  - name: description
+    type: string
+    required: true
+    description: Description of the project
+---
+
+## Overview
+
+Project entity stores information about available projects. It's a central concept of the domain. All operations evolve around specific project.
+
+### Entity Properties
+<EntityPropertiesTable />

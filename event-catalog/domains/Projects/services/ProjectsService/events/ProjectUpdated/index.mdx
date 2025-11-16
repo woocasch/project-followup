@@ -1,0 +1,25 @@
+---
+id: ProjectUpdated
+name: Project updated
+version: 0.0.1
+summary: |
+  Indicates a project was modified
+channels:
+  - id: projects.{env}.events
+#schemaPath: 'schema.avro'
+---
+
+import Footer from '@catalog/components/footer.astro';
+
+## Overview
+
+The 'Project Updated' event is triggered when project is modified.
+
+Modification of project is understood as change in project properties (title, due date, description) and adding new direct child to the project.
+So adding new task or assigning new user to work on project.
+
+New comments on project's tasks arent' considered a project update.
+
+## Architecture diagram
+
+<NodeGraph />

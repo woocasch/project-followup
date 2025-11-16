@@ -1,0 +1,23 @@
+---
+id: tasks.{env}.events
+name: Tasks Events Channel
+version: 1.0.0
+summary: |
+  Central event stream for all task-related events.
+address: tasks.{env}.events
+#protocols: 
+#  - kafka
+
+parameters:
+  env:
+    enum:
+      - dev
+      - test
+      - prod
+    description: 'Environment to use'
+---
+
+### Overview
+The Tasks Events channel is the central stream for all tasks-related events.
+
+<ChannelInformation />

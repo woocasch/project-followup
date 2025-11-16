@@ -1,0 +1,35 @@
+---
+id: Task
+name: Task
+version: 1.0.0
+identifier: taskId
+aggregateRoot: true
+summary: Represents a task in the project.
+properties:
+  - name: taskId
+    type: UUID
+    required: true
+    description: Unique identifier of the task
+  - name: projectId
+    type: UUID
+    required: true
+    description: Reference to parent project.
+    references: Project
+    referencesIdentifier: projectId
+    relationType: hasOne
+  - name: title
+    type: string
+    required: true
+    description: Title of the project
+  - name: description
+    type: string
+    required: true
+    description: Description of the project
+---
+
+## Overview
+
+Stores information about tasks assigned to a project.
+
+### Entity properties
+<EntityPropertiesTable />

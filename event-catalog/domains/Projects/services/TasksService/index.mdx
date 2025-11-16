@@ -1,0 +1,25 @@
+---
+id: TasksService
+version: 0.0.1
+name: Tasks Service
+summary: |
+  Service that handles projects' tasks
+receives:
+  - id: CreateTask
+  - id: UpdateTask
+sends:
+  - id: TaskCreated
+  - id: TaskUpdated
+writesTo:
+  - id: ProjectsWritesModel
+    version: 0.0.1
+readsFrom:
+  - id: ProjectsWritesModel
+    version: 0.0.1
+  - id: ProjectsReadsModel
+    version: 0.0.1
+---
+
+## Architecture diagram
+
+<NodeGraph />

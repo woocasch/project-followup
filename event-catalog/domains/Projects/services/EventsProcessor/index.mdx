@@ -1,0 +1,17 @@
+---
+id: EventsProcessor
+version: 0.0.1
+name: Events Processor service
+summary: |
+  Service that processes events from writes model into writes model.
+writesTo:
+  - id: ProjectsReadsModel
+    version: 0.0.1
+readsFrom:
+  - id: ProjectsWritesModel
+    version: 0.0.1
+---
+
+## Architecture diagram
+
+<NodeGraph />

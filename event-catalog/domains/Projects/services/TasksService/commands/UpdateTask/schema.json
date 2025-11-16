@@ -1,0 +1,34 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "UpdateTaskCommand",
+    "type": "object",
+    "properties": {
+      "taskId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "The unique identifier of the task being updated."
+      },
+      "userId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "The unique identifier of the user updating the task."
+      },
+      "description": {
+        "type": "string",
+        "description": "A brief description of the task."
+      },
+      "dueDate": {
+        "type": "string",
+        "format": "date",
+        "description": "The due date for the task."
+      },
+      "timestamp": {
+        "type": "string",
+        "format": "date-time",
+        "description": "The date and time when the task was updated."
+      }
+    },
+    "required": ["taskId", "projectId", "userId", "description", "dueDate", "timestamp"],
+    "additionalProperties": false
+  }
+  

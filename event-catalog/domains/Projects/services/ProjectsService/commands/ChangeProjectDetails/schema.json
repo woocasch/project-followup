@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "ChangeProjectDetailsCommand",
+    "type": "object",
+    "properties": {
+      "projectId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "The unique identifier of the project being created."
+      },
+      "userId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "The unique identifier of the user updating the project."
+      },
+      "title": {
+        "type": "string",
+        "description": "The new title for the project being updated."
+      },
+      "description": {
+        "type": "string",
+        "description": "A new brief description of the project."
+      },
+      "timestamp": {
+        "type": "string",
+        "format": "date-time",
+        "description": "The date and time when the project details were updated."
+      }
+    },
+    "required": ["projectId", "userId", "title", "description", "timestamp"],
+    "additionalProperties": false
+  }
+  

@@ -1,0 +1,33 @@
+{
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "title": "CreateProjectCommand",
+    "type": "object",
+    "properties": {
+      "projectId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "The unique identifier of the project being created."
+      },
+      "userId": {
+        "type": "string",
+        "format": "uuid",
+        "description": "The unique identifier of the user creating the project."
+      },
+      "title": {
+        "type": "string",
+        "description": "The title of the project being created."
+      },
+      "description": {
+        "type": "string",
+        "description": "A brief description of the project."
+      },
+      "timestamp": {
+        "type": "string",
+        "format": "date-time",
+        "description": "The date and time when the project was created."
+      }
+    },
+    "required": ["projectId", "userId", "title", "description", "timestamp"],
+    "additionalProperties": false
+  }
+  

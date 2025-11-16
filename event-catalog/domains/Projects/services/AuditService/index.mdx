@@ -1,0 +1,22 @@
+---
+id: AuditService
+version: 0.0.1
+name: Audit service
+summary: |
+  Monitors system and writes audit information for easier tracking of operations done.
+receives:
+  - id: ProjectCreated
+  - id: ProjectUpdated
+  - id: TaskCreated
+  - id: TaskUpdated
+writesTo:
+  - id: AuditDatabase
+    version: 0.0.1
+readsFrom:
+  - id: AuditDatabase
+    version: 0.0.1
+---
+
+## Architecture diagram
+
+<NodeGraph />

@@ -1,0 +1,25 @@
+---
+id: ProjectsService
+version: 0.0.1
+name: Projects Service
+summary: |
+  Service that handles projects
+receives:
+  - id: CreateProject
+  - id: ChangeProjectDetails
+sends:
+  - id: ProjectCreated
+  - id: ProjectUpdated
+writesTo:
+  - id: ProjectsWritesModel
+    version: 0.0.1
+readsFrom:
+  - id: ProjectsWritesModel
+    version: 0.0.1
+  - id: ProjectsReadsModel
+    version: 0.0.1
+---
+
+## Architecture diagram
+
+<NodeGraph />

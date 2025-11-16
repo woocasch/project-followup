@@ -1,0 +1,27 @@
+---
+id: ProjectsReadsModel
+name: Projects Reads Model DB
+version: 0.0.1
+container_type: database
+technology: Engine TBD
+authoritative: true
+access_mode: readWrite
+classification: internal
+summary: Event Sourcing reads database.
+---
+
+## Architecture diagram
+
+<NodeGraph />
+
+### What is this?
+A database containing read model optimized for fast searches.
+
+### What does it store?
+View of data optimized for perfomant searches and browsing.
+
+### Who writes to it?
+- **ProjectsService** is the owner of the database and is the only one able to write it.
+
+### Who reads from it?
+- **ProjectsService** is using this database to provide data fast.

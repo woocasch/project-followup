@@ -2,7 +2,7 @@
 
 using System.Collections.ObjectModel;
 
-public class ValidationErrorsDetails
+public sealed class ValidationErrorsDetails
 {
     public ValidationErrorsDetails(
         IEnumerable<ValidationErrorsDetailsEntry> errors)

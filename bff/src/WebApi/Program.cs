@@ -56,7 +56,7 @@ app.Run();
 namespace ProjectFollowUp.BFF.WebApi
 {
     [CompilerGenerated]
-    public class WebApiProgram
+    public sealed class WebApiProgram
     {
     }
 }

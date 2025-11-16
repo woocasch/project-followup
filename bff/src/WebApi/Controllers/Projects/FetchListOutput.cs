@@ -2,12 +2,7 @@
 
 using System.Collections.ObjectModel;
 
-public class FetchListOutput
+public sealed class FetchListOutput(List<ProjectListItem> projects)
 {
-    public FetchListOutput(IEnumerable<ProjectListItem> projects)
-    {
-        this.Projects = new([.. projects]);
-    }
-
-    public ReadOnlyCollection<ProjectListItem> Projects { get; }
+    public List<ProjectListItem> Projects { get; } = new([.. projects]);
 }

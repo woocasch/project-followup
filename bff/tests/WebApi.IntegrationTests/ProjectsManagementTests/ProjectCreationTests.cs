@@ -8,18 +8,13 @@ using Newtonsoft.Json;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 using ProjectFollowUp.BFF.WebApi.Validation;
 
-public class ProjectCreationTests : TestBase
+public sealed class ProjectCreationTests(WebApiFactory webApiFactory) : TestBase(webApiFactory)
 {
     private CreateInput payload = null!;
 
     private HttpRequestMessage request = null!;
 
     private HttpResponseMessage response = null!;
-
-    public ProjectCreationTests(WebApiFactory webApiFactory)
-        : base(webApiFactory)
-    {
-    }
 
     [Fact]
     public void WhenValidProjectIsCreatedThenCorrectStatusIsReturned()
@@ -32,6 +27,17 @@ public class ProjectCreationTests : TestBase
     }
 
     [Fact]
+    public void WhenValidProjectIsCreatedThenProjectIdIsReturnedInBody()
+    {
+        this.Given(t => t.PayloadIsCreated(nameof(WhenValidProjectIsCreatedThenCorrectStatusIsReturned), "Description"))
+            .And(t => t.RequestIsCreated())
+            .When(t => t.RequestIsSent())
+            .Then(t => t.ResponseBodyShouldBeNotNull<CreateOutput>())
+            .Then(t => t.ResponseBodyShouldBe<CreateOutput>(o => o.ProjectId != Guid.Empty))
+            .BDDfy();
+    }
+
+    [Fact]
     public void WhenProjectNameIsLongerThanAllowedThenBadRequestIsReturned()
     {
         var longTitle = new string('A', 101);
@@ -39,7 +45,7 @@ public class ProjectCreationTests : TestBase
             .And(t => t.RequestIsCreated())
             .When(t => t.RequestIsSent())
             .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.BadRequest))
-            .And(t => t.ResponseBodyShouldBe<ValidationErrorsDetails>())
+            .And(t => t.ResponseBodyShouldBeNotNull<ValidationErrorsDetails>())
             .And(t => t.ResponseBodyShouldBe<ValidationErrorsDetails>(body =>
                 body.Errors.Any(entry =>
                     entry.PropertyName == "Title" &&
@@ -55,7 +61,7 @@ public class ProjectCreationTests : TestBase
             .And(t => t.RequestIsCreated())
             .When(t => t.RequestIsSent())
             .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.BadRequest))
-            .And(t => t.ResponseBodyShouldBe<ValidationErrorsDetails>())
+            .And(t => t.ResponseBodyShouldBeNotNull<ValidationErrorsDetails>())
             .And(t => t.ResponseBodyShouldBe<ValidationErrorsDetails>(body =>
                 body.Errors.Any(entry =>
                     entry.PropertyName == "Title" &&
@@ -71,7 +77,7 @@ public class ProjectCreationTests : TestBase
             .And(t => t.RequestIsCreated())
             .When(t => t.RequestIsSent())
             .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.BadRequest))
-            .And(t => t.ResponseBodyShouldBe<ValidationErrorsDetails>())
+            .And(t => t.ResponseBodyShouldBeNotNull<ValidationErrorsDetails>())
             .And(t => t.ResponseBodyShouldBe<ValidationErrorsDetails>(body =>
                 body.Errors.Any(entry =>
                     entry.PropertyName == "Title" &&
@@ -87,7 +93,7 @@ public class ProjectCreationTests : TestBase
             .And(t => t.RequestIsCreated())
             .When(t => t.RequestIsSent())
             .Then(t => t.ResponseStatusShouldBe(HttpStatusCode.BadRequest))
-            .And(t => t.ResponseBodyShouldBe<ValidationErrorsDetails>())
+            .And(t => t.ResponseBodyShouldBeNotNull<ValidationErrorsDetails>())
             .And(t => t.ResponseBodyShouldBe<ValidationErrorsDetails>(body =>
                 body.Errors.Any(entry =>
                     entry.PropertyName == "Description" &&
@@ -140,7 +146,7 @@ public class ProjectCreationTests : TestBase
         this.response.StatusCode.ShouldBe(statusCode);
     }
 
-    private async Task ResponseBodyShouldBe<T>()
+    private async Task ResponseBodyShouldBeNotNull<T>()
         where T : class
     {
         var responseBody = await this.response.Content.ReadAsStringAsync();

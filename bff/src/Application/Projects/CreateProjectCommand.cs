@@ -2,25 +2,20 @@
 
 using ProjectFollowUp.BFF.Application.Cqrs;
 
-public sealed class CreateProjectCommand : ICommand
+public sealed class CreateProjectCommand(
+    Guid projectId,
+    string title,
+    string description,
+    Guid userId,
+    DateTimeOffset createdAt) : ICommand
 {
-    public CreateProjectCommand(
-        Guid projectId,
-        string title,
-        string description,
-        Guid userId)
-    {
-        this.ProjectId = projectId;
-        this.Title = title;
-        this.Description = description;
-        this.UserId = userId;
-    }
+    public Guid ProjectId { get; } = projectId;
 
-    public Guid ProjectId { get; }
+    public string Title { get; } = title;
 
-    public string Title { get; }
+    public string Description { get; } = description;
 
-    public string Description { get; }
+    public Guid UserId { get; } = userId;
 
-    public Guid UserId { get; }
+    public DateTimeOffset CreatedAt { get; } = createdAt;
 }

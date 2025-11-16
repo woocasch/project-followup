@@ -12,6 +12,10 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.csproj" />
+  </ItemGroup>
+
 	<ItemGroup>
 		<Using Include="System.Threading" />
 		<Using Include="System.Threading.Tasks" />

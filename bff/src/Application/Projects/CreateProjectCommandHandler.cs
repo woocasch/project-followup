@@ -7,7 +7,7 @@ public sealed class CreateProjectCommandHandler : CommandHandlerBase<CreateProje
     protected override Task<CommandResult> HandleCommand(CreateProjectCommand command, CancellationToken cancellationToken)
     {
         var domainEvent = new Domain.Projects.ProjectEvents.ProjectCreated(
-            Domain.Projects.ProjectId.FromGuid(command.ProjectId),
+            command.ProjectId,
             command.Title,
             command.Description,
             command.CreatedAt);

@@ -29,6 +29,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
+builder.Services.AddScoped<IValidator<UpdateInput>, UpdateInputValidator>();
 
 var app = builder.Build();
 

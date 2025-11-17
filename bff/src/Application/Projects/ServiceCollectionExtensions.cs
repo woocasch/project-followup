@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
     {
         services
             .RegisterCommandHandler<CreateProjectCommand, CreateProjectCommandHandler>()
+            .RegisterCommandHandler<UpdateProjectCommand, UpdateProjectCommandHandler>()
             .RegisterQueryHandler<FetchProjectsQuery, FetchProjectsResult, FetchProjectsQueryHandler>()
             .RegisterQueryHandler<GetProjectQuery, GetProjectResult, GetProjectQueryHandler>();
         return services;

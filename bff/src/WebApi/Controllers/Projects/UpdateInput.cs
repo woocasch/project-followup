@@ -1,6 +1,6 @@
 ﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 
-public sealed class CreateInput(
+public class UpdateInput(
     string title,
     string description)
 {

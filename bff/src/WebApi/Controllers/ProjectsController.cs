@@ -54,7 +54,7 @@ public sealed class ProjectsController(IMediator mediator) : ControllerBase
     {
         var projectId = Guid.NewGuid();
         var command = new CreateProjectCommand(
-            projectId,
+            ProjectId.FromGuid(projectId),
             payload.Title,
             payload.Description,
             // TODO: Get user id from token
@@ -67,5 +67,26 @@ public sealed class ProjectsController(IMediator mediator) : ControllerBase
         }
 
         return Results.CreatedAtRoute(GetRouteName, new { projectId }, new CreateOutput(projectId));
+    }
+
+    [HttpPut("{projectId:guid}")]
+    public async Task<IResult> Update(
+        Guid projectId,
+        UpdateInput payload,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateProjectCommand(
+            ProjectId.FromGuid(projectId),
+            payload.Title,
+            payload.Description,
+            Guid.NewGuid(),
+            DateTimeOffset.UtcNow);
+        var result = await mediator.Send(command, cancellationToken);
+        if (!result.IsSuccess)
+        {
+            return Results.Problem("Could not update project.");
+        }
+
+        return Results.AcceptedAtRoute(GetRouteName, new { projectId });
     }
 }

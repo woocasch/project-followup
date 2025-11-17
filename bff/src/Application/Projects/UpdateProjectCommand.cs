@@ -1,11 +1,14 @@
-﻿namespace ProjectFollowUp.BFF.Domain.Projects.ProjectEvents;
+﻿namespace ProjectFollowUp.BFF.Application.Projects;
 
-public readonly struct ProjectDetailsChanged(
+using ProjectFollowUp.BFF.Application.Cqrs;
+using ProjectFollowUp.BFF.Domain.Projects;
+
+public sealed class UpdateProjectCommand(
     ProjectId projectId,
     string title,
     string description,
     Guid userId,
-    DateTimeOffset createdAt)
+    DateTimeOffset createdAt) : ICommand
 {
     public ProjectId ProjectId { get; } = projectId;
 

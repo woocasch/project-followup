@@ -3,10 +3,23 @@
 using System.Collections.ObjectModel;
 
 using ProjectFollowUp.BFF.Domain.Projects;
+using ProjectFollowUp.BFF.Domain.Projects.ProjectEvents;
 
 internal static class ProjectsStore
 {
     private static readonly Collection<(ProjectId ProjectId, object DomainEvent)> projectEvents = [];
+
+    static ProjectsStore()
+    {
+        var firstProjectId = ProjectId.FromGuid(Guid.NewGuid());
+        object domainEvent = new ProjectCreated(firstProjectId, "First project", "Some description", DateTimeOffset.UtcNow);
+        projectEvents.Add((ProjectId: firstProjectId, DomainEvent: domainEvent));
+        var secondProjectId = ProjectId.FromGuid(Guid.NewGuid());
+        domainEvent = new ProjectCreated(secondProjectId, "Second project", "Another description", DateTimeOffset.UtcNow);
+        projectEvents.Add((ProjectId: secondProjectId, DomainEvent: domainEvent));
+        domainEvent = new ProjectDetailsChanged(firstProjectId, "FirstProject", "Modified description", DateTimeOffset.UtcNow);
+        projectEvents.Add((ProjectId: firstProjectId, DomainEvent: domainEvent));
+    }
 
     public static void AddEvent(ProjectId projectId, object domainEvent)
     {

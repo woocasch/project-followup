@@ -4,7 +4,6 @@ public readonly struct ProjectDetailsChanged(
     ProjectId projectId,
     string title,
     string description,
-    Guid userId,
     DateTimeOffset createdAt)
 {
     public ProjectId ProjectId { get; } = projectId;
@@ -12,8 +11,6 @@ public readonly struct ProjectDetailsChanged(
     public string Title { get; } = title;
 
     public string Description { get; } = description;
-
-    public Guid UserId { get; } = userId;
 
     public DateTimeOffset CreatedAt { get; } = createdAt;
 }

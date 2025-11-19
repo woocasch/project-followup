@@ -4,7 +4,8 @@ using System.Net.Http.Json;
 
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 
-public sealed class UpdateProjectTests : TestBase
+public sealed class UpdateProjectTests(
+    WebApiFactory webApiFactory) : TestBase(webApiFactory)
 {
     private Guid projectId;
 
@@ -13,11 +14,6 @@ public sealed class UpdateProjectTests : TestBase
     private HttpResponseMessage response = null!;
 
     private GetOutput getProjectOutput = null!;
-
-    public UpdateProjectTests(WebApiFactory webApiFactory)
-        : base(webApiFactory)
-    {
-    }
 
     [Fact]
     public void WhenProjectIsUpdatedThenNewDataIsReturnedFromGet()

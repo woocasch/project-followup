@@ -40,6 +40,11 @@ public sealed class ProjectsController(IMediator mediator) : ControllerBase
     {
         var query = new GetProjectQuery(Guid.NewGuid(), ProjectId.FromGuid(projectId));
         var result = await mediator.Fetch(query, cancellationToken);
+        if (result is null)
+        {
+            return Results.NotFound();
+        }
+
         var output = new GetOutput(
             result.ProjectId.ToGuid(),
             result.Title,

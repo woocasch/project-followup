@@ -3,6 +3,7 @@ import styled from '@emotion/styled';
 import { theme } from '@root/theme';
 import { ClipboardCheck, User } from 'lucide-react';
 import type * as model from '../projects-list.model';
+import { useNavigate } from 'react-router';
 
 interface ProjectCardComponentProps {
   project: model.ProjectListItem;
@@ -37,6 +38,11 @@ const ButtonsContainer = styled.div(`
 `);
 
 export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
+  const navigate = useNavigate();
+  function onEditClick() {
+    navigate(`/projects/${project.id}/edit`);
+  }
+
   return (
     <Card size={CardSize.Medium}>
       <Card.Header>
@@ -47,8 +53,9 @@ export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
       </Card.Content>
       <Card.Footer>
         <ButtonsContainer>
-          <Button>Follow-up meeting</Button>
-          <Button>Project details</Button>
+          <Button variant="action">Follow-up meeting</Button>
+          <Button variant="action">Project details</Button>
+          <Button variant="action" onClick={onEditClick}>Edit project</Button>
           <MembersCount>
             <User />
             {project.usersCount}

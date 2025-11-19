@@ -1,5 +1,6 @@
 import HomePage from '@home/home';
 import CreateProject from '@projects/create-project';
+import EditProject from './projects/edit-project';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import AppLayoutComponent from './AppLayout';
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
           {
             path: 'create',
             Component: CreateProject,
+          },
+          {
+            path: ':projectId/edit',
+            Component: EditProject,
           },
         ],
       },

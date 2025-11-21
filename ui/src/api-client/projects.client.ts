@@ -57,7 +57,7 @@ export class ProjectsClient implements model.ProjectsApi {
   async edit(payload: model.EditPayloadParameters): Promise<boolean> {
     const response = await axios.put(
       `https://localhost:7037/api/Projects/${payload.projectId}`,
-      <EditPayload>{
+      {
         title: payload.title,
         description: payload.description,
       },

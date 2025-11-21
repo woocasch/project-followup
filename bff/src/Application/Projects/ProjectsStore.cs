@@ -47,13 +47,8 @@ internal static class ProjectsStore
             .Select(pe => pe.ProjectId)
             .Distinct()
             .ToList();
-        foreach (var projectId in projectIds)
-        {
-            var project = GetProjectById(projectId);
-            if (project != null)
-            {
-                yield return project;
-            }
-        }
+        return projectIds
+            .Select(GetProjectById)
+            .Where(project => project != null)!;
     }
 }

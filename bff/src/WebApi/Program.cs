@@ -29,6 +29,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 });
 
 builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
+builder.Services.AddScoped<IValidator<UpdateInput>, UpdateInputValidator>();
 
 var app = builder.Build();
 
@@ -56,7 +57,7 @@ app.Run();
 namespace ProjectFollowUp.BFF.WebApi
 {
     [CompilerGenerated]
-    public class WebApiProgram
+    public sealed class WebApiProgram
     {
     }
 }

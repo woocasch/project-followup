@@ -2,43 +2,30 @@
 
 using System.Collections.ObjectModel;
 
-public sealed class FetchProjectsResult
+using ProjectFollowUp.BFF.Domain.Projects;
+
+public sealed class FetchProjectsResult(IEnumerable<FetchProjectsResult.Project> projects)
 {
-    public FetchProjectsResult(IEnumerable<Project> projects)
+    public ReadOnlyCollection<Project> Projects { get; } = new ReadOnlyCollection<Project>([.. projects]);
+
+    public sealed class Project(
+        ProjectId id,
+        string title,
+        string description,
+        int usersCount,
+        int tasksCompleted,
+        int tasksTotal)
     {
-        this.Projects = new ReadOnlyCollection<Project>(projects.ToList());
-    }
+        public ProjectId Id { get; } = id;
 
-    public ReadOnlyCollection<Project> Projects { get; }
+        public string Title { get; } = title;
 
-    public sealed class Project
-    {
-        public Project(
-            Guid id,
-            string title,
-            string description,
-            int usersCount,
-            int tasksCompleted,
-            int tasksTotal)
-        {
-            this.Id = id;
-            this.Title = title;
-            this.Description = description;
-            this.UsersCount = usersCount;
-            this.TasksCompleted = tasksCompleted;
-            this.TasksTotal = tasksTotal;
-        }
+        public string Description { get; } = description;
 
-        public Guid Id { get; }
+        public int UsersCount { get; } = usersCount;
 
-        public string Title { get; }
+        public int TasksCompleted { get; } = tasksCompleted;
 
-        public string Description { get; }
-
-        public int UsersCount { get; }
-
-        public int TasksCompleted { get; }
-
-        public int TasksTotal { get; }
+        public int TasksTotal { get; } = tasksTotal;
     }
 }

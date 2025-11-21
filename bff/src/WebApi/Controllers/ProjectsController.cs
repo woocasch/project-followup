@@ -5,35 +5,50 @@ using Microsoft.AspNetCore.Mvc;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.Projects;
+using ProjectFollowUp.BFF.Domain.Projects;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProjectsController : ControllerBase
+public sealed class ProjectsController(IMediator mediator) : ControllerBase
 {
-    private readonly IMediator mediator;
-
-    public ProjectsController(IMediator mediator)
-    {
-        this.mediator = mediator;
-    }
+    public const string GetRouteName = "GetProjectById";
 
     [HttpGet]
     public async Task<IResult> FetchList(CancellationToken cancellationToken)
     {
         // TODO: Retrieve user id from token.
         var query = new FetchProjectsQuery(Guid.NewGuid());
-        var result = await this.mediator.Fetch(query, cancellationToken);
+        var result = await mediator.Fetch(query, cancellationToken);
         var projects = result.Projects
             .Select(p => new ProjectListItem(
-                p.Id,
+                p.Id.ToGuid(),
                 p.Title,
                 p.Description,
                 p.UsersCount,
                 p.TasksCompleted,
                 p.TasksTotal))
             .ToList();
-        var output = new FetchListOutput(projects);
+        var output = new FetchListOutput([.. projects]);
+        return Results.Ok(output);
+    }
+
+    [HttpGet("{projectId:guid}", Name = GetRouteName)]
+    public async Task<IResult> Get(
+        Guid projectId,
+        CancellationToken cancellationToken)
+    {
+        var query = new GetProjectQuery(Guid.NewGuid(), ProjectId.FromGuid(projectId));
+        var result = await mediator.Fetch(query, cancellationToken);
+        if (result is null)
+        {
+            return Results.NotFound();
+        }
+
+        var output = new GetOutput(
+            result.ProjectId.ToGuid(),
+            result.Title,
+            result.Description);
         return Results.Ok(output);
     }
 
@@ -44,17 +59,39 @@ public class ProjectsController : ControllerBase
     {
         var projectId = Guid.NewGuid();
         var command = new CreateProjectCommand(
-            projectId,
+            ProjectId.FromGuid(projectId),
             payload.Title,
             payload.Description,
             // TODO: Get user id from token
-            Guid.NewGuid());
-        var result = await this.mediator.Send(command, cancellationToken);
+            Guid.NewGuid(),
+            DateTimeOffset.UtcNow);
+        var result = await mediator.Send(command, cancellationToken);
         if (!result.IsSuccess)
         {
             return Results.Problem("Could not create project.");
         }
 
-        return Results.Created();
+        return Results.CreatedAtRoute(GetRouteName, new { projectId }, new CreateOutput(projectId));
+    }
+
+    [HttpPut("{projectId:guid}")]
+    public async Task<IResult> Update(
+        Guid projectId,
+        UpdateInput payload,
+        CancellationToken cancellationToken)
+    {
+        var command = new UpdateProjectCommand(
+            ProjectId.FromGuid(projectId),
+            payload.Title,
+            payload.Description,
+            Guid.NewGuid(),
+            DateTimeOffset.UtcNow);
+        var result = await mediator.Send(command, cancellationToken);
+        if (!result.IsSuccess)
+        {
+            return Results.Problem("Could not update project.");
+        }
+
+        return Results.AcceptedAtRoute(GetRouteName, new { projectId });
     }
 }

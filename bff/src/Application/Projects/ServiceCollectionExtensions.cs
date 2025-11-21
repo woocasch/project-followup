@@ -9,8 +9,11 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddProjects(
         this IServiceCollection services)
     {
-        services.RegisterCommandHandler<CreateProjectCommand, CreateProjectCommandHandler>();
-        services.RegisterQueryHandler<FetchProjectsQuery, FetchProjectsResult, FetchProjectsQueryHandler>();
+        services
+            .RegisterCommandHandler<CreateProjectCommand, CreateProjectCommandHandler>()
+            .RegisterCommandHandler<UpdateProjectCommand, UpdateProjectCommandHandler>()
+            .RegisterQueryHandler<FetchProjectsQuery, FetchProjectsResult, FetchProjectsQueryHandler>()
+            .RegisterQueryHandler<GetProjectQuery, GetProjectResult, GetProjectQueryHandler>();
         return services;
     }
 }

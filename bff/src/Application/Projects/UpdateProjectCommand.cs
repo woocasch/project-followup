@@ -3,7 +3,7 @@
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Domain.Projects;
 
-public sealed class CreateProjectCommand(
+public sealed class UpdateProjectCommand(
     ProjectId projectId,
     string title,
     string description,

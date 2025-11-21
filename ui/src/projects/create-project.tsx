@@ -48,8 +48,7 @@ export default function CreateProject() {
   }
 
   function onCancelClick() {
-    setTitle('');
-    setDescription('');
+    navigate('/');
   }
 
   return (

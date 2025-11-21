@@ -51,7 +51,7 @@ export class ProjectsClient implements model.ProjectsApi {
       `https://localhost:7037/api/Projects`,
       payload,
     );
-    return response.status === 202;
+    return response.status === 201;
   }
 
   async edit(payload: model.EditPayloadParameters): Promise<boolean> {

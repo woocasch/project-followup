@@ -32,7 +32,7 @@ export class EditProjectWebService implements model.EditProjectService {
     const success = response;
     return { success };
   }
-}   
+}
 
 const editProjectService: model.EditProjectService =
   new EditProjectWebService();

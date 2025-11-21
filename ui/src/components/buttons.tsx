@@ -85,5 +85,5 @@ export function Button(props: ButtonProps) {
 
 export function IconButton(props: IconButtonProps) {
   const { icon: Icon, onClick = () => {} } = props;
-  return <Icon onClick={onClick} style={{ display: 'inline' }} />;
+  return <Icon onClick={onClick} style={{ display: 'inline', cursor: 'pointer' }} />;
 }

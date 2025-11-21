@@ -1,7 +1,7 @@
-import { Button, Card, CardSize } from '@components/index';
+import { Button, IconButton, Card, CardSize } from '@components/index';
 import styled from '@emotion/styled';
 import { theme } from '@root/theme';
-import { ClipboardCheck, User } from 'lucide-react';
+import { ClipboardCheck, Pencil, Presentation, ReceiptText, User } from 'lucide-react';
 import type * as model from '../projects-list.model';
 import { useNavigate } from 'react-router';
 
@@ -32,9 +32,16 @@ const ProjectContentContainer = styled.div(`
 const ButtonsContainer = styled.div(`
     font-size: ${theme.fontSizes.small};
     display: grid;
-    grid-template-columns: repeat(4, auto);
+    grid-template-columns: repeat(3, 1fr) repeat(2, auto);
     gap: ${theme.spaces.xsmall};
     align-items: center;
+    text-align: center;
+    & > * {
+        justify-self: center;
+    }
+
+    & > svg {
+        height: 1.4em;}
 `);
 
 export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
@@ -53,9 +60,9 @@ export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
       </Card.Content>
       <Card.Footer>
         <ButtonsContainer>
-          <Button variant="action">Follow-up meeting</Button>
-          <Button variant="action">Project details</Button>
-          <Button variant="action" onClick={onEditClick}>Edit project</Button>
+          <IconButton icon={Presentation} />
+          <IconButton icon={ReceiptText} />
+          <IconButton icon={Pencil}  onClick={onEditClick} />
           <MembersCount>
             <User />
             {project.usersCount}

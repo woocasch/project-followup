@@ -75,7 +75,7 @@ export default function EditProject() {
 
     return (
         <div>
-            <PageHeader>New project</PageHeader>
+            <PageHeader>Edit project</PageHeader>
             <EditProjectForm>
                 <Text
                     value={title}
@@ -90,7 +90,7 @@ export default function EditProject() {
                 />
                 <ButtonsContainer>
                     <Button variant="action" buttonType="rounded" onClick={onEditClick}>
-                        Create
+                        Update
                     </Button>
                     <Button
                         variant="warning"

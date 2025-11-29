@@ -12,6 +12,8 @@ services:
     container_name: project-follow-up-ui
     hostname: project-follow-up-ui
     restart: always
+    volumes:
+      - ./docker_files/ui/configuration.json:/usr/share/nginx/html/configuration.json
     depends_on:
       - bff
 

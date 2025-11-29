@@ -10,6 +10,7 @@ import '@assets/themes/dark.scss';
 import '@assets/themes/sizes.scss';
 import '@assets/main.scss';
 import StylingPage from './styling';
+import { loadConfiguration } from './infrastructure/configuration';
 
 const router = createBrowserRouter([
   {
@@ -49,8 +50,14 @@ const router = createBrowserRouter([
   },
 ]);
 
-const rootEl = document.getElementById('root');
-if (rootEl) {
-  const root = ReactDOM.createRoot(rootEl);
-  root.render(<RouterProvider router={router} />);
+async function bootstrapApp() {
+  await loadConfiguration();
+
+  const rootEl = document.getElementById('root');
+  if (rootEl) {
+    const root = ReactDOM.createRoot(rootEl);
+    root.render(<RouterProvider router={router} />);
+  }
 }
+
+bootstrapApp();

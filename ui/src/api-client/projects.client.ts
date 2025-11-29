@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type * as model from './projects.model';
+import { ApiClientBase } from './api-client-base';
 
 interface EditPayload {
   title: string;
@@ -12,10 +13,10 @@ interface GetProjectOutput {
   description: string;
 }
 
-export class ProjectsClient implements model.ProjectsApi {
+export class ProjectsClient extends ApiClientBase implements model.ProjectsApi {
   async fetchProjectsList(): Promise<model.FetchListResult> {
-    const response = await axios.get<model.FetchListResult>(
-      `https://localhost:7037/api/Projects`,
+    const response = await this.createBffClient().get<model.FetchListResult>(
+      `api/Projects`,
     );
     if (response.status !== 200) {
       return { projects: [] };
@@ -27,8 +28,8 @@ export class ProjectsClient implements model.ProjectsApi {
     parameters: model.GetProjectParameters,
   ): Promise<model.GetProjectResult> {
     try {
-      const response = await axios.get<GetProjectOutput>(
-        `https://localhost:7037/api/Projects/${parameters.projectId}`,
+      const response = await this.createBffClient().get<GetProjectOutput>(
+        `api/Projects/${parameters.projectId}`,
       );
 
       return {
@@ -47,16 +48,16 @@ export class ProjectsClient implements model.ProjectsApi {
   }
 
   async create(payload: model.CreatePayloadParameters): Promise<boolean> {
-    const response = await axios.post(
-      `https://localhost:7037/api/Projects`,
+    const response = await this.createBffClient().post(
+      `api/Projects`,
       payload,
     );
     return response.status === 201;
   }
 
   async edit(payload: model.EditPayloadParameters): Promise<boolean> {
-    const response = await axios.put(
-      `https://localhost:7037/api/Projects/${payload.projectId}`,
+    const response = await this.createBffClient().put(
+      `api/Projects/${payload.projectId}`,
       {
         title: payload.title,
         description: payload.description,

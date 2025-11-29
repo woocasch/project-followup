@@ -2,13 +2,13 @@ name: project-follow-up
 
 services:  
   bff:
-    image: project-follow-up-bff:latest
+    image: project-follow-up-bff:local
     container_name: project-follow-up-bff
     hostname: project-follow-up-bff
     restart: always
 
   ui:
-    image: project-follow-up-ui:latest
+    image: project-follow-up-ui:local
     container_name: project-follow-up-ui
     hostname: project-follow-up-ui
     restart: always

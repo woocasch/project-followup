@@ -1,0 +1,1 @@
+docker build . -t project-follow-up-ui:local

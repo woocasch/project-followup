@@ -1,6 +1,6 @@
 import HomePage from '@home/home';
 import CreateProject from '@projects/create-project';
-import EditProject from './projects/edit-project';
+import EditProject from '@projects/edit-project';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import AppLayoutComponent from './AppLayout';
@@ -11,6 +11,7 @@ import '@assets/themes/sizes.scss';
 import '@assets/main.scss';
 import StylingPage from './styling';
 import { loadConfiguration } from './infrastructure/configuration';
+import CreateUser from '@user-accounts/create-user';
 
 const router = createBrowserRouter([
   {
@@ -37,6 +38,19 @@ const router = createBrowserRouter([
             Component: EditProject,
           },
         ],
+      },
+      {
+        path: '/users',
+        children: [
+          {
+            index: true,
+            Component: HomePage,
+          },
+          {
+            path: 'create',
+            Component: CreateUser,
+          },
+        ]
       },
       {
         path: '/styling',

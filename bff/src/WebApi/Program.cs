@@ -32,6 +32,12 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
 builder.Services.AddScoped<IValidator<UpdateInput>, UpdateInputValidator>();
 builder.Services.AddHttpIdentityProvider();
+builder.Services.Configure<KeycloakSettings>(builder.Configuration.GetSection("Keycloak"));
+builder.Services.AddHttpClient("Keycloak", client =>
+{
+    client.BaseAddress = new Uri("http://localhost:5000/auth/");
+});
+builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 

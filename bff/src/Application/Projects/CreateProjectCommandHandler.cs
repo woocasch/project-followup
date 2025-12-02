@@ -11,7 +11,7 @@ public sealed class CreateProjectCommandHandler : CommandHandlerBase<CreateProje
             command.Title,
             command.Description,
             command.CreatedAt);
-        ProjectsStore.AddEvent(domainEvent.ProjectId, domainEvent);
+        UsersStore.AddEvent(domainEvent.ProjectId, domainEvent);
         return Task.FromResult(CommandResult.Success());
     }
 }

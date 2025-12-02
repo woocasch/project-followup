@@ -2,11 +2,6 @@ import axios from 'axios';
 import type * as model from './projects.model';
 import { ApiClientBase } from './api-client-base';
 
-interface EditPayload {
-  title: string;
-  description: string;
-}
-
 interface GetProjectOutput {
   projectId: string;
   title: string;

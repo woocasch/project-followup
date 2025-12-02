@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 using FluentValidation;
 
 using ProjectFollowUp.BFF.Application;
+using ProjectFollowUp.BFF.Infrastructure.IdentityProvider;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 using ProjectFollowUp.BFF.WebApi.Validation;
 
@@ -30,6 +31,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
 builder.Services.AddScoped<IValidator<UpdateInput>, UpdateInputValidator>();
+builder.Services.AddHttpIdentityProvider();
 
 var app = builder.Build();
 

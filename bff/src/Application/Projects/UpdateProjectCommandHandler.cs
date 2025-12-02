@@ -16,7 +16,7 @@ public sealed class UpdateProjectCommandHandler : CommandHandlerBase<UpdateProje
             command.Title,
             command.Description,
             command.CreatedAt);
-        ProjectsStore.AddEvent(command.ProjectId, domainEvent);
+        UsersStore.AddEvent(command.ProjectId, domainEvent);
         return CommandResult.Success();
     }
 }

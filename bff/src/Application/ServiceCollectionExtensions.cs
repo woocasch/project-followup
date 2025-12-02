@@ -4,14 +4,17 @@ using Microsoft.Extensions.DependencyInjection;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.Projects;
+using ProjectFollowUp.BFF.Application.Users;
 
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddApplication(
         this IServiceCollection services)
     {
-        services.AddCqrs();
-        services.AddProjects();
+        services
+            .AddCqrs()
+            .AddProjects()
+            .AddUsers();
         return services;
     }
 }

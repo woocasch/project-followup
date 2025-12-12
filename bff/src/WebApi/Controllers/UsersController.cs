@@ -21,8 +21,8 @@ public sealed class UsersController(
         var userId = Guid.NewGuid();
         var command = new CreateUserCommand(
             UserId.FromGuid(userId),
-            payload.Email,
-            payload.DisplayName);
+            payload.DisplayName,
+            payload.Email);
         var result = await mediator.Send(command, cancellationToken);
         if (!result.IsSuccess)
         {

@@ -6,6 +6,7 @@ using FluentValidation;
 
 using ProjectFollowUp.BFF.Application;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider;
+using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 using ProjectFollowUp.BFF.WebApi.Validation;
 
@@ -31,7 +32,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 
 builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
 builder.Services.AddScoped<IValidator<UpdateInput>, UpdateInputValidator>();
-builder.Services.AddHttpIdentityProvider();
+builder.Services.AddKeycloakIdentityProvider();
 builder.Services.Configure<KeycloakSettings>(builder.Configuration.GetSection("Keycloak"));
 builder.Services.AddHttpClient("Keycloak", client =>
 {

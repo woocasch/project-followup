@@ -1,6 +1,6 @@
 ﻿namespace ProjectFollowUp.BFF.Application.IdentityProvider;
 
-public interface IIdentityProviderClient
+public interface IIdentityProvider
 {
     Task<CreateUserCredentialsResponse> CreateUserCredentials(
         CreateUserCredentialsRequest request,

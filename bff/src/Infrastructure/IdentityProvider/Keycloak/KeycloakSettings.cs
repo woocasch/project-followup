@@ -1,4 +1,4 @@
-﻿namespace ProjectFollowUp.BFF.Infrastructure.IdentityProvider;
+﻿namespace ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
 
 public sealed class KeycloakSettings
 {

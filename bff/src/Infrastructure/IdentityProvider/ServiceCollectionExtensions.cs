@@ -3,13 +3,16 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using ProjectFollowUp.BFF.Application.IdentityProvider;
+using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
 
 public static class ServiceCollectionExtensions
 {
-    public static IServiceCollection AddHttpIdentityProvider(
+    public static IServiceCollection AddKeycloakIdentityProvider(
         this IServiceCollection services)
     {
-        services.AddTransient<IIdentityProviderClient, HttpIdentityProvider>();
+        services
+            .AddTransient<IIdentityProvider, KeycloakIdentityProvider>()
+            .AddSingleton<IKeycloakClient, DefaultKeycloakClient>();
         return services;
     }
 }

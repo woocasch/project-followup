@@ -8,7 +8,7 @@ using ProjectFollowUp.BFF.Application.IdentityProvider;
 using ProjectFollowUp.BFF.Domain.Users.UserEvents;
 
 public sealed class CreateUserCommandHandler(
-    IIdentityProviderClient identityProvider) : CommandHandlerBase<CreateUserCommand>
+    IIdentityProvider identityProvider) : CommandHandlerBase<CreateUserCommand>
 {
     protected override async Task<CommandResult> HandleCommand(
         CreateUserCommand command,

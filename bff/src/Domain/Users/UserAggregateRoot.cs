@@ -12,14 +12,14 @@ public sealed class UserAggregateRoot : AggregateRootBase<UserId>
 
     public string DisplayName { get; private set; } = null!;
 
-    public string Email { get; private set; } = null!;
+    public EmailAddress Email { get; private set; } = null!;
 
     public DateTimeOffset CreatedAt { get; private set; }
 
     public static UserAggregateRoot Create(
         UserId projectId,
         string displayName,
-        string email,
+        EmailAddress email,
         DateTimeOffset createdAt)
     {
         var project = new UserAggregateRoot();

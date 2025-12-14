@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.IdentityProvider;
+using ProjectFollowUp.BFF.Domain.Users;
 using ProjectFollowUp.BFF.Domain.Users.UserEvents;
 
 public sealed class CreateUserCommandHandler(
@@ -31,10 +32,11 @@ public sealed class CreateUserCommandHandler(
         CancellationToken cancellationToken)
     {
         await Task.Yield();
+        var email = EmailAddress.FromString(command.Email);
         var userCreatedEvent = new UserCreated(
             command.Id,
             command.DisplayName,
-            command.Email,
+            email,
             DateTimeOffset.UtcNow);
         UsersStore.AddEvent(command.Id, userCreatedEvent);
     }

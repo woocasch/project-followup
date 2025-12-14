@@ -8,4 +8,19 @@
 		<RootNamespace>ProjectFollowUp.BFF.Domain</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Update="Users\EmailAddressResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EmailAddressResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Users\EmailAddressResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EmailAddressResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
 </Project>

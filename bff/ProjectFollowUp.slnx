@@ -1,6 +1,8 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path="build-image.ps1" />
     <File Path="Directory.Packages.props" />
+    <File Path="Dockerfile" />
   </Folder>
   <Folder Name="/src/">
     <Project Path="src/Application/Application.csproj" Id="4ea5ab7f-a596-4bbb-b57f-c5ceeaaa9cd9" />
@@ -9,6 +11,7 @@
     <Project Path="src/WebApi/WebApi.csproj" Id="22ef88db-5bca-4562-aa27-599826c9a7ef" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/Domain.UnitTests/Domain.UnitTests.csproj" />
     <Project Path="tests/WebApi.IntegrationTests/WebApi.IntegrationTests.csproj" Id="ced2d375-c56c-40d5-9b1d-2001d7c4b564" />
   </Folder>
 </Solution>

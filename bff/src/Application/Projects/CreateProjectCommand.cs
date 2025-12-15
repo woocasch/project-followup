@@ -1,7 +1,7 @@
 ﻿namespace ProjectFollowUp.BFF.Application.Projects;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
-using ProjectFollowUp.BFF.Domain.Projects;
+using ProjectFollowUp.BFF.Domain.Project;
 
 public sealed class CreateProjectCommand(
     ProjectId projectId,

@@ -2,7 +2,7 @@
 
 using System.Collections.ObjectModel;
 
-using ProjectFollowUp.BFF.Domain.Projects;
+using ProjectFollowUp.BFF.Domain.Project;
 
 public sealed class FetchProjectsResult(IEnumerable<FetchProjectsResult.Project> projects)
 {

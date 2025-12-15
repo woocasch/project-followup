@@ -1,6 +1,6 @@
-﻿namespace ProjectFollowUp.BFF.Domain.Projects.ProjectEvents;
+﻿namespace ProjectFollowUp.BFF.Domain.Project.Events;
 
-public readonly struct ProjectCreated(
+public readonly struct ProjectDetailsChanged(
     ProjectId projectId,
     string title,
     string description,

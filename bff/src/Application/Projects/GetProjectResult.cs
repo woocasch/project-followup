@@ -1,6 +1,6 @@
 ﻿namespace ProjectFollowUp.BFF.Application.Projects;
 
-using ProjectFollowUp.BFF.Domain.Projects;
+using ProjectFollowUp.BFF.Domain.Project;
 
 public sealed class GetProjectResult(ProjectId projectId, string title, string description)
 {

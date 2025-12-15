@@ -1,6 +1,6 @@
 import HomePage from '@home/home';
 import CreateProject from '@projects/create-project';
-import EditProject from './projects/edit-project';
+import EditProject from '@projects/edit-project';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router';
 import AppLayoutComponent from './AppLayout';
@@ -10,6 +10,8 @@ import '@assets/themes/dark.scss';
 import '@assets/themes/sizes.scss';
 import '@assets/main.scss';
 import StylingPage from './styling';
+import { loadConfiguration } from './infrastructure/configuration';
+import CreateUser from '@user-accounts/create-user';
 
 const router = createBrowserRouter([
   {
@@ -38,6 +40,19 @@ const router = createBrowserRouter([
         ],
       },
       {
+        path: '/users',
+        children: [
+          {
+            index: true,
+            Component: HomePage,
+          },
+          {
+            path: 'create',
+            Component: CreateUser,
+          },
+        ]
+      },
+      {
         path: '/styling',
         Component: StylingPage,
       },
@@ -49,8 +64,14 @@ const router = createBrowserRouter([
   },
 ]);
 
-const rootEl = document.getElementById('root');
-if (rootEl) {
-  const root = ReactDOM.createRoot(rootEl);
-  root.render(<RouterProvider router={router} />);
+async function bootstrapApp() {
+  await loadConfiguration();
+
+  const rootEl = document.getElementById('root');
+  if (rootEl) {
+    const root = ReactDOM.createRoot(rootEl);
+    root.render(<RouterProvider router={router} />);
+  }
 }
+
+bootstrapApp();

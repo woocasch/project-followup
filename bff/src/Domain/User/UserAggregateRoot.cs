@@ -15,27 +15,27 @@ public sealed class UserAggregateRoot : AggregateRootBase<UserId>
     public DateTimeOffset CreatedAt { get; private set; }
 
     public static UserAggregateRoot Create(
-        UserId projectId,
+        UserId userId,
         string displayName,
         EmailAddress email,
         DateTimeOffset createdAt)
     {
-        var project = new UserAggregateRoot();
+        var user = new UserAggregateRoot();
         var domainEvent = new UserCreated(
-            projectId,
+            userId,
             displayName,
             email,
             createdAt);
-        project.Apply(domainEvent);
-        return project;
+        user.Apply(domainEvent);
+        return user;
     }
 
 
     public static UserAggregateRoot Rehydrate(IEnumerable<object> domainEvents)
     {
-        var project = new UserAggregateRoot();
-        project.RecreateFromHistory(domainEvents);
-        return project;
+        var user = new UserAggregateRoot();
+        user.RecreateFromHistory(domainEvents);
+        return user;
     }
 
     protected override void When(object domainEvent)

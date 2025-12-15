@@ -27,9 +27,9 @@ public sealed class SerializationTests
     [Fact]
     public void WhenSerializedValueIsDeserializedThenInstanceIsCorrect()
     {
-        const string serializedValue = """{"value":"user@domain.com"}""";
+        const string actualSerializedValue = """{"value":"user@domain.com"}""";
         const string expectedEmailAddress = "user@domain.com";
-        this.Given(t => t.SerializedValueIsSetTo(serializedValue))
+        this.Given(t => t.SerializedValueIsSetTo(actualSerializedValue))
             .And(t => t.InstanceIsDeserialized())
             .When(t => t.ExceptionIsNotThrown())
             .Then(t => t.InstanceValueIs(v => v.Value == expectedEmailAddress))

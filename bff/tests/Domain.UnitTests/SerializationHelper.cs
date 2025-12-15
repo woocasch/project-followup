@@ -4,7 +4,7 @@ using System.Text.Json;
 
 public static class SerializationHelper
 {
-    private static Lazy<JsonSerializerOptions> serializerOptions = new(SerializerFactory);
+    private static readonly Lazy<JsonSerializerOptions> serializerOptions = new(SerializerFactory);
 
     public static JsonSerializerOptions SerializerOptions => serializerOptions.Value;
 

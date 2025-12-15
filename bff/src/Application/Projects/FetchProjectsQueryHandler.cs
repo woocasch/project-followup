@@ -16,7 +16,7 @@ public sealed class FetchProjectsQueryHandler : QueryHandlerBase<FetchProjectsQu
 
     private static IEnumerable<FetchProjectsResult.Project> GetAllProjects()
     {
-        var projects = UsersStore.GetAllProjects();
+        var projects = ProjectsStore.GetAllProjects();
         foreach(var project in projects)
         {
             yield return new FetchProjectsResult.Project(

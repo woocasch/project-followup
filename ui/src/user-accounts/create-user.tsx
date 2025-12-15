@@ -34,13 +34,13 @@ export default function CreateUser() {
 
   async function onCreateClick() {
     const result = await createUserService.createUser({ email, displayName });
-    // if (result.created) {
-    //   navigate('/users');
-    // }
+    if (result.created) {
+      navigate('/users');
+    }
   }
 
   function onCancelClick() {
-    // navigate('/');
+    navigate('/');
   }
     return (
         <div>

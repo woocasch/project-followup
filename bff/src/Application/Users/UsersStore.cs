@@ -24,17 +24,17 @@ internal static class UsersStore
             return null;
         }
 
-        var project = UserAggregateRoot.Rehydrate(events);
-        return project;
+        var user = UserAggregateRoot.Rehydrate(events);
+        return user;
     }
 
     public static IEnumerable<UserAggregateRoot> GetAllUsers()
     {
-        var projectIds = usersEvents
+        var userIds = usersEvents
             .Select(pe => pe.UserId)
             .Distinct()
             .ToList();
-        return projectIds
+        return userIds
             .Select(GetUserById)
             .Where(user => user != null)!;
     }

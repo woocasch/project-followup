@@ -12,7 +12,7 @@ public sealed class GetProjectQueryHandler : QueryHandlerBase<GetProjectQuery, G
         CancellationToken cancellationToken)
     {
         await Task.Yield();
-        var project = UsersStore.GetProjectById(query.ProjectId);
+        var project = ProjectsStore.GetProjectById(query.ProjectId);
         if (project is null)
         {
             return null;

@@ -5,11 +5,11 @@ using System.Collections.ObjectModel;
 using ProjectFollowUp.BFF.Domain.Project;
 using ProjectFollowUp.BFF.Domain.Project.Events;
 
-internal static class UsersStore
+internal static class ProjectsStore
 {
     private static readonly Collection<(ProjectId ProjectId, object DomainEvent)> projectEvents = [];
 
-    static UsersStore()
+    static ProjectsStore()
     {
         var firstProjectId = ProjectId.FromGuid(Guid.NewGuid());
         object domainEvent = new ProjectCreated(firstProjectId, "First project", "Some description", DateTimeOffset.UtcNow);

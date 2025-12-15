@@ -72,7 +72,6 @@ public sealed class DefaultKeycloakClient(
             new System.Net.Http.Headers.AuthenticationHeaderValue(request.TokenType, request.AccessToken);
         var webClient = clientFactory.CreateClient("Keycloak");
         var responseMessage = await webClient.SendAsync(requestMessage, cancellationToken);
-        var responseContent = await responseMessage.Content.ReadAsStringAsync(cancellationToken);
-        return new CreateCredentialsResponse(false);
+        return new CreateCredentialsResponse(responseMessage.IsSuccessStatusCode);
     }
 }

@@ -1,8 +1,8 @@
-﻿namespace ProjectFollowUp.BFF.Domain.UnitTests.UsersTests.EmailAddressTests;
+﻿namespace ProjectFollowUp.BFF.Domain.UnitTests.UserTests.EmailAddressTests;
 
 using System.Text.Json;
 
-using ProjectFollowUp.BFF.Domain.Users;
+using ProjectFollowUp.BFF.Domain.User;
 
 public sealed class SerializationTests
 {

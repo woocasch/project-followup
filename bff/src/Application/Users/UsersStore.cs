@@ -2,7 +2,7 @@
 
 using System.Collections.ObjectModel;
 
-using ProjectFollowUp.BFF.Domain.Users;
+using ProjectFollowUp.BFF.Domain.User;
 
 internal static class UsersStore
 {

@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ProjectFollowUp.BFF.Domain.Users {
+namespace ProjectFollowUp.BFF.Domain.User {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace ProjectFollowUp.BFF.Domain.Users {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ProjectFollowUp.BFF.Domain.Users.EmailAddressResources", typeof(EmailAddressResources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("ProjectFollowUp.BFF.Domain.User.EmailAddressResources", typeof(EmailAddressResources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;

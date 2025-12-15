@@ -1,4 +1,4 @@
-﻿namespace ProjectFollowUp.BFF.Domain.Users.UserEvents;
+﻿namespace ProjectFollowUp.BFF.Domain.User.Events;
 
 public readonly struct UserCreated(
     UserId id,

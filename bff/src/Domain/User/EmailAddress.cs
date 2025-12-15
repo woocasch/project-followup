@@ -1,4 +1,4 @@
-﻿namespace ProjectFollowUp.BFF.Domain.Users;
+﻿namespace ProjectFollowUp.BFF.Domain.User;
 
 using System.Diagnostics;
 using System.Text.Json.Serialization;

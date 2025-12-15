@@ -1,6 +1,6 @@
-﻿namespace ProjectFollowUp.BFF.Domain.Projects;
+﻿namespace ProjectFollowUp.BFF.Domain.Project;
 
-using ProjectFollowUp.BFF.Domain.Projects.ProjectEvents;
+using ProjectFollowUp.BFF.Domain.Project.Events;
 
 public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
 {

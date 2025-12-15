@@ -1,8 +1,6 @@
-﻿namespace ProjectFollowUp.BFF.Domain.Users;
+﻿namespace ProjectFollowUp.BFF.Domain.User;
 
-using ProjectFollowUp.BFF.Domain.Projects;
-using ProjectFollowUp.BFF.Domain.Projects.ProjectEvents;
-using ProjectFollowUp.BFF.Domain.Users.UserEvents;
+using ProjectFollowUp.BFF.Domain.User.Events;
 
 public sealed class UserAggregateRoot : AggregateRootBase<UserId>
 {

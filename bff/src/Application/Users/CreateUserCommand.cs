@@ -1,7 +1,7 @@
 ﻿namespace ProjectFollowUp.BFF.Application.Users;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
-using ProjectFollowUp.BFF.Domain.Users;
+using ProjectFollowUp.BFF.Domain.User;
 
 public sealed class CreateUserCommand(
     UserId id,

@@ -1,4 +1,4 @@
-﻿namespace ProjectFollowUp.BFF.Domain.Users;
+﻿namespace ProjectFollowUp.BFF.Domain.User;
 
 using System;
 using System.Diagnostics.CodeAnalysis;

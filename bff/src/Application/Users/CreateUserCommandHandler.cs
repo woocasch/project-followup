@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.IdentityProvider;
-using ProjectFollowUp.BFF.Domain.Users;
-using ProjectFollowUp.BFF.Domain.Users.UserEvents;
+using ProjectFollowUp.BFF.Domain.User;
+using ProjectFollowUp.BFF.Domain.User.Events;
 
 public sealed class CreateUserCommandHandler(
     IIdentityProvider identityProvider) : CommandHandlerBase<CreateUserCommand>

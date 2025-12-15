@@ -2,8 +2,8 @@
 
 using System.Collections.ObjectModel;
 
-using ProjectFollowUp.BFF.Domain.Projects;
-using ProjectFollowUp.BFF.Domain.Projects.ProjectEvents;
+using ProjectFollowUp.BFF.Domain.Project;
+using ProjectFollowUp.BFF.Domain.Project.Events;
 
 internal static class UsersStore
 {

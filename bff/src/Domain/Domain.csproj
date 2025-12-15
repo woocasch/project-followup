@@ -9,7 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Update="Users\EmailAddressResources.Designer.cs">
+    <Compile Update="User\EmailAddressResources.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>EmailAddressResources.resx</DependentUpon>
@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Update="Users\EmailAddressResources.resx">
+    <EmbeddedResource Update="User\EmailAddressResources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>EmailAddressResources.Designer.cs</LastGenOutput>
     </EmbeddedResource>

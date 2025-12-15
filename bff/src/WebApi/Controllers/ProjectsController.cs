@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.Projects;
-using ProjectFollowUp.BFF.Domain.Projects;
+using ProjectFollowUp.BFF.Domain.Project;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 
 [Route("api/[controller]")]

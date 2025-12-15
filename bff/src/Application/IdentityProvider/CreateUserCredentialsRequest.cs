@@ -1,6 +1,6 @@
 ﻿namespace ProjectFollowUp.BFF.Application.IdentityProvider;
 
-using ProjectFollowUp.BFF.Domain.Users;
+using ProjectFollowUp.BFF.Domain.User;
 
 public sealed class CreateUserCredentialsRequest(
     UserId userId,

@@ -25,7 +25,7 @@ processors:
         from_attribute: service_version
         action: upsert
       - key: deployment.environment
-        value: "docker"
+        from_attribute: deployment_environment
         action: upsert
 
   # Transform logs to be compatible with Elasticsearch

@@ -81,6 +81,8 @@ services:
       - ./otel-collector/otel-collector-config.yml:/etc/otel-collector-config.yml
       - /var/log:/var/log:ro
       - otel-data:/tmp
+    ports:
+      - "5001:4317"
     # ports:
     #   - "4317:4317"   # OTLP gRPC receiver
     #   - "4318:4318"   # OTLP HTTP receiver

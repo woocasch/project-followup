@@ -11,6 +11,7 @@ COPY ["src/Application/Application.csproj", "src/Application/"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 COPY ["src/WebApi/WebApi.csproj", "src/WebApi/"]
+COPY ["tests/Domain.UnitTests/Domain.UnitTests.csproj", "tests/Domain.UnitTests/"]
 COPY ["tests/WebApi.IntegrationTests/WebApi.IntegrationTests.csproj", "tests/WebApi.IntegrationTests/"]
 
 RUN dotnet restore "ProjectFollowUp.slnx"

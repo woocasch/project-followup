@@ -7,4 +7,7 @@ export default defineConfig({
   html: {
     title: 'Project follow-up',
   },
+  server: {
+    port: 4000,
+  },
 });

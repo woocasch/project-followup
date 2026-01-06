@@ -4,6 +4,11 @@ using System.Text.Json.Serialization;
 
 using FluentValidation;
 
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
+
 using ProjectFollowUp.BFF.Application;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
@@ -34,11 +39,49 @@ builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
 builder.Services.AddScoped<IValidator<UpdateInput>, UpdateInputValidator>();
 builder.Services.AddKeycloakIdentityProvider();
 builder.Services.Configure<KeycloakSettings>(builder.Configuration.GetSection("Keycloak"));
+var keycloakBaseAddress = builder.Configuration.GetValue("Keycloak:BaseAddress", string.Empty);
 builder.Services.AddHttpClient("Keycloak", client =>
 {
-    client.BaseAddress = new Uri("http://localhost:5000/auth/");
+    client.BaseAddress = new Uri(keycloakBaseAddress);
 });
 builder.Services.AddMemoryCache();
+
+// Configure OpenTelemetry
+var serviceName = builder.Configuration.GetValue("OpenTelemetry:ServiceName", "UNKNOWN"); ;
+var serviceVersion = builder.Configuration.GetValue("OpenTelemetry:ServiceVersion", "X.X.X");
+var otlpEndpoint = builder.Configuration.GetValue("OpenTelemetry:OtlpEndpoint", string.Empty);
+builder.Logging.ClearProviders();
+builder.Services.AddOpenTelemetry()
+    .ConfigureResource(resource => resource
+        .AddService(serviceName: serviceName, serviceVersion: serviceVersion))
+    .WithLogging(logging => logging
+        .AddConsoleExporter()
+        .AddOtlpExporter(options =>
+        {
+            // OTLP gRPC endpoint
+            options.Endpoint = new Uri(otlpEndpoint);
+            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+        }))
+    .WithTracing(tracing => tracing
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddOtlpExporter(options =>
+        {
+            // OTLP gRPC endpoint
+            options.Endpoint = new Uri(otlpEndpoint);
+            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+        }))
+    .WithMetrics(metrics => metrics
+        .AddAspNetCoreInstrumentation()
+        .AddHttpClientInstrumentation()
+        .AddProcessInstrumentation()
+        .AddRuntimeInstrumentation()
+        .AddOtlpExporter(options =>
+        {
+            // OTLP gRPC endpoint
+            options.Endpoint = new Uri(otlpEndpoint);
+            options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
+        }));
 
 var app = builder.Build();
 

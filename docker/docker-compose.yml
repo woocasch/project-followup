@@ -7,7 +7,7 @@ services:
     hostname: bff.projectfollowup.local
     restart: unless-stopped
     environment:
-      - Keycloak__baseAddress=http://otel-collector.projectfollowup.local:4317
+      - Keycloak__baseAddress=http://keycloak.projectfollowup.local:8080
       - Keycloak__clientSecret=LE6W5fO2GsZKMxTo7EWZzcXWL283GCk7
       - OpenTelemetry__OtlpEndpoint=http://otel-collector.projectfollowup.local:4317
     networks:
@@ -46,11 +46,20 @@ services:
   keycloak.projectfollowup.local:
     container_name: keycloak.projectfollowup.local
     hostname: keycloak.projectfollowup.local
-    image: quay.io/keycloak/keycloak:26.0
+    image: quay.io/keycloak/keycloak:26.5
     command:
       - start
       - --hostname=http://localhost:5000/auth
       - --hostname-strict=false
+      - --proxy-headers=xforwarded
+      - --telemetry-endpoint=http://otel-collector.projectfollowup.local:4317
+      - --telemetry-service-name=ProjectFollowUp.Services.Keycloak
+      - --feature-opentelemetry-logs=enabled
+      - --feature-opentelemetry-metrics=enabled
+      - --telemetry-logs-enabled=true
+      - --metrics-enabled=true
+      - --telemetry-metrics-enabled=true
+      - --tracing-enabled=true
       # - --optimized
     depends_on:
       - keycloak.storage.projectfollowup.local

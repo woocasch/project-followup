@@ -120,8 +120,8 @@ app.UseCors(options =>
 
 await app.StartAsync();
 
-var usersProjection = app.Services.GetRequiredService<ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProcessing.UsersProjection>();
-await usersProjection.CreateProjection(CancellationToken.None);
+var projectionsInitializer = app.Services.GetRequiredService<ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProcessing.IProjectionsInitializer>();
+await projectionsInitializer.InitializeProjections(CancellationToken.None);
 
 await app.WaitForShutdownAsync();
 

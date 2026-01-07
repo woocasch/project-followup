@@ -53,14 +53,6 @@ services:
       - --hostname=http://localhost:5000/auth
       - --hostname-strict=false
       - --proxy-headers=xforwarded
-      - --telemetry-endpoint=http://otel-collector.projectfollowup.local:4317
-      - --telemetry-service-name=ProjectFollowUp.Services.Keycloak
-      - --feature-opentelemetry-logs=enabled
-      - --feature-opentelemetry-metrics=enabled
-      - --telemetry-logs-enabled=true
-      - --metrics-enabled=true
-      - --telemetry-metrics-enabled=true
-      - --tracing-enabled=true
       # - --optimized
     depends_on:
       - keycloak.storage.projectfollowup.local
@@ -115,10 +107,6 @@ services:
       - KURRENT_EXT_TCP_PORT=1113
       - KURRENT_EXT_HTTP_PORT=2113
       - KURRENT_ENABLE_ATOM_PUB_OVER_HTTP=true
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector.projectfollowup.local:4317
-      - OTEL_SERVICE_NAME=ProjectFollowUp.Services.KurrentDB
-      - OTEL_RESOURCE_ATTRIBUTES=service.name=ProjectFollowUp.Services.KurrentDB
-      - KURRENT_ENABLE_OPENTELEMETRY=true
       - EVENTSTORE_EnableAtomPubOverHttp=true
     ports:
       - "5002:2113"  # HTTP API

@@ -118,7 +118,12 @@ app.UseCors(options =>
         .SetIsOriginAllowed(_ => true)
         .AllowCredentials());
 
-app.Run();
+await app.StartAsync();
+
+var usersProjection = app.Services.GetRequiredService<ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProcessing.UsersProjection>();
+await usersProjection.CreateProjection(CancellationToken.None);
+
+await app.WaitForShutdownAsync();
 
 namespace ProjectFollowUp.BFF.WebApi
 {

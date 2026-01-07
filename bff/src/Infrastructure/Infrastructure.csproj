@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="EventSourcing\Kurrent\ProjectionsProcessing\Users.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="KurrentDB.Client" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
     <PackageReference Include="Microsoft.Extensions.Http" />

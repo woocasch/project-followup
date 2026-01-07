@@ -109,6 +109,7 @@ services:
     restart: unless-stopped
     command:
       - --insecure
+      - --run-projections=All
     environment:
       - KURRENT_CLUSTER_SIZE=1
       - KURRENT_EXT_TCP_PORT=1113

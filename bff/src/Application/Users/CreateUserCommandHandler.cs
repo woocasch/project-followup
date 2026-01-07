@@ -4,12 +4,14 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
+using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Application.IdentityProvider;
 using ProjectFollowUp.BFF.Domain.User;
 using ProjectFollowUp.BFF.Domain.User.Events;
 
 public sealed class CreateUserCommandHandler(
-    IIdentityProvider identityProvider) : CommandHandlerBase<CreateUserCommand>
+    IIdentityProvider identityProvider,
+    IEventStreamsRepository eventsRepository) : CommandHandlerBase<CreateUserCommand>
 {
     protected override async Task<CommandResult> HandleCommand(
         CreateUserCommand command,
@@ -38,7 +40,12 @@ public sealed class CreateUserCommandHandler(
             command.DisplayName,
             email,
             DateTimeOffset.UtcNow);
-        UsersStore.AddEvent(command.Id, userCreatedEvent);
+        ////UsersStore.AddEvent(command.Id, userCreatedEvent);
+        await eventsRepository.AppendToStreamAsync(
+            command.Id.Value.ToString(),
+            [userCreatedEvent],
+            expectedVersion: 0,
+            cancellationToken);
     }
 
     private async Task<bool> CreateUserCredentials(

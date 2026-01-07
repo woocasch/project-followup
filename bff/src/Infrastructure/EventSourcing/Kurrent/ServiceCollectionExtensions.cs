@@ -19,7 +19,9 @@ public static class ServiceCollectionExtensions
         var client = new KurrentDBClient(settings);
 
         services.AddSingleton(client);
+        services.Configure<KurrentSettings>(configuration.GetSection("Kurrent"));
         services.AddScoped<IEventStreamsRepository, KurrentEventStreamsRepository>();
+        services.AddSingleton<INamingService, DefaultNamingService>();
 
         return services;
     }

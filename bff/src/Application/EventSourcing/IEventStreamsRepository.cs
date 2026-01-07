@@ -2,25 +2,26 @@
 
 public interface IEventStreamsRepository
 {
-    Task AppendToStreamAsync(
-        string streamId,
+    Task AppendToStreamAsync<TAggregate>(
+        string aggregateId,
         IEnumerable<object> events,
         ulong expectedVersion,
-        CancellationToken cancellationToken = default);
+        CancellationToken cancellationToken)
+        where TAggregate : class;
 
     Task<IEnumerable<EventEnvelope>> ReadStreamAsync(
-        string streamId,
-        CancellationToken cancellationToken = default);
+        string aggregateId,
+        CancellationToken cancellationToken);
 
     Task<ulong> GetStreamVersionAsync(
-        string streamId,
-        CancellationToken cancellationToken = default);
+        string aggregateId,
+        CancellationToken cancellationToken);
 
     Task<bool> StreamExistsAsync(
-        string streamId,
-        CancellationToken cancellationToken = default);
+        string aggregateId,
+        CancellationToken cancellationToken);
 
     Task DeleteStreamAsync(
-        string streamId,
-        CancellationToken cancellationToken = default);
+        string aggregateId,
+        CancellationToken cancellationToken);
 }

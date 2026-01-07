@@ -41,7 +41,7 @@ public sealed class CreateUserCommandHandler(
             email,
             DateTimeOffset.UtcNow);
         ////UsersStore.AddEvent(command.Id, userCreatedEvent);
-        await eventsRepository.AppendToStreamAsync(
+        await eventsRepository.AppendToStreamAsync<UserAggregateRoot>(
             command.Id.Value.ToString(),
             [userCreatedEvent],
             expectedVersion: 0,

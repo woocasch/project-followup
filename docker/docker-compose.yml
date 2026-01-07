@@ -10,6 +10,7 @@ services:
       - Keycloak__baseAddress=http://keycloak.projectfollowup.local:8080
       - Keycloak__clientSecret=LE6W5fO2GsZKMxTo7EWZzcXWL283GCk7
       - OpenTelemetry__OtlpEndpoint=http://otel-collector.projectfollowup.local:4317
+      - OpenTelemetry__Environment=LocalDocker
     networks:
       - nginx-network
       - monitoring

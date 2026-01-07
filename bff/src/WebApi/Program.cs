@@ -45,6 +45,12 @@ var serviceVersion = builder.Configuration.GetValue("OpenTelemetry:ServiceVersio
 var otlpEndpoint = builder.Configuration.GetValue("OpenTelemetry:OtlpEndpoint", string.Empty);
 var environment = builder.Configuration.GetValue("OpenTelemetry:Environment", "---");
 builder.Logging.ClearProviders();
+builder.Logging.AddOpenTelemetry(options =>
+{
+    options.IncludeFormattedMessage = true;
+    options.ParseStateValues = true;
+    options.IncludeScopes = true;
+});
 builder.Services.AddOpenTelemetry()
     .ConfigureResource(resource => resource
         .AddService(serviceName: serviceName, serviceVersion: serviceVersion)

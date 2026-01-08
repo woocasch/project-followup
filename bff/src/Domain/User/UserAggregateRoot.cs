@@ -32,7 +32,6 @@ public sealed class UserAggregateRoot : AggregateRootBase<UserId>
         return user;
     }
 
-
     public static UserAggregateRoot Rehydrate(IEnumerable<object> domainEvents)
     {
         var user = new UserAggregateRoot();

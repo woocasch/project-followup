@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using ProjectFollowUp.BFF.Domain.User;
+
 public abstract class AggregateRootBase<TId> : IAggregateRoot
     where TId : notnull
 {

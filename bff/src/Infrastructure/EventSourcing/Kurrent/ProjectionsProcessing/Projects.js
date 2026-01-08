@@ -14,6 +14,10 @@
             state.title = event.data.title;
             state.description = event.data.description;
             state.createdAt = event.data.createdAt;
+        },
+        ProjectDetailsChanged: function (state, event) {
+            state.title = event.data.title;
+            state.description = event.data.description;
         }
     })
     .outputState();

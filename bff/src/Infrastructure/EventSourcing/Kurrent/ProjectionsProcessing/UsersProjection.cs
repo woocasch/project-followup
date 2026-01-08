@@ -6,7 +6,7 @@ public sealed class UsersProjection(
     KurrentDBProjectionManagementClient client)
     : ProjectionBase(client, ProjectionName, typeof(UsersProjection).Assembly, ResourceName)
 {
-    private const string ProjectionName = "Users";
+    public const string ProjectionName = "User";
 
     private const string ResourceName = "ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProcessing.Users.js";
 }

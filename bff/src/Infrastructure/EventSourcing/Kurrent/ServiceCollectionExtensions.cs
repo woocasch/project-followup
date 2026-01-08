@@ -27,8 +27,10 @@ public static class ServiceCollectionExtensions
         var projectionClient = new KurrentDBProjectionManagementClient(projectionClientSettings);
         services.AddSingleton(projectionClient);
         services.AddTransient<IProjection, UsersProjection>();
+        services.AddTransient<IProjection, ProjectsProjection>();
         services.AddSingleton<IProjectionFactory, ProjectionFactory>();
         services.AddSingleton<IProjectionsInitializer, ProjectionsInitializer>();
+        services.AddScoped<Application.Projects.IReadModel, ProjectsReadModel>();
         return services;
     }
 }

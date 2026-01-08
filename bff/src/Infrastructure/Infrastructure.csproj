@@ -9,6 +9,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="EventSourcing\Kurrent\ProjectionsProcessing\Projects.js" />
     <EmbeddedResource Include="EventSourcing\Kurrent\ProjectionsProcessing\Users.js" />
   </ItemGroup>
 

@@ -39,6 +39,7 @@ public sealed class GetProjectTests : TestBase
 
     private async Task GetProjectRequestIsSent()
     {
+        await Task.Delay(3000);
         this.response = await this.Client.SendAsync(this.request);
     }
 

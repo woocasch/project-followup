@@ -14,15 +14,28 @@ public abstract class ProjectionBase(
     {
         if (await this.ProjectionExists())
         {
-            await client.UpdateAsync(projectionName, this.GetProjectionContent(), cancellationToken: cancellationToken);
+            await client.UpdateAsync(
+                projectionName,
+                this.GetProjectionQuery(),
+                emitEnabled: true,
+                cancellationToken: cancellationToken);
         }
         else
         {
-            await client.CreateContinuousAsync(projectionName, this.GetProjectionContent(), cancellationToken: cancellationToken);
+            var projectionQuery = this.GetProjectionQuery();
+            await client.CreateContinuousAsync(
+                projectionName,
+                projectionQuery,
+                cancellationToken: cancellationToken);
+            await client.UpdateAsync(
+                projectionName,
+                projectionQuery,
+                emitEnabled: true,
+                cancellationToken: cancellationToken);
         }
     }
 
-    private string GetProjectionContent()
+    private string GetProjectionQuery()
     {
         using var stream = resourcesContainer.GetManifestResourceStream(resourceName)
             ?? throw new InvalidOperationException($"Embedded resource '{resourceName}' not found in '{resourcesContainer.FullName}'.");

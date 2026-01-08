@@ -35,17 +35,20 @@ public sealed class CreateUserCommandHandler(
     {
         await Task.Yield();
         var email = EmailAddress.FromString(command.Email);
-        var userCreatedEvent = new UserCreated(
+        var user = UserAggregateRoot.Create(
             command.Id,
             command.DisplayName,
             email,
             DateTimeOffset.UtcNow);
-        ////UsersStore.AddEvent(command.Id, userCreatedEvent);
-        await eventsRepository.AppendToStreamAsync<UserAggregateRoot>(
-            command.Id.Value.ToString(),
-            [userCreatedEvent],
-            expectedVersion: 0,
+        await eventsRepository.StoreStreamAsync(
+            user,
             cancellationToken);
+        ////UsersStore.AddEvent(command.Id, userCreatedEvent);
+        //await eventsRepository.AppendToStreamAsync<UserAggregateRoot>(
+        //    command.Id.Value.ToString(),
+        //    [userCreatedEvent],
+        //    expectedVersion: 0,
+        //    cancellationToken);
     }
 
     private async Task<bool> CreateUserCredentials(

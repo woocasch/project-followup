@@ -8,6 +8,8 @@ public sealed class UserAggregateRoot : AggregateRootBase<UserId>
     {
     }
 
+    public override Guid AggregateId => this.Id.Value;
+
     public string DisplayName { get; private set; } = null!;
 
     public EmailAddress Email { get; private set; } = null!;

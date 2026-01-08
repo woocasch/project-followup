@@ -21,7 +21,7 @@ public sealed class KurrentEventStreamsRepository(
     };
 
     public async Task AppendToStreamAsync<TAggregate>(
-        string aggregateId,
+        Guid aggregateId,
         IEnumerable<object> events,
         ulong expectedVersion,
         CancellationToken cancellationToken)
@@ -46,19 +46,23 @@ public sealed class KurrentEventStreamsRepository(
             cancellationToken: cancellationToken);
     }
 
-    public async Task DeleteStreamAsync(string aggregateId, CancellationToken cancellationToken)
+    public async Task DeleteStreamAsync<TAggregate>(Guid aggregateId, CancellationToken cancellationToken)
+        where TAggregate : class
     {
+        var streamId = namingService.GetStreamName<TAggregate>(aggregateId);
         await eventStoreClient.DeleteAsync(
-            aggregateId,
+            streamId,
             StreamState.Any,
             cancellationToken: cancellationToken);
     }
 
-    public async Task<ulong> GetStreamVersionAsync(string aggregateId, CancellationToken cancellationToken)
+    public async Task<ulong> GetStreamVersionAsync<TAggregate>(Guid aggregateId, CancellationToken cancellationToken)
+        where TAggregate : class
     {
+        var streamId = namingService.GetStreamName<TAggregate>(aggregateId);
         var result = eventStoreClient.ReadStreamAsync(
             Direction.Backwards,
-            aggregateId,
+            streamId,
             StreamPosition.End,
             maxCount: 1,
             cancellationToken: cancellationToken);
@@ -79,11 +83,13 @@ public sealed class KurrentEventStreamsRepository(
         return (ulong)events[0].Event.EventNumber.ToInt64() + 1;
     }
 
-    public async Task<IEnumerable<EventEnvelope>> ReadStreamAsync(string aggregateId, CancellationToken cancellationToken)
+    public async Task<IEnumerable<EventEnvelope>> ReadStreamAsync<TAggregate>(Guid aggregateId, CancellationToken cancellationToken)
+        where TAggregate : class
     {
+        var streamId = namingService.GetStreamName<TAggregate>(aggregateId);
         var result = eventStoreClient.ReadStreamAsync(
             Direction.Forwards,
-            aggregateId,
+            streamId,
             StreamPosition.Start,
             cancellationToken: cancellationToken);
 
@@ -95,7 +101,7 @@ public sealed class KurrentEventStreamsRepository(
         }
 
         var events = new List<EventEnvelope>();
-        var streamType = ExtractStreamType(aggregateId);
+        var streamType = ExtractStreamType(streamId);
 
         await foreach (var resolvedEvent in result)
         {
@@ -127,7 +133,7 @@ public sealed class KurrentEventStreamsRepository(
             var envelope = new EventEnvelope(
                 @event: eventData,
                 streamType: streamType,
-                streamId: aggregateId,
+                streamId: streamId,
                 streamVersion: (ulong)resolvedEvent.Event.EventNumber.ToInt64() + 1,
                 timestamp: resolvedEvent.Event.Created,
                 eventTypeName: resolvedEvent.Event.EventType);
@@ -138,11 +144,13 @@ public sealed class KurrentEventStreamsRepository(
         return events;
     }
 
-    public async Task<bool> StreamExistsAsync(string aggregateId, CancellationToken cancellationToken)
+    public async Task<bool> StreamExistsAsync<TAggregate>(Guid aggregateId, CancellationToken cancellationToken)
+        where TAggregate : class
     {
+        var streamId = namingService.GetStreamName<TAggregate>(aggregateId);
         var result = eventStoreClient.ReadStreamAsync(
             Direction.Forwards,
-            aggregateId,
+            streamId,
             StreamPosition.Start,
             maxCount: 1,
             cancellationToken: cancellationToken);

@@ -2,6 +2,6 @@
 
 public interface INamingService
 {
-    string GetStreamName<TAggregateType>(string aggregateId)
+    string GetStreamName<TAggregateType>(Guid aggregateId)
         where TAggregateType : class;
 }

@@ -11,6 +11,7 @@ services:
       - Keycloak__clientSecret=LE6W5fO2GsZKMxTo7EWZzcXWL283GCk7
       - OpenTelemetry__OtlpEndpoint=http://otel-collector.projectfollowup.local:4317
       - OpenTelemetry__Environment=LocalDocker
+      - Kurrent__ConnectionString=esdb://kurrent.projectfollowup.local:2113?tls=false
     networks:
       - nginx-network
       - monitoring
@@ -112,8 +113,8 @@ services:
       - "5002:2113"  # HTTP API
       - "5003:1113"  # TCP interface
     volumes:
-      - kurrent-data:/var/lib/kurrent
-      - kurrent-logs:/var/log/kurrent
+      - kurrent-data:/var/lib/kurrentdb
+      - kurrent-logs:/var/log/kurrentdb
     networks:
       - nginx-network
       - monitoring

@@ -1,18 +1,20 @@
 ﻿fromCategory("UserProfile")
+    .foreachStream()
     .when({
         $init: function () {
             return {
-                totalUsers: 0,
-                users: [],
+                id: null,
+                displayName: null,
+                email: null,
+                createdAt: null,
             };
         },
         UserCreated: function (state, event) {
-            state.totalUsers += 1;
-            state.users.push({
-                id: event.data.id.value,
-                displayName: event.data.displayName,
-                email: event.data.email.value,
-                createdAt: event.data.createdAt
-            });
+            state.id = event.data.id.value;
+            state.displayName = event.data.displayName;
+            state.email = event.data.email.value;
+            state.createdAt = event.data.createdAt;
+            linkTo('EmailToUser-' + event.data.email.value.toLowerCase(), event);
         }
-    });
+    })
+    .outputState();

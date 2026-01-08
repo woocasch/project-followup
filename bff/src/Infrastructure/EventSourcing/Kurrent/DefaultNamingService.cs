@@ -9,7 +9,7 @@ public sealed class DefaultNamingService(
 
     private KurrentSettings Settings => settings.Value;
 
-    public string GetStreamName<TAggregateType>(string aggregateId) where TAggregateType : class
+    public string GetStreamName<TAggregateType>(Guid aggregateId) where TAggregateType : class
     {
         var aggregateType = typeof(TAggregateType);
         if (!aggregatePrefixes.TryGetValue(aggregateType, out var prefix))

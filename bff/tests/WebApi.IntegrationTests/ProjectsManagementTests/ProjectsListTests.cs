@@ -47,6 +47,7 @@ public sealed class ProjectsListTests(WebApiFactory webApiFactory) : TestBase(we
 
     private async Task FetchRequestIsSent()
     {
+        await Task.Delay(TimeSpan.FromSeconds(3));
         this.response = await this.Client.SendAsync(this.request);
     }
 

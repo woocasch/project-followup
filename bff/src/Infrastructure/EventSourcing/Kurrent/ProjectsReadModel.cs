@@ -1,6 +1,7 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent;
 
 using System;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -16,6 +17,7 @@ using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProces
 
 public sealed class ProjectsReadModel(
     KurrentDBClient client,
+    KurrentDBProjectionManagementClient projectionClient,
     INamingService namingService) : IReadModel
 {
     public async Task<ProjectData?> GetAsync(Guid projectId, CancellationToken cancellationToken)
@@ -46,6 +48,26 @@ public sealed class ProjectsReadModel(
         return null;
     }
 
+    public async Task<ReadOnlyCollection<ProjectData>> FetchAsync(CancellationToken cancellationToken)
+    {
+        var projectsIds = await this.FetchProjectIds(cancellationToken);
+        var result = new Collection<ProjectData>();
+        await Parallel.ForEachAsync(
+            projectsIds,
+            async (id, ct) =>
+            {
+                var projectData = await this.GetAsync(id, cancellationToken);
+                if (projectData is null)
+                {
+                    return;
+                }
+
+                result.Add(projectData);
+            });
+
+        return new(result);
+    }
+
     private static ProjectData? DeserializeProject(string json)
     {
         var internalData = JsonSerializer.Deserialize<InternalProjectData>(json);
@@ -58,6 +80,14 @@ public sealed class ProjectsReadModel(
             internalData.Id,
             internalData.Title,
             internalData.Description);
+    }
+
+    private async Task<IEnumerable<Guid>> FetchProjectIds(CancellationToken cancellationToken)
+    {
+        var projectsList = await projectionClient.GetStateAsync<ProjectsListState>(
+            "ProjectsList",
+            cancellationToken: cancellationToken);
+        return projectsList.ProjectIds;
     }
 
     private class InternalProjectData
@@ -75,4 +105,12 @@ public sealed class ProjectsReadModel(
         public DateTimeOffset CreatedAt { get; set; }
     }
 
+    private class ProjectsListState
+    {
+        [JsonPropertyName("count")]
+        public int Count { get; set; }
+
+        [JsonPropertyName("projectIds")]
+        public Guid[] ProjectIds { get; set; } = [];
+    }
 }

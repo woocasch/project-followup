@@ -4,6 +4,7 @@ using KurrentDB.Client;
 
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProcessing;
@@ -14,23 +15,36 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var connectionString = configuration.GetValue<string>("Kurrent:ConnectionString")!;
-
-        var settings = KurrentDBClientSettings.Create(connectionString);
-        var client = new KurrentDBClient(settings);
-
-        services.AddSingleton(client);
         services.Configure<KurrentSettings>(configuration.GetSection("Kurrent"));
+        services.AddSingleton(sp =>
+        {
+            var settings = sp.GetRequiredService<IOptions<KurrentSettings>>();
+            var clientSettings = KurrentDBClientSettings.Create(settings.Value.ConnectionString);
+            return new KurrentDBClient(clientSettings);
+        });
+        services.AddSingleton(sp =>
+        {
+            var settings = sp.GetRequiredService<IOptions<KurrentSettings>>();
+            var clientSettings = KurrentDBClientSettings.Create(settings.Value.ConnectionString);
+            return new KurrentDBProjectionManagementClient(clientSettings);
+        });
+
         services.AddScoped<IEventStreamsRepository, KurrentEventStreamsRepository>();
         services.AddSingleton<INamingService, DefaultNamingService>();
-        var projectionClientSettings = KurrentDBClientSettings.Create(connectionString);
-        var projectionClient = new KurrentDBProjectionManagementClient(projectionClientSettings);
-        services.AddSingleton(projectionClient);
-        services.AddTransient<IProjection, UsersProjection>();
-        services.AddTransient<IProjection, ProjectsProjection>();
+        services.AddProjections();
         services.AddSingleton<IProjectionFactory, ProjectionFactory>();
         services.AddSingleton<IProjectionsInitializer, ProjectionsInitializer>();
         services.AddScoped<Application.Projects.IReadModel, ProjectsReadModel>();
+        return services;
+    }
+
+    private static IServiceCollection AddProjections(
+        this IServiceCollection services)
+    {
+        services
+            .AddTransient<IProjection, UsersProjection>()
+            .AddTransient<IProjection, ProjectsProjection>()
+            .AddTransient<IProjection, ProjectsListProjection>();
         return services;
     }
 }

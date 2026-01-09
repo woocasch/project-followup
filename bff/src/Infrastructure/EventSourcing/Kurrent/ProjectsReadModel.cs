@@ -57,7 +57,7 @@ public sealed class ProjectsReadModel(
             projectsIds,
             async (id, ct) =>
             {
-                var projectData = await this.GetAsync(id, cancellationToken);
+                var projectData = await this.GetAsync(id, ct);
                 if (projectData is null)
                 {
                     return;

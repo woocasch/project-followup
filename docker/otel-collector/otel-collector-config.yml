@@ -28,7 +28,7 @@ processors:
         from_attribute: deployment_environment
         action: upsert
 
-  # Transform logs to be compatible with Elasticsearch
+  # Transform logs to be compatible with Loki
   transform/logs:
     log_statements:
       - context: log

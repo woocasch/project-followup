@@ -146,6 +146,5 @@ networks:
 volumes:
   keycloak-data:
   otel-data:
-  elasticsearch-data:
   kurrent-data:
   kurrent-logs:

@@ -2,7 +2,9 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
+[method: JsonConstructor]
 public readonly struct ProjectId(Guid value) : IAggregateId<ProjectId>
 {
     public readonly Guid Value => value;

@@ -4,6 +4,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using ProjectFollowUp.BFF.Domain.User;
+
 public abstract class AggregateRootBase<TId> : IAggregateRoot
     where TId : notnull
 {
@@ -11,18 +13,7 @@ public abstract class AggregateRootBase<TId> : IAggregateRoot
 
     public TId Id { get; protected set; } = default!;
 
-    public Guid AggregateId
-    {
-        get
-        {
-            if (this.Id is Guid guidId)
-            {
-                return guidId;
-            }
-
-            return Guid.Empty;
-        }
-    }
+    public abstract Guid AggregateId { get; }
 
     public virtual string AggregateType => this.GetType().FullName!;
 

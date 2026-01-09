@@ -4,19 +4,22 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
+using ProjectFollowUp.BFF.Application.EventSourcing;
+using ProjectFollowUp.BFF.Domain.Project;
 using ProjectFollowUp.BFF.Domain.Project.Events;
 
-public sealed class UpdateProjectCommandHandler : CommandHandlerBase<UpdateProjectCommand>
+public sealed class UpdateProjectCommandHandler(
+    IEventStreamsRepository eventsRepository,
+    IAggregateFactory aggregateFactory) : CommandHandlerBase<UpdateProjectCommand>
 {
     protected override async Task<CommandResult> HandleCommand(UpdateProjectCommand command, CancellationToken cancellationToken)
     {
-        await Task.Yield();
-        var domainEvent = new ProjectDetailsChanged(
-            command.ProjectId,
-            command.Title,
-            command.Description,
-            command.CreatedAt);
-        ProjectsStore.AddEvent(command.ProjectId, domainEvent);
+        var existingProjectEvents = await eventsRepository.ReadStreamAsync<ProjectAggregateRoot>(
+            command.ProjectId.ToGuid(),
+            cancellationToken);
+        var project = aggregateFactory.Create(existingProjectEvents, ProjectAggregateRoot.Rehydrate);
+        project.ChangeDetails(command.Title, command.Description);
+        await eventsRepository.StoreStreamAsync(project, cancellationToken);
         return CommandResult.Success();
     }
 }

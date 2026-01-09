@@ -4,22 +4,23 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
+using ProjectFollowUp.BFF.Domain.Project;
 
-public sealed class GetProjectQueryHandler : QueryHandlerBase<GetProjectQuery, GetProjectResult>
+public sealed class GetProjectQueryHandler(
+    IReadModel readModel) : QueryHandlerBase<GetProjectQuery, GetProjectResult>
 {
     protected override async Task<GetProjectResult?> HandleQuery(
         GetProjectQuery query,
         CancellationToken cancellationToken)
     {
-        await Task.Yield();
-        var project = ProjectsStore.GetProjectById(query.ProjectId);
+        var project = await readModel.GetAsync(query.ProjectId.ToGuid(), cancellationToken);
         if (project is null)
         {
             return null;
         }
 
         var result = new GetProjectResult(
-            project.Id,
+            ProjectId.FromGuid(project.Id),
             project.Title,
             project.Description);
         return result;

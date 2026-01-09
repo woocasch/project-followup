@@ -8,6 +8,8 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
     {
     }
 
+    public override Guid AggregateId => this.Id.Value;
+
     public string Title { get; private set; } = null!;
 
     public string Description { get; private set; } = null!;

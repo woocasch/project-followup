@@ -1,6 +1,7 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent;
 
 using System;
+using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.Json;
@@ -51,7 +52,7 @@ public sealed class ProjectsReadModel(
     public async Task<ReadOnlyCollection<ProjectData>> FetchAsync(CancellationToken cancellationToken)
     {
         var projectsIds = await this.FetchProjectIds(cancellationToken);
-        var result = new Collection<ProjectData>();
+        var result = new ConcurrentBag<ProjectData>();
         await Parallel.ForEachAsync(
             projectsIds,
             async (id, ct) =>
@@ -65,7 +66,7 @@ public sealed class ProjectsReadModel(
                 result.Add(projectData);
             });
 
-        return new(result);
+        return new(result.ToArray());
     }
 
     private static ProjectData? DeserializeProject(string json)

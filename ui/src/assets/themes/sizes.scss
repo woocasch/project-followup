@@ -17,4 +17,8 @@ body {
     --fontSize-large: 1.5em;
     --fontSize-xlarge: 2em;
     --fontSize-xxlarge: 2.5em;
+    // Shadows
+    --shadows-small: 0 1px 3px rgba(0, 0, 0, 0.1);
+    --shadows-medium: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadows-large: 0 10px 25px rgba(0, 0, 0, 0.15);
 }

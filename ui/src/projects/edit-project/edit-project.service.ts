@@ -3,7 +3,8 @@ import type * as model from './edit-project.model';
 
 export class EditProjectWebService implements model.EditProjectService {
   async getProject(
-    request: model.GetProjectRequest): Promise<model.GetProjectResponse> {
+    request: model.GetProjectRequest,
+  ): Promise<model.GetProjectResponse> {
     const response = await projectsApi.getProject({
       projectId: request.projectId,
     });

@@ -13,10 +13,14 @@ export const theme = {
     warningText: 'var(--colors-warning-text)',
     error: 'var(--colors-error)',
     errorText: 'var(--colors-error-text)',
+    danger: 'var(--colors-error)', // Alias for error
+    dangerLight: 'var(--colors-error-light)', // Light danger color for hover states
     background: 'var(--colors-background)',
     surface: 'var(--colors-surface)',
+    text: 'var(--colors-text-primary)', // Alias for textPrimary
     textPrimary: 'var(--colors-text-primary)',
     textSecondary: 'var(--colors-text-secondary)',
+    border: 'var(--colors-border)', // Border color
   },
   spaces: {
     xsmall: 'var(--spaces-xsmall)',
@@ -38,6 +42,11 @@ export const theme = {
     large: 'var(--fontSize-large)',
     xlarge: 'var(--fontSize-xlarge)',
     xxlarge: 'var(--fontSize-xxlarge)',
+  },
+  shadows: {
+    small: 'var(--shadows-small)',
+    medium: 'var(--shadows-medium)',
+    large: 'var(--shadows-large)',
   },
 };
 

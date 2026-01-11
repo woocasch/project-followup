@@ -2,6 +2,7 @@
 
 import styled from '@emotion/styled';
 import { Outlet } from 'react-router';
+import { UserProfile } from './components';
 import Footer from './layout-elements/footer';
 import Menu from './layout-elements/menu';
 import { theme } from './theme';
@@ -22,9 +23,11 @@ const Header = styled.header(`
   background-color: ${theme.colors.primary};
   width: 100%;
   display: grid;
-  grid-template-columns: 1fr auto;
+  grid-template-columns: 1fr auto auto;
   grid-area: header;
   padding: ${theme.spaces.small};
+  gap: ${theme.spaces.medium};
+  align-items: center;
 `);
 
 const Main = styled.main(`
@@ -43,6 +46,7 @@ export default function AppLayoutComponent() {
       <Header>
         <Menu />
         <ThemeSwitcher />
+        <UserProfile />
       </Header>
       <Main>
         <Outlet />

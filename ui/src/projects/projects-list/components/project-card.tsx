@@ -1,9 +1,15 @@
-import { Button, IconButton, Card, CardSize } from '@components/index';
+import { Card, CardSize, IconButton } from '@components/index';
 import styled from '@emotion/styled';
 import { theme } from '@root/theme';
-import { ClipboardCheck, Pencil, Presentation, ReceiptText, User } from 'lucide-react';
-import type * as model from '../projects-list.model';
+import {
+  ClipboardCheck,
+  Pencil,
+  Presentation,
+  ReceiptText,
+  User,
+} from 'lucide-react';
 import { useNavigate } from 'react-router';
+import type * as model from '../projects-list.model';
 
 interface ProjectCardComponentProps {
   project: model.ProjectListItem;
@@ -62,7 +68,7 @@ export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
         <ButtonsContainer>
           <IconButton icon={Presentation} />
           <IconButton icon={ReceiptText} />
-          <IconButton icon={Pencil}  onClick={onEditClick} />
+          <IconButton icon={Pencil} onClick={onEditClick} />
           <MembersCount>
             <User />
             {project.usersCount}

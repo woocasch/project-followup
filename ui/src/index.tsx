@@ -9,9 +9,11 @@ import '@assets/themes/light.scss';
 import '@assets/themes/dark.scss';
 import '@assets/themes/sizes.scss';
 import '@assets/main.scss';
-import StylingPage from './styling';
-import { loadConfiguration } from './infrastructure/configuration';
 import CreateUser from '@user-accounts/create-user';
+import { AuthProvider, ProtectedRoute } from './infrastructure/auth';
+import { loadConfiguration } from './infrastructure/configuration';
+import StylingPage from './styling';
+import UserInfoPage from './user-info/user-info';
 
 const router = createBrowserRouter([
   {
@@ -20,22 +22,38 @@ const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: HomePage,
+        element: (
+          <ProtectedRoute>
+            <HomePage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: '/projects',
         children: [
           {
             index: true,
-            Component: HomePage,
+            element: (
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: 'create',
-            Component: CreateProject,
+            element: (
+              <ProtectedRoute>
+                <CreateProject />
+              </ProtectedRoute>
+            ),
           },
           {
             path: ':projectId/edit',
-            Component: EditProject,
+            element: (
+              <ProtectedRoute>
+                <EditProject />
+              </ProtectedRoute>
+            ),
           },
         ],
       },
@@ -44,21 +62,45 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            Component: HomePage,
+            element: (
+              <ProtectedRoute roles={['admin', 'user-manager']}>
+                <HomePage />
+              </ProtectedRoute>
+            ),
           },
           {
             path: 'create',
-            Component: CreateUser,
+            element: (
+              <ProtectedRoute roles={['admin', 'user-manager']}>
+                <CreateUser />
+              </ProtectedRoute>
+            ),
           },
-        ]
+        ],
       },
       {
         path: '/styling',
-        Component: StylingPage,
+        element: (
+          <ProtectedRoute>
+            <StylingPage />
+          </ProtectedRoute>
+        ),
+      },
+      {
+        path: '/user-info',
+        element: (
+          <ProtectedRoute>
+            <UserInfoPage />
+          </ProtectedRoute>
+        ),
       },
       {
         path: '*',
-        Component: HomePage,
+        element: (
+          <ProtectedRoute>
+            <HomePage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },
@@ -70,7 +112,11 @@ async function bootstrapApp() {
   const rootEl = document.getElementById('root');
   if (rootEl) {
     const root = ReactDOM.createRoot(rootEl);
-    root.render(<RouterProvider router={router} />);
+    root.render(
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>,
+    );
   }
 }
 

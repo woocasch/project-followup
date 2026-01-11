@@ -1,9 +1,9 @@
-import styled from "@emotion/styled";
-import { theme } from "@root/theme";
 import { Button, PageHeader, Text } from '@components/index';
-import { useNavigate } from "react-router";
-import { useState } from "react";
-import createUserService from "./create-user/create-user.service";
+import styled from '@emotion/styled';
+import { theme } from '@root/theme';
+import { useState } from 'react';
+import { useNavigate } from 'react-router';
+import createUserService from './create-user/create-user.service';
 
 const CreateUserForm = styled.div(`
   margin: auto;
@@ -28,8 +28,8 @@ const ButtonsContainer = styled.div(`
 `);
 
 export default function CreateUser() {
-    const [email, setEmail] = useState('');
-    const [displayName, setDisplayName] = useState('');
+  const [email, setEmail] = useState('');
+  const [displayName, setDisplayName] = useState('');
   const navigate = useNavigate();
 
   async function onCreateClick() {
@@ -42,32 +42,29 @@ export default function CreateUser() {
   function onCancelClick() {
     navigate('/');
   }
-    return (
-        <div>
-            <PageHeader>New user</PageHeader>
-            <CreateUserForm>
-                <Text
-                    value={email}
-                    setValue={(v) => setEmail(v)}
-                    label="Email"
-                />
-                <Text
-                    value={displayName}
-                    setValue={(v) => setDisplayName(v)}
-                    label="Display Name"
-                />
-                <ButtonsContainer>
-                    <Button variant="action" buttonType="rounded" onClick={onCreateClick}>
-                        Create
-                    </Button>
-                    <Button
-                        variant="warning"
-                        buttonType="rounded"
-                        onClick={onCancelClick}
-                    >
-                        Cancel
-                    </Button>
-                </ButtonsContainer>
-            </CreateUserForm>
-        </div>);
+  return (
+    <div>
+      <PageHeader>New user</PageHeader>
+      <CreateUserForm>
+        <Text value={email} setValue={(v) => setEmail(v)} label="Email" />
+        <Text
+          value={displayName}
+          setValue={(v) => setDisplayName(v)}
+          label="Display Name"
+        />
+        <ButtonsContainer>
+          <Button variant="action" buttonType="rounded" onClick={onCreateClick}>
+            Create
+          </Button>
+          <Button
+            variant="warning"
+            buttonType="rounded"
+            onClick={onCancelClick}
+          >
+            Cancel
+          </Button>
+        </ButtonsContainer>
+      </CreateUserForm>
+    </div>
+  );
 }

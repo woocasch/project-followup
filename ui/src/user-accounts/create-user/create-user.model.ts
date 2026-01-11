@@ -1,12 +1,12 @@
 export interface CreateUserRequest {
-    email: string;
-    displayName: string;
+  email: string;
+  displayName: string;
 }
 
 export interface CreateUserResponse {
-    created: boolean;
+  created: boolean;
 }
 
 export interface CreateUserService {
-    createUser(request: CreateUserRequest): Promise<CreateUserResponse>;
+  createUser(request: CreateUserRequest): Promise<CreateUserResponse>;
 }

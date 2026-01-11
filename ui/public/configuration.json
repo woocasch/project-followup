@@ -1,3 +1,8 @@
 {
-    "bffRoot": "https://localhost:7037"
+    "bffRoot": "https://localhost:7037",
+    "keycloak": {
+        "url": "http://localhost:5000/auth",
+        "realm": "project-follow-up",
+        "clientId": "frontend"
+    }
 }

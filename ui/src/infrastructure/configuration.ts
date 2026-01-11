@@ -1,5 +1,12 @@
+export interface KeycloakConfiguration {
+    url: string;
+    realm: string;
+    clientId: string;
+}
+
 export interface ApplicationConfiguration {
     bffRoot: string;
+    keycloak: KeycloakConfiguration;
 }
 
 let config: ApplicationConfiguration;

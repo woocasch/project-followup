@@ -2,7 +2,7 @@ import {
   getAuthorizationHeader,
   getKeycloakInstance,
 } from '@root/infrastructure/auth';
-import getConfig, { isConfigLoaded } from '@root/infrastructure/configuration';
+import getConfig from '@root/infrastructure/configuration';
 import axios from 'axios';
 
 export abstract class ApiClientBase {
@@ -58,13 +58,5 @@ export abstract class ApiClientBase {
     );
 
     return client;
-  }
-
-  private getApiRoot(): string {
-    if (!isConfigLoaded()) {
-      return '';
-    }
-
-    return getConfig().bffRoot;
   }
 }

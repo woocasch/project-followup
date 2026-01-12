@@ -4,6 +4,11 @@ using System.Text.Json.Serialization;
 
 using FluentValidation;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.IdentityModel.Tokens;
+
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -20,7 +25,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+    options.Filters.Add(new AuthorizeFilter(policy));
+});
 
 builder.Services.AddValidation();
 
@@ -41,6 +52,40 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
 builder.Services.AddScoped<IValidator<UpdateInput>, UpdateInputValidator>();
 builder.Services.AddMemoryCache();
+
+// Configure Keycloak Settings
+builder.Services.Configure<KeycloakSettings>(builder.Configuration.GetSection("Keycloak"));
+var keycloakBaseAddress = builder.Configuration.GetValue("Keycloak:BaseAddress", string.Empty);
+var keycloakRealm = builder.Configuration.GetValue("Keycloak:Realm", string.Empty);
+var keycloakAuthority = $"{keycloakBaseAddress.TrimEnd('/')}/realms/{keycloakRealm}";
+
+// Configure JWT Bearer Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = keycloakAuthority;
+        options.Audience = builder.Configuration.GetValue("Keycloak:ClientId", string.Empty);
+        options.RequireHttpsMetadata = false; // Set to true in production
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = false, // Keycloak may not include audience in token
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.FromMinutes(5)
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<ProjectFollowUp.BFF.WebApi.WebApiProgram>>();
+                logger.LogError(context.Exception, "Authentication failed");
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 // Configure OpenTelemetry
 var serviceName = builder.Configuration.GetValue("OpenTelemetry:ServiceName", "UNKNOWN"); ;
@@ -90,8 +135,6 @@ builder.Services.AddOpenTelemetry()
             options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
         }));
 builder.Services.AddKeycloakIdentityProvider();
-builder.Services.Configure<KeycloakSettings>(builder.Configuration.GetSection("Keycloak"));
-var keycloakBaseAddress = builder.Configuration.GetValue("Keycloak:BaseAddress", string.Empty);
 builder.Services.AddHttpClient("Keycloak", client =>
 {
     client.BaseAddress = new Uri(keycloakBaseAddress);
@@ -107,16 +150,17 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
-app.MapControllers();
-
 app.UseCors(options =>
     options
         .AllowAnyHeader()
         .AllowAnyMethod()
         .SetIsOriginAllowed(_ => true)
         .AllowCredentials());
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 
 var projectionsInitializer = app.Services.GetRequiredService<ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProcessing.IProjectionsInitializer>();

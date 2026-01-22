@@ -21,4 +21,19 @@
 		<Using Include="System.Threading.Tasks" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Compile Update="IdentityProvider\IdentityProviderResources.Designer.cs">
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	    <DependentUpon>IdentityProviderResources.resx</DependentUpon>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="IdentityProvider\IdentityProviderResources.resx">
+	    <Generator>ResXFileCodeGenerator</Generator>
+	    <LastGenOutput>IdentityProviderResources.Designer.cs</LastGenOutput>
+	  </EmbeddedResource>
+	</ItemGroup>
+
 </Project>

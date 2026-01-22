@@ -17,26 +17,28 @@ public sealed class CreateUserCommandHandler(
         CreateUserCommand command,
         CancellationToken cancellationToken)
     {
-        var credentialsCreated = await CreateUserCredentials(
+        var credentialsId = await CreateUserCredentials(
             command,
             cancellationToken);
-        if (!credentialsCreated)
+        if (!credentialsId.HasValue)
         {
             return CommandResult.Failure("CreateUserCredentialsFailed");
         }
 
-        await CreateUserProfile(command, cancellationToken);
+        await CreateUserProfile(command, credentialsId.Value, cancellationToken);
         return CommandResult.Success();
     }
 
     private async Task CreateUserProfile(
         CreateUserCommand command,
+        Guid credentialsId,
         CancellationToken cancellationToken)
     {
         await Task.Yield();
         var email = EmailAddress.FromString(command.Email);
         var user = UserAggregateRoot.Create(
             command.Id,
+            credentialsId,
             command.DisplayName,
             email,
             DateTimeOffset.UtcNow);
@@ -45,7 +47,7 @@ public sealed class CreateUserCommandHandler(
             cancellationToken);
     }
 
-    private async Task<bool> CreateUserCredentials(
+    private async Task<Guid?> CreateUserCredentials(
         CreateUserCommand command,
         CancellationToken cancellationToken)
     {
@@ -56,6 +58,11 @@ public sealed class CreateUserCommandHandler(
         var response = await identityProvider.CreateUserCredentials(
             request,
             cancellationToken);
-        return response.Created;
+        if (!response.CredentialsCreated)
+        {
+            return null;
+        }
+
+        return response.CredentialsId;
     }
 }

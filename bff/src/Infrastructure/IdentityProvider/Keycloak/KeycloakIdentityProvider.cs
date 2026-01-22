@@ -22,6 +22,23 @@ public sealed class KeycloakIdentityProvider(
             Enabled = true,
         };
         var created = await client.CreateUserAsync(options.Value.Realm, user, cancellationToken);
-        return new CreateUserCredentialsResponse(created);
+        if (!created)
+        {
+            return CreateUserCredentialsResponse.Failed();
+        }
+
+        var usersFound = (await client.GetUsersAsync(
+            options.Value.Realm,
+            email: request.Email,
+            cancellationToken: cancellationToken))
+            .ToList();
+        var createdUser = usersFound.SingleOrDefault();
+        if (createdUser is null)
+        {
+            return CreateUserCredentialsResponse.Failed();
+        }
+
+        var userId = Guid.Parse(createdUser.Id);
+        return CreateUserCredentialsResponse.Succeeded(userId);
     }
 }

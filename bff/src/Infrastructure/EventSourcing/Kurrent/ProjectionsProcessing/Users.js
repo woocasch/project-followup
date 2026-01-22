@@ -4,6 +4,7 @@
         $init: function () {
             return {
                 id: null,
+                credentalsId: null,
                 displayName: null,
                 email: null,
                 createdAt: null,
@@ -11,6 +12,7 @@
         },
         UserCreated: function (state, event) {
             state.id = event.data.id.value;
+            state.credentalsId = event.data.credentialsId;
             state.displayName = event.data.displayName;
             state.email = event.data.email.value;
             state.createdAt = event.data.createdAt;

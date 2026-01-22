@@ -10,6 +10,8 @@ public sealed class UserAggregateRoot : AggregateRootBase<UserId>
 
     public override Guid AggregateId => this.Id.Value;
 
+    public Guid CredentialsId { get; private set; } = Guid.Empty;
+
     public string DisplayName { get; private set; } = null!;
 
     public EmailAddress Email { get; private set; } = null!;
@@ -18,6 +20,7 @@ public sealed class UserAggregateRoot : AggregateRootBase<UserId>
 
     public static UserAggregateRoot Create(
         UserId userId,
+        Guid credentialsId,
         string displayName,
         EmailAddress email,
         DateTimeOffset createdAt)
@@ -25,6 +28,7 @@ public sealed class UserAggregateRoot : AggregateRootBase<UserId>
         var user = new UserAggregateRoot();
         var domainEvent = new UserCreated(
             userId,
+            credentialsId,
             displayName,
             email,
             createdAt);
@@ -54,6 +58,7 @@ public sealed class UserAggregateRoot : AggregateRootBase<UserId>
     private void When(UserCreated userCreated)
     {
         this.Id = userCreated.Id;
+        this.CredentialsId = userCreated.CredentialsId;
         this.DisplayName = userCreated.DisplayName;
         this.Email = userCreated.Email;
         this.CreatedAt = userCreated.CreatedAt;

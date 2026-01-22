@@ -43,7 +43,7 @@ export default function Menu() {
       </li>
 
       {/* Admin-only menu items */}
-      <RoleGuard roles={['admin', 'user-manager']}>
+      <RoleGuard roles={['admin', 'manage-users']}>
         <li>
           <MenuLink to="/users/create">Create User</MenuLink>
         </li>

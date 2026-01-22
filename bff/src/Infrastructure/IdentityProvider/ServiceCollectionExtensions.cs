@@ -1,5 +1,7 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.IdentityProvider;
 
+using global::Keycloak.Net;
+
 using Microsoft.Extensions.DependencyInjection;
 
 using ProjectFollowUp.BFF.Application.IdentityProvider;
@@ -12,7 +14,14 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddTransient<IIdentityProvider, KeycloakIdentityProvider>()
-            .AddSingleton<IKeycloakClient, DefaultKeycloakClient>();
+            .AddScoped(sp =>
+            {
+                var settings = sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<KeycloakSettings>>().Value;
+                return new KeycloakClient(
+                    settings.BaseAddress,
+                    settings.ClientSecret,
+                    new(authenticationRealm: settings.Realm, adminClientId: settings.ClientId));
+            });
         return services;
     }
 }

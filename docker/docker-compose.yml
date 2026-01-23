@@ -119,6 +119,26 @@ services:
       - nginx-network
       - monitoring
 
+  rabbitmq.projectfollowup.local:
+    image: rabbitmq:3-management
+    container_name: rabbitmq.projectfollowup.local
+    hostname: rabbitmq.projectfollowup.local
+    restart: unless-stopped
+    ports:
+      # AMQP – do komunikacji aplikacji (.NET / MassTransit)
+      - "5004:5672"
+      # Panel administracyjny RabbitMQ (UI)
+      - "5005:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_DEFAULT_VHOST: /
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+    networks:
+      - monitoring
+
   nginx.projectfollowup.local:
     image: nginx:latest
     container_name: nginx.projectfollowup.local
@@ -148,3 +168,4 @@ volumes:
   otel-data:
   kurrent-data:
   kurrent-logs:
+  rabbitmq_data:

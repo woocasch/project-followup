@@ -19,6 +19,7 @@ using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
+using ProjectFollowUp.BFF.WebApi.MassTransit;
 using ProjectFollowUp.BFF.WebApi.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -38,6 +39,8 @@ builder.Services.AddValidation();
 builder.Services.AddApplication();
 
 builder.Services.AddKurrentEventSourcing(builder.Configuration);
+
+builder.Services.ConfigureMassTransit();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

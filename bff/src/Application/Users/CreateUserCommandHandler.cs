@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
+using ProjectFollowUp.BFF.Application.EventsBus;
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Application.IdentityProvider;
 using ProjectFollowUp.BFF.Domain.User;
@@ -11,13 +12,14 @@ using ProjectFollowUp.BFF.Domain.User.Events;
 
 public sealed class CreateUserCommandHandler(
     IIdentityProvider identityProvider,
-    IEventStreamsRepository eventsRepository) : CommandHandlerBase<CreateUserCommand>
+    IEventStreamsRepository eventsRepository,
+    IEventPublisher eventPublisher) : CommandHandlerBase<CreateUserCommand>
 {
     protected override async Task<CommandResult> HandleCommand(
         CreateUserCommand command,
         CancellationToken cancellationToken)
     {
-        var credentialsId = await CreateUserCredentials(
+        var credentialsId = await this.CreateUserCredentials(
             command,
             cancellationToken);
         if (!credentialsId.HasValue)
@@ -25,11 +27,18 @@ public sealed class CreateUserCommandHandler(
             return CommandResult.Failure("CreateUserCredentialsFailed");
         }
 
-        await CreateUserProfile(command, credentialsId.Value, cancellationToken);
+        var profileId = await this.CreateUserProfile(command, credentialsId.Value, cancellationToken);
+        await eventPublisher.Publish(
+            new UserCreatedEvent
+            {
+                CredentialsId = credentialsId.Value,
+                ProfileId = profileId
+            },
+            cancellationToken);
         return CommandResult.Success();
     }
 
-    private async Task CreateUserProfile(
+    private async Task<Guid> CreateUserProfile(
         CreateUserCommand command,
         Guid credentialsId,
         CancellationToken cancellationToken)
@@ -45,6 +54,7 @@ public sealed class CreateUserCommandHandler(
         await eventsRepository.StoreStreamAsync(
             user,
             cancellationToken);
+        return user.Id.Value;
     }
 
     private async Task<Guid?> CreateUserCredentials(

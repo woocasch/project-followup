@@ -14,6 +14,7 @@ import { AuthProvider, ProtectedRoute } from './infrastructure/auth';
 import { loadConfiguration } from './infrastructure/configuration';
 import StylingPage from './styling';
 import UserInfoPage from './user-info/user-info';
+import ActivateAccount from './account/activate-account';
 
 const router = createBrowserRouter([
   {
@@ -77,6 +78,15 @@ const router = createBrowserRouter([
             ),
           },
         ],
+      },
+      {
+        path: '/account',
+        children: [
+          {
+            path: 'activate/:linkCode',
+            Component: ActivateAccount
+          }
+        ]
       },
       {
         path: '/styling',

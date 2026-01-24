@@ -50,7 +50,7 @@ public sealed class SendActivationMailConsumer(
             HtmlBody = $"""
             <p>Dear {displayName},</p>
             <p>Please activate your account by clicking the following link:</p>
-            <p><a href='https://localhost:4000/account/activate/{linkCode}'>Activate Account</a></p>
+            <p><a href='http://localhost:4000/account/activate/{linkCode}'>Activate Account</a></p>
             <p>Best regards,<br/>
             Project Follow-Up Team</p>
             """

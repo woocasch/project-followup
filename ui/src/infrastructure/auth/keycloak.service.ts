@@ -30,7 +30,7 @@ export function getKeycloakInstance(): Keycloak | null {
 export async function authenticateUser(keycloak: Keycloak): Promise<boolean> {
   try {
     const authenticated = await keycloak.init({
-      onLoad: 'login-required',
+      onLoad: 'check-sso',
       checkLoginIframe: false,
       enableLogging: true,
     });

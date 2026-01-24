@@ -10,7 +10,8 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services)
     {
         services
-            .RegisterCommandHandler<CreateActivationLinkCommand, CreateActivationLinkCommandHandler>();
+            .RegisterCommandHandler<CreateActivationLinkCommand, CreateActivationLinkCommandHandler>()
+            .RegisterQueryHandler<GetActivationLinkDataQuery, GetActivationLinkDataResult, GetActivationLinkDataQueryHandler>();
         return services;
     }
 }

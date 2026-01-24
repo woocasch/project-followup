@@ -13,6 +13,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="EventSourcing\Kurrent\ProjectionsProcessing\ActivationLinks.js" />
     <EmbeddedResource Include="EventSourcing\Kurrent\ProjectionsProcessing\Projects.js" />
     <EmbeddedResource Include="EventSourcing\Kurrent\ProjectionsProcessing\ProjectsList.js" />
     <EmbeddedResource Include="EventSourcing\Kurrent\ProjectionsProcessing\Users.js" />

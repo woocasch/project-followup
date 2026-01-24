@@ -7,6 +7,7 @@ import Footer from './layout-elements/footer';
 import Menu from './layout-elements/menu';
 import { theme } from './theme';
 import ThemeSwitcher from './theme-switcher';
+import { useAuth } from './infrastructure/auth';
 
 const AppLayout = styled.div(`
   width: 100%;
@@ -41,12 +42,13 @@ const FooterContainer = styled.footer(`
 `);
 
 export default function AppLayoutComponent() {
+  const { isAuthenticated } = useAuth();
   return (
     <AppLayout>
       <Header>
-        <Menu />
+        {isAuthenticated && <Menu />}
         <ThemeSwitcher />
-        <UserProfile />
+        {isAuthenticated && <UserProfile />}
       </Header>
       <Main>
         <Outlet />

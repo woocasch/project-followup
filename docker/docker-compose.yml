@@ -155,6 +155,15 @@ services:
     networks:
       - nginx-network
 
+  mailpit.projectfollowup.local:
+    image: axllent/mailpit
+    container_name: mailpit.projectfollowup.local
+    hostname: mailpit.projectfollowup.local
+    restart: unless-stopped
+    ports:
+      - "5006:8025"  # Web UI
+      - "5007:1025"  # SMTP
+
 networks:
   keycloak-network:
     driver: bridge

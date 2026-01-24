@@ -1,5 +1,8 @@
 ﻿namespace ProjectFollowUp.BFF.Domain.User.Events;
 
+using System.Text.Json.Serialization;
+
+[method: JsonConstructor]
 public readonly struct UserCreated(
     UserId id,
     Guid credentialsId,

@@ -1,5 +1,8 @@
 ﻿namespace ProjectFollowUp.BFF.Domain.Project.Events;
 
+using System.Text.Json.Serialization;
+
+[method: JsonConstructor]
 public readonly struct ProjectDetailsChanged(
     ProjectId projectId,
     string title,

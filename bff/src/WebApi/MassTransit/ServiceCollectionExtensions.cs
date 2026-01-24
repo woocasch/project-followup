@@ -4,8 +4,10 @@ using global::MassTransit;
 
 using Google.Api;
 
-using ProjectFollowUp.BFF.Application.Users;
+using ProjectFollowUp.BFF.Domain.ActivationLink;
+using ProjectFollowUp.BFF.Domain.User;
 using ProjectFollowUp.BFF.Infrastructure.EventBus;
+using ProjectFollowUp.BFF.Infrastructure.EventBus.Documents;
 using ProjectFollowUp.BFF.Infrastructure.EventBus.Users;
 
 public static class ServiceCollectionExtensions
@@ -18,6 +20,7 @@ public static class ServiceCollectionExtensions
             configurator =>
             {
                 configurator.AddUserConsumers();
+                configurator.AddActivationLinkConsumers();
                 configurator.UsingRabbitMq((context, cfg) =>
                 {
                     cfg.Host("localhost", 5004, "projectfollowup-bff", c =>
@@ -26,6 +29,7 @@ public static class ServiceCollectionExtensions
                         c.Password("api-bff");
                     });
                     context.AddUserConsumers(cfg);
+                    context.AddActivationLinkConsumers(cfg);
                 });
             });
         return services;
@@ -34,7 +38,14 @@ public static class ServiceCollectionExtensions
     private static IBusRegistrationConfigurator AddUserConsumers(
         this IBusRegistrationConfigurator configurator)
     {
-        configurator.AddConsumer<SendActivationEmailConsumer>();
+        configurator.AddConsumer<CreateActivationLinkConsumer>();
+        return configurator;
+    }
+
+    private static IBusRegistrationConfigurator AddActivationLinkConsumers(
+        this IBusRegistrationConfigurator configurator)
+    {
+        configurator.AddConsumer<SendActivationMailConsumer>();
         return configurator;
     }
 
@@ -42,15 +53,34 @@ public static class ServiceCollectionExtensions
         this IBusRegistrationContext context,
         IRabbitMqBusFactoryConfigurator configurator)
     {
-        configurator.Message<UserCreatedEvent>(x =>
+        configurator.Message<UserRegisteredEvent>(x =>
         {
             x.SetEntityName("user.created");
         });
+        configurator.Message<ActivationLinkGeneratedEvent>(x =>
+        {
+            x.SetEntityName("activationlink.generated");
+        });
         configurator.ReceiveEndpoint("user.created.activation-email", e =>
         {
-            e.ConfigureConsumer<SendActivationEmailConsumer>(context);
+            e.ConfigureConsumer<CreateActivationLinkConsumer>(context);
         });
 
+        return configurator;
+    }
+
+    private static IRabbitMqBusFactoryConfigurator AddActivationLinkConsumers(
+        this IBusRegistrationContext context,
+        IRabbitMqBusFactoryConfigurator configurator)
+    {
+        configurator.Message<ActivationLinkGeneratedEvent>(x =>
+        {
+            x.SetEntityName("activationlink.generated");
+        });
+        configurator.ReceiveEndpoint("activationlink.generated.send-email", e =>
+        {
+            e.ConfigureConsumer<SendActivationMailConsumer>(context);
+        });
         return configurator;
     }
 }

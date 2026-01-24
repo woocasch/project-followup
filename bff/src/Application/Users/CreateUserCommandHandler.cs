@@ -27,18 +27,17 @@ public sealed class CreateUserCommandHandler(
             return CommandResult.Failure("CreateUserCredentialsFailed");
         }
 
-        var profileId = await this.CreateUserProfile(command, credentialsId.Value, cancellationToken);
+        var userId = await this.CreateUserProfile(command, credentialsId.Value, cancellationToken);
         await eventPublisher.Publish(
-            new UserCreatedEvent
+            new UserRegisteredEvent
             {
-                CredentialsId = credentialsId.Value,
-                ProfileId = profileId
+                UserId = userId
             },
             cancellationToken);
         return CommandResult.Success();
     }
 
-    private async Task<Guid> CreateUserProfile(
+    private async Task<UserId> CreateUserProfile(
         CreateUserCommand command,
         Guid credentialsId,
         CancellationToken cancellationToken)
@@ -54,7 +53,7 @@ public sealed class CreateUserCommandHandler(
         await eventsRepository.StoreStreamAsync(
             user,
             cancellationToken);
-        return user.Id.Value;
+        return user.Id;
     }
 
     private async Task<Guid?> CreateUserCredentials(

@@ -3,11 +3,11 @@
 import styled from '@emotion/styled';
 import { Outlet } from 'react-router';
 import { UserProfile } from './components';
+import { useAuth } from './infrastructure/auth';
 import Footer from './layout-elements/footer';
 import Menu from './layout-elements/menu';
 import { theme } from './theme';
 import ThemeSwitcher from './theme-switcher';
-import { useAuth } from './infrastructure/auth';
 
 const AppLayout = styled.div(`
   width: 100%;

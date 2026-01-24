@@ -4,4 +4,5 @@ export { FieldLabel, PageHeader, SectionHeader } from './headers';
 export { default as LoadingSpinner } from './loading-spinner';
 export { SmallText } from './small-text';
 export { Text, type TextProps } from './text';
+export { Password, type PasswordProps } from './password';
 export { default as UserProfile } from './user-profile';

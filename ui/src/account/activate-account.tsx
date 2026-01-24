@@ -1,9 +1,11 @@
-import { Button, PageHeader, Text } from "@root/components";
-import { useNavigate, useParams } from "react-router";
-import accountActivationService from "./account-activation/account-activation.service";
-import { useEffect, useState } from "react";
-import styled from "@emotion/styled";
-import { theme } from "@root/theme";
+import styled from '@emotion/styled';
+import { Button, PageHeader, Password } from '@root/components';
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { theme } from '@root/theme';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router';
+import activateAccountLogic from './activate-account.logic';
 
 const DisplayContainer = styled.div(`
     margin: auto;
@@ -34,38 +36,64 @@ const Buttons = styled.div(`
 type RouteParams = Record<'linkCode', string>;
 
 export default function ActivateAccount() {
-    const { linkCode } = useParams<RouteParams>();
-    const navigate = useNavigate();
+  const { linkCode } = useParams<RouteParams>();
+  const navigate = useNavigate();
 
-    const [displayName, setDisplayName] = useState('');
-    const [emailAddress, setEmailAddress] = useState('');
-    const [password, setPassword] = useState('');
-    const [repeatPassword, setRepeatPassword] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [emailAddress, setEmailAddress] = useState('');
+//   const [password, setPassword] = useState('');
+//   const [repeatPassword, setRepeatPassword] = useState('');
+  const form = useForm({
+    resolver: zodResolver(activateAccountLogic.getFormSchema()),
+  });
 
-    useEffect(() => {
-        if (!linkCode) {
-            navigate('/');
-            return;
-        }
+  useEffect(() => {
+    activateAccountLogic.setupActivationComponent({
+      linkCode: linkCode || '',
+      navigate,
+      setDisplayName,
+      setEmailAddress,
+    });
+  }, [linkCode, navigate]);
 
-        accountActivationService.getLinkCodeData(linkCode)
-            .then((r) => {
-                if (r) {
-                    setDisplayName(r.displayName);
-                    setEmailAddress(r.emailAddress);
-                }
-            });
-    }, [linkCode, navigate]);
+  async function onSubmit() {
+    const input = {
+        linkCode: linkCode || '',
+        password: form.getValues('password'),
+    };
+    await activateAccountLogic.activateAccount(input);
+  }
 
-    return (<DisplayContainer>
-        <PageHeader className="description">Account activation</PageHeader>
-        <Header className="description">Hello <UserDatum>{displayName}</UserDatum></Header>
-        <p className="description">You were invited to <strong>Project Follow-Up</strong> application through e-mail address <UserDatum>{emailAddress}</UserDatum></p>
-        <p className="description">Select a password to activate your account:</p>
-        <Text label="Password" hiddenValue={true} value={password} setValue={setPassword} />
-        <Text label="Repeat password" hiddenValue={true} value={repeatPassword} setValue={setRepeatPassword} />
-        <Buttons>
-            <Button variant="button" buttonType="rounded" onClick={() => alert('test')}>Activate account</Button>
-        </Buttons>
-    </DisplayContainer>)
+  return (
+    <DisplayContainer>
+      <PageHeader className="description">Account activation</PageHeader>
+      <Header className="description">
+        Hello <UserDatum>{displayName}</UserDatum>
+      </Header>
+      <div className="description">
+        You were invited to <strong>Project Follow-Up</strong> application
+        through e-mail address <UserDatum>{emailAddress}</UserDatum>
+      </div>
+      <div className="description">Select a password to activate your account:</div>
+      <Password
+        label="Password"
+        {...form.register('password')}
+        error={form.formState.errors.password?.message}
+      />
+      <Password
+        label="Repeat password"
+        {...form.register('repeatPassword')}
+        error={form.formState.errors.repeatPassword?.message}
+      />
+      <Buttons>
+        <Button
+          variant="button"
+          buttonType="rounded"
+          onClick={() => form.handleSubmit(onSubmit)()}
+        >
+          Activate account
+        </Button>
+      </Buttons>
+    </DisplayContainer>
+  );
 }

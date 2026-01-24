@@ -10,11 +10,11 @@ import '@assets/themes/dark.scss';
 import '@assets/themes/sizes.scss';
 import '@assets/main.scss';
 import CreateUser from '@user-accounts/create-user';
+import ActivateAccount from './account/activate-account';
 import { AuthProvider, ProtectedRoute } from './infrastructure/auth';
 import { loadConfiguration } from './infrastructure/configuration';
 import StylingPage from './styling';
 import UserInfoPage from './user-info/user-info';
-import ActivateAccount from './account/activate-account';
 
 const router = createBrowserRouter([
   {
@@ -84,9 +84,9 @@ const router = createBrowserRouter([
         children: [
           {
             path: 'activate/:linkCode',
-            Component: ActivateAccount
-          }
-        ]
+            Component: ActivateAccount,
+          },
+        ],
       },
       {
         path: '/styling',

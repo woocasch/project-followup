@@ -79,16 +79,25 @@ public sealed class CreateBffClient(
         await keycloakClient.AddClientRoleMappingsToUserAsync(
             realmSettings.Value.RealmId,
             serviceAccountUser.Id,
-            client.Id,
+            realmManagementClient.Id,
             rolesForAssignment,
             cancellationToken);
+
+        var result = await keycloakClient.GenerateClientSecretAsync(
+            realmSettings.Value.RealmId,
+            client.Id,
+            cancellationToken);
+        reporter.Warning("=============================================");
+        reporter.Warning("A client secret was generated for the BFF client. Make sure to store it securely.");
+        reporter.Warning($"Client secret: {result.Value}");
+        reporter.Warning("This message will not be written again.");
+        reporter.Warning("=============================================");
     }
 
     public async Task<bool> IsNeeded(CancellationToken cancellationToken)
     {
-        //var client = await this.FindClient(cancellationToken);
-        //return client is null;
-        return true;
+        var client = await this.FindClient(cancellationToken);
+        return client is null;
     }
 
     private async Task<Client?> FindClient(CancellationToken cancellationToken)

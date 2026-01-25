@@ -15,7 +15,7 @@ public sealed class CreateUIClient(
 {
     private readonly SetupSettings setupSettings = setupSettingsOptions.Value;
 
-    public int Order => 2;
+    public int Order => 3;
 
     public string Description => "Creating a client for UI in realm";
 

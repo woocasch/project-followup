@@ -11,6 +11,7 @@ public static class ServiceCollectionExtensions
     public static IServiceCollection AddOperationsImplementations(this IServiceCollection services)
     {
         services.AddTransient<IOperation, CreateRealm>();
+        services.AddTransient<IOperation, CreateCustomRoles>();
         services.AddTransient<IOperation, CreateAdminUser>();
         services.AddTransient<IOperation, CreateUIClient>();
         services.AddTransient<IOperation, CreateBffClient>();

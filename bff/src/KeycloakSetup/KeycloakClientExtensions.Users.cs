@@ -67,4 +67,18 @@ public static partial class KeycloakClientExtensions
             roles,
             cancellationToken);
     }
+
+    public static async Task<bool> AssignRolesToUser(
+        this KeycloakClient keycloakClient,
+        string realmId,
+        string userId,
+        IEnumerable<Role> roles,
+        CancellationToken cancellationToken)
+    {
+        return await keycloakClient.AddRealmRoleMappingsToUserAsync(
+            realmId,
+            userId,
+            roles,
+            cancellationToken);
+    }
 }

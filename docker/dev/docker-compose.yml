@@ -1,0 +1,139 @@
+name: project-follow-up-dev
+
+services:  
+  keycloak.storage.projectfollowup.dev:
+    container_name: keycloak.storage.projectfollowup.dev
+    hostname: keycloak.storage.projectfollowup.dev
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret-password
+      - MYSQL_DATABASE=keycloak
+      - MYSQL_USER=keycloak
+      - MYSQL_PASSWORD=keycloak-password
+    volumes:
+      - type: volume
+        source: keycloak-data
+        target: /var/lib/mysql
+    networks:
+      - keycloak-network
+
+  keycloak.projectfollowup.dev:
+    container_name: keycloak.projectfollowup.dev
+    hostname: keycloak.projectfollowup.dev
+    image: quay.io/keycloak/keycloak:26.5
+    command:
+      - start
+      - --hostname=http://localhost:4002
+      - --hostname-strict=false
+      - --proxy-headers=xforwarded
+      # - --optimized
+    ports:
+      - "4002:8080"
+    depends_on:
+      - keycloak.storage.projectfollowup.dev
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT: false
+      KC_DB: mysql
+      KC_DB_URL_HOST: keycloak.storage.projectfollowup.dev
+      KC_DB_URL_PROPERTIES : '?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true'
+      KC_DB_SCHEMA: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: 'keycloak-password'
+    restart: unless-stopped
+    networks:
+      - keycloak-network
+      - nginx-network
+      - monitoring
+
+  otel-collector.projectfollowup.dev:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector.projectfollowup.dev
+    hostname: otel-collector.projectfollowup.dev
+    restart: unless-stopped
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./otel-collector/otel-collector-config.yml:/etc/otel-collector-config.yml
+      - /var/log:/var/log:ro
+      - otel-data:/tmp
+    ports:
+      - "4003:4317"
+    # ports:
+    #   - "4317:4317"   # OTLP gRPC receiver
+    #   - "4318:4318"   # OTLP HTTP receiver
+    #   - "8888:8888"   # Prometheus metrics
+    #   - "8889:8889"   # Prometheus exporter metrics
+    networks:
+      - nginx-network
+      - monitoring
+
+  kurrent.projectfollowup.dev:
+    image: docker.kurrent.io/kurrent-latest/kurrentdb:latest
+    container_name: kurrent.projectfollowup.dev
+    hostname: kurrent.projectfollowup.dev
+    restart: unless-stopped
+    command:
+      - --insecure
+      - --run-projections=All
+    environment:
+      - KURRENT_CLUSTER_SIZE=1
+      - KURRENT_EXT_TCP_PORT=1113
+      - KURRENT_EXT_HTTP_PORT=2113
+      - KURRENT_ENABLE_ATOM_PUB_OVER_HTTP=true
+      - EVENTSTORE_EnableAtomPubOverHttp=true
+    ports:
+      - "4004:2113"  # HTTP API
+      - "4005:1113"  # TCP interface
+    volumes:
+      - kurrent-data:/var/lib/kurrentdb
+      - kurrent-logs:/var/log/kurrentdb
+    networks:
+      - nginx-network
+      - monitoring
+
+  rabbitmq.projectfollowup.dev:
+    image: rabbitmq:3-management
+    container_name: rabbitmq.projectfollowup.dev
+    hostname: rabbitmq.projectfollowup.dev
+    restart: unless-stopped
+    ports:
+      # AMQP – do komunikacji aplikacji (.NET / MassTransit)
+      - "4006:5672"
+      # Panel administracyjny RabbitMQ (UI)
+      - "4007:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_DEFAULT_VHOST: /
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+    networks:
+      - monitoring
+
+  mailpit.projectfollowup.dev:
+    image: axllent/mailpit
+    container_name: mailpit.projectfollowup.dev
+    hostname: mailpit.projectfollowup.dev
+    restart: unless-stopped
+    ports:
+      - "4008:8025"  # Web UI
+      - "4009:1025"  # SMTP
+
+networks:
+  keycloak-network:
+    driver: bridge
+  nginx-network:
+    driver: bridge
+  monitoring:
+    external: true
+
+volumes:
+  keycloak-data:
+  otel-data:
+  kurrent-data:
+  kurrent-logs:
+  rabbitmq_data:

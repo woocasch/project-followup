@@ -4,8 +4,6 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Keycloak.Net;
-using Keycloak.Net.Models.Clients;
-using Keycloak.Net.Models.Root;
 using Keycloak.Net.Models.Users;
 
 using Microsoft.Extensions.Options;
@@ -15,6 +13,8 @@ public sealed class CreateAdminUser(
     KeycloakClient keycloakClient,
     IReporter reporter) : IOperation
 {
+    public int Order => 4;
+
     public string Description => "Creating application's admin user";
 
     public async Task Execute(CancellationToken cancellationToken)
@@ -25,15 +25,15 @@ public sealed class CreateAdminUser(
             Enabled = true,
             Email = "admin@projectfollowup.dev",
             EmailVerified = true,
-            Credentials = new[]
-            {
+            Credentials =
+            [
                 new Credentials()
                 {
                     Type = "password",
                     Value = "projectfollowup",
                     Temporary = true,
                 }
-            },
+            ],
         };
 
         var result = await keycloakClient.CreateUserAsync(

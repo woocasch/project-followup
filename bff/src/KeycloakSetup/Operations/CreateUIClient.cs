@@ -15,6 +15,8 @@ public sealed class CreateUIClient(
 {
     private const string FrontendClientId = "frontend";
 
+    public int Order => 2;
+
     public string Description => "Creating a client for UI in realm";
 
     public async Task Execute(CancellationToken cancellationToken)

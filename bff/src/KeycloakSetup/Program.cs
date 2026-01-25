@@ -1,52 +1,57 @@
-﻿using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 using ProjectFollowUp.BFF.KeycloakSetup;
 
-var keycloakServerUrl = "http://localhost:4002";
+var builder = Host.CreateApplicationBuilder();
 
-var keycloakClient = new Keycloak.Net.KeycloakClient(
-    keycloakServerUrl,
-    "admin",
-    "admin",
-    new(authenticationRealm: "master"));
+builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+builder.Configuration.AddUserSecrets(typeof(Program).Assembly, optional: true);
+builder.Configuration.AddEnvironmentVariables();
 
-var realmSettings = Options.Create(new ProjectFollowUp.BFF.KeycloakSetup.RealmSettings
+builder.AddRealmSettings();
+
+builder.Services
+    .AddOperationsImplementations()
+    .AddKeycloakClient()
+    .AddReporter<ConsoleReporter>();
+
+var app = builder.Build();
+
+await RunOperations(app);
+
+static async Task RunOperations(IHost app)
 {
-    RealmId = "project-follow-up",
-    RealmName = "Project Follow Up",
-});
-var reporter = new ConsoleReporter();
+    using var scope = app.Services.CreateScope();
+    var services = scope.ServiceProvider;
+    var reporter = services.GetRequiredService<IReporter>();
+    var operations = services.GetServices<IOperation>()
+        .OrderBy(o => o.Order);
 
-var operations = new List<IOperation>
-{
-    new ProjectFollowUp.BFF.KeycloakSetup.Operations.CreateRealm(realmSettings, keycloakClient),
-    new ProjectFollowUp.BFF.KeycloakSetup.Operations.CreateUIClient(realmSettings, keycloakClient, reporter),
-    new ProjectFollowUp.BFF.KeycloakSetup.Operations.CreateBffClient(realmSettings, keycloakClient, reporter),
-    new ProjectFollowUp.BFF.KeycloakSetup.Operations.CreateAdminUser(realmSettings, keycloakClient, reporter),
-};
+    reporter.Info("Starting configuration of Keycloak server...");
 
-reporter.Info("Starting configuration of Keycloak server...");
-
-foreach (var operation in operations)
-{
-    reporter.Info($"Working on operation: '{operation.Description}'.");
-    var isNeeded = await operation.IsNeeded(CancellationToken.None);
-    if (isNeeded)
+    foreach (var operation in operations)
     {
-        reporter.Info($"Executing operation: '{operation.Description}'");
-        try
+        reporter.Info($"Working on operation: '{operation.Description}'.");
+        var isNeeded = await operation.IsNeeded(CancellationToken.None);
+        if (isNeeded)
         {
-            await operation.Execute(CancellationToken.None);
-            reporter.Info($"Operation '{operation.Description}' completed.");
+            reporter.Info($"Executing operation: '{operation.Description}'");
+            try
+            {
+                await operation.Execute(CancellationToken.None);
+                reporter.Info($"Operation '{operation.Description}' completed.");
+            }
+            catch (Exception ex)
+            {
+                reporter.Error($"Operation '{operation.Description}' failed with exception: {ex.Message}");
+                break;
+            }
         }
-        catch (Exception ex)
+        else
         {
-            reporter.Error($"Operation '{operation.Description}' failed with exception: {ex.Message}");
-            break;
+            reporter.Warning($"Operation '{operation.Description}' is not needed. Skipping.");
         }
-    }
-    else
-    {
-        reporter.Warning($"Operation '{operation.Description}' is not needed. Skipping.");
     }
 }

@@ -12,6 +12,8 @@ public sealed class CreateBffClient(
 {
     private const string WebApiBffClientId = "webapi-bff";
 
+    public int Order => 3;
+
     public string Description => "Creating a client for WebAPI BFF in realm";
 
     public async Task Execute(CancellationToken cancellationToken)

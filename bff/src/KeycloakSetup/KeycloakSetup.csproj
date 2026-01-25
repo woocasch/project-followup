@@ -9,8 +9,17 @@
 		<RootNamespace>ProjectFollowUp.BFF.KeycloakSetup</RootNamespace>
 	</PropertyGroup>
 
+  <ItemGroup>
+    <Content Include="appsettings.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Keycloak.Net.Core" />
+		<PackageReference Include="Microsoft.Extensions.Hosting" />
 		<PackageReference Include="Microsoft.Extensions.Options" />
 	</ItemGroup>
 

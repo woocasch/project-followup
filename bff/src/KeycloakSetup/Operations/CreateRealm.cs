@@ -11,6 +11,8 @@ public sealed class CreateRealm(
     IOptions<RealmSettings> realmSettings,
     KeycloakClient keycloakClient) : IOperation
 {
+    public int Order => 1;
+
     public string Description => $"Create Keycloak realm '{realmSettings.Value.RealmName}'.";
 
     public async Task Execute(CancellationToken cancellationToken)

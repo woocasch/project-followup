@@ -22,6 +22,7 @@ var operations = new List<IOperation>
     new ProjectFollowUp.BFF.KeycloakSetup.Operations.CreateRealm(realmSettings, keycloakClient),
     new ProjectFollowUp.BFF.KeycloakSetup.Operations.CreateUIClient(realmSettings, keycloakClient, reporter),
     new ProjectFollowUp.BFF.KeycloakSetup.Operations.CreateBffClient(realmSettings, keycloakClient, reporter),
+    new ProjectFollowUp.BFF.KeycloakSetup.Operations.CreateAdminUser(realmSettings, keycloakClient, reporter),
 };
 
 reporter.Info("Starting configuration of Keycloak server...");

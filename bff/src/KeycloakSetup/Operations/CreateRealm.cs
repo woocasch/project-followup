@@ -8,33 +8,35 @@ using Keycloak.Net;
 using Microsoft.Extensions.Options;
 
 public sealed class CreateRealm(
-    IOptions<RealmSettings> realmSettings,
-    KeycloakClient keycloakClient) : IOperation
+    IOptions<SetupSettings> setupSettingsOptions,
+    KeycloakClient keycloakClient,
+    IReporter reporter) : IOperation
 {
+    private readonly SetupSettings setupSettings = setupSettingsOptions.Value;
+
     public int Order => 1;
 
-    public string Description => $"Create Keycloak realm '{realmSettings.Value.RealmName}'.";
+    public string Description => $"Create Keycloak realm '{setupSettings.ProjectFollowUpRealm.RealmName}'.";
 
     public async Task Execute(CancellationToken cancellationToken)
     {
-        await keycloakClient.ImportRealmAsync(
-            "master",
-            new()
-            {
-                _Realm = realmSettings.Value.RealmId,
-                DisplayName = realmSettings.Value.RealmName,
-                LoginWithEmailAllowed = true,
-                DuplicateEmailsAllowed = false,
-                EditUsernameAllowed = false,
-                VerifyEmail = true,
-            },
+        var created = await keycloakClient.CreateRealm(
+            setupSettings.ProjectFollowUpRealm.RealmId,
+            setupSettings.ProjectFollowUpRealm.RealmName,
             cancellationToken);
+        if (!created)
+        {
+            var message = $"Failed to create Keycloak realm '{setupSettings.ProjectFollowUpRealm.RealmName}'.";
+            reporter.Error(message);
+            throw new InvalidOperationException(message);
+        }
+
+        reporter.Info($"Realm '{setupSettings.ProjectFollowUpRealm.RealmName}' created.");
     }
 
     public async Task<bool> IsNeeded(CancellationToken cancellationToken)
     {
-        var realms = await keycloakClient.GetRealmsAsync("master", cancellationToken);
-        var ourRealm = realms.SingleOrDefault(r => r._Realm == realmSettings.Value.RealmId);
-        return ourRealm is null;
+        var realm = await keycloakClient.FindRealm(setupSettings.ProjectFollowUpRealm.RealmId, cancellationToken);
+        return realm is null;
     }
 }

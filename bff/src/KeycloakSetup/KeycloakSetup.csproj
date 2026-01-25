@@ -7,6 +7,7 @@
     <Nullable>enable</Nullable>
 		<AssemblyName>KeycloakSetup</AssemblyName>
 		<RootNamespace>ProjectFollowUp.BFF.KeycloakSetup</RootNamespace>
+		<UserSecretsId>610f0099-d6a0-441c-80c8-259519c182a5</UserSecretsId>
 	</PropertyGroup>
 
   <ItemGroup>

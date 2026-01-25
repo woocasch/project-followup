@@ -9,7 +9,7 @@ using Keycloak.Net.Models.Users;
 using Microsoft.Extensions.Options;
 
 public sealed class CreateAdminUser(
-    IOptions<RealmSettings> realmSettings,
+    IOptions<SetupSettings> realmSettings,
     KeycloakClient keycloakClient,
     IReporter reporter) : IOperation
 {
@@ -19,26 +19,11 @@ public sealed class CreateAdminUser(
 
     public async Task Execute(CancellationToken cancellationToken)
     {
-        var user = new User()
-        {
-            UserName = "projectfollowup",
-            Enabled = true,
-            Email = "admin@projectfollowup.dev",
-            EmailVerified = true,
-            Credentials =
-            [
-                new Credentials()
-                {
-                    Type = "password",
-                    Value = "projectfollowup",
-                    Temporary = true,
-                }
-            ],
-        };
-
-        var result = await keycloakClient.CreateUserAsync(
-            realmSettings.Value.RealmId,
-            user,
+        var result = await keycloakClient.CreateUser(
+            realmSettings.Value.ProjectFollowUpRealm.RealmId,
+            "projectfollowup",
+            "admin@projectfollowup.dev",
+            "projectfollowup",
             cancellationToken);
         if (!result)
         {
@@ -46,26 +31,14 @@ public sealed class CreateAdminUser(
             reporter.Error(message);
             throw new InvalidOperationException(message);
         }
-
-        var createdUser = (await keycloakClient.GetUsersAsync(
-            realmSettings.Value.RealmId,
-            username: "projectfollowup",
-            cancellationToken: cancellationToken))
-            .FirstOrDefault();
-        if (createdUser is null)
-        {
-            var message = "Admin user was not found after creation.";
-            reporter.Error(message);
-            throw new InvalidOperationException(message);
-        }
     }
 
     public async Task<bool> IsNeeded(CancellationToken cancellationToken)
     {
-        var user = await keycloakClient.GetUsersAsync(
-            realmSettings.Value.RealmId,
-            username: "projectfollowup",
+        var user = await keycloakClient.GetUserByUsername(
+            realmSettings.Value.ProjectFollowUpRealm.RealmId,
+            "projectfollowup",
             cancellationToken: cancellationToken);
-        return !user.Any();
+        return user is null;
     }
 }

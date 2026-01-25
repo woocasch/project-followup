@@ -10,7 +10,7 @@ builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnC
 builder.Configuration.AddUserSecrets(typeof(Program).Assembly, optional: true);
 builder.Configuration.AddEnvironmentVariables();
 
-builder.AddRealmSettings();
+builder.Services.Configure<SetupSettings>(builder.Configuration.GetSection("SetupSettings"));
 
 builder.Services
     .AddOperationsImplementations()

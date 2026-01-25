@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 
 using ProjectFollowUp.BFF.KeycloakSetup.Operations;
 
@@ -25,23 +26,18 @@ public static class ServiceCollectionExtensions
 
     public static IServiceCollection AddKeycloakClient(this IServiceCollection services)
     {
-        services.AddTransient(sp =>
+        services.AddScoped(sp =>
         {
-            var keycloakServerUrl = "http://localhost:4002";
+            var settings = sp.GetRequiredService<IOptions<SetupSettings>>().Value;
+            var keycloakServerUrl = settings.KeycloakBaseUrl;
 
             var keycloakClient = new Keycloak.Net.KeycloakClient(
                 keycloakServerUrl,
-                "admin",
-                "admin",
-                new(authenticationRealm: "master"));
+                settings.MasterAdminUsername,
+                settings.MasterAdminPassword,
+                new(authenticationRealm: settings.MasterRealm));
             return keycloakClient;
         });
         return services;
-    }
-
-    public static IHostApplicationBuilder AddRealmSettings(this IHostApplicationBuilder builder)
-    {
-        builder.Services.Configure<RealmSettings>(builder.Configuration.GetSection("Keycloak"));
-        return builder;
     }
 }

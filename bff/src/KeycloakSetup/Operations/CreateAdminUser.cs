@@ -35,8 +35,8 @@ public sealed class CreateAdminUser(
         }
 
         string[] adminRoleNames = [
-            "create-users",
-            "search-users",
+            "create-user",
+            "search-user",
             ];
         var adminRoles = await keycloakClient.FindRealmRoles(
             setupSettings.ProjectFollowUpRealm.RealmId,

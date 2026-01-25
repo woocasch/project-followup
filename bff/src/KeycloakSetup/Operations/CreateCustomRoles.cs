@@ -14,8 +14,8 @@ public sealed class CreateCustomRoles(
 {
     private readonly IReadOnlyDictionary<string, string> roles = new Dictionary<string, string>
     {
-        { "create-users", "Can create application users." },
-        { "search-users", "Can search for application users." },
+        { "create-user", "Can create application users." },
+        { "search-user", "Can search for application users." },
     };
 
     public int Order => 2;

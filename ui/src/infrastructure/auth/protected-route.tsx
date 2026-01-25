@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import LoadingSpinner from '../../components/loading-spinner';
 import { useAuth } from './auth.context';
+import { Button } from '@root/components';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -13,7 +14,7 @@ export function ProtectedRoute({
   roles,
   fallback,
 }: ProtectedRouteProps) {
-  const { isAuthenticated, isLoading, hasAnyRole } = useAuth();
+  const { isAuthenticated, isLoading, hasAnyRole, login } = useAuth();
 
   if (isLoading) {
     return <LoadingSpinner message="Authenticating..." />;
@@ -25,12 +26,14 @@ export function ProtectedRoute({
         <div
           style={{
             display: 'flex',
+            flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
             height: '100vh',
           }}
         >
           <div>You need to be authenticated to access this page.</div>
+          <div>To login click <Button buttonType='rounded' variant='action' onClick={() => login()}>here</Button>.</div>
         </div>
       )
     );

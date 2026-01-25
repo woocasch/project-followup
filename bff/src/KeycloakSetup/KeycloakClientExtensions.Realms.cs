@@ -30,6 +30,7 @@ public static partial class KeycloakClientExtensions
                 DuplicateEmailsAllowed = false,
                 EditUsernameAllowed = false,
                 VerifyEmail = true,
+                Enabled = true,
             },
             cancellationToken);
     }

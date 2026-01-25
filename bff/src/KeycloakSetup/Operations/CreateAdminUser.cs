@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Keycloak.Net;
+using Keycloak.Net.Models.Clients;
 using Keycloak.Net.Models.Root;
 using Keycloak.Net.Models.Users;
 
@@ -30,10 +31,11 @@ public sealed class CreateAdminUser(
                 {
                     Type = "password",
                     Value = "projectfollowup",
-                    Temporary = false,
+                    Temporary = true,
                 }
             },
         };
+
         var result = await keycloakClient.CreateUserAsync(
             realmSettings.Value.RealmId,
             user,
@@ -41,6 +43,18 @@ public sealed class CreateAdminUser(
         if (!result)
         {
             var message = "Failed to create admin user.";
+            reporter.Error(message);
+            throw new InvalidOperationException(message);
+        }
+
+        var createdUser = (await keycloakClient.GetUsersAsync(
+            realmSettings.Value.RealmId,
+            username: "projectfollowup",
+            cancellationToken: cancellationToken))
+            .FirstOrDefault();
+        if (createdUser is null)
+        {
+            var message = "Admin user was not found after creation.";
             reporter.Error(message);
             throw new InvalidOperationException(message);
         }

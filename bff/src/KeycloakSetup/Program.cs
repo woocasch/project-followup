@@ -42,6 +42,7 @@ foreach (var operation in operations)
         catch (Exception ex)
         {
             reporter.Error($"Operation '{operation.Description}' failed with exception: {ex.Message}");
+            break;
         }
     }
     else

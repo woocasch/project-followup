@@ -55,6 +55,7 @@ public sealed class CreateBffClient(
         {
             "view-users",
             "manage-users",
+            "query-users",
         };
         var roles = await keycloakClient.GetRolesAsync(
             realmSettings.Value.RealmId,

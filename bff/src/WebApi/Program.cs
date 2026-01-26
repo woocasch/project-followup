@@ -18,6 +18,7 @@ using ProjectFollowUp.BFF.Application;
 using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
+using ProjectFollowUp.BFF.Infrastructure.MailSender;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 using ProjectFollowUp.BFF.WebApi.MassTransit;
 using ProjectFollowUp.BFF.WebApi.Validation;
@@ -55,6 +56,10 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
 builder.Services.AddScoped<IValidator<UpdateInput>, UpdateInputValidator>();
 builder.Services.AddMemoryCache();
+
+// Configure mail sender
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.AddMailSender();
 
 // Configure Keycloak Settings
 builder.Services.Configure<KeycloakSettings>(builder.Configuration.GetSection("Keycloak"));
@@ -164,7 +169,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
 
 var projectionsInitializer = app.Services.GetRequiredService<ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProcessing.IProjectionsInitializer>();
 await projectionsInitializer.InitializeProjections(CancellationToken.None);

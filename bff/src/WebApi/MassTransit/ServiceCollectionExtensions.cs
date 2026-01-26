@@ -23,7 +23,7 @@ public static class ServiceCollectionExtensions
                 configurator.AddActivationLinkConsumers();
                 configurator.UsingRabbitMq((context, cfg) =>
                 {
-                    cfg.Host("localhost", 5004, "projectfollowup-bff", c =>
+                    cfg.Host("localhost", 4006, "projectfollowup-bff", c =>
                     {
                         c.Username("api-bff");
                         c.Password("api-bff");

@@ -9,10 +9,12 @@ using MimeKit;
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Domain.ActivationLink;
 using ProjectFollowUp.BFF.Domain.User;
+using ProjectFollowUp.BFF.Infrastructure.MailSender;
 
 public sealed class SendActivationMailConsumer(
     IEventStreamsRepository eventsRepository,
-    IAggregateFactory aggregateFactory) : IConsumer<ActivationLinkGeneratedEvent>
+    IAggregateFactory aggregateFactory,
+    IMailSender mailSender) : IConsumer<ActivationLinkGeneratedEvent>
 {
     public async Task Consume(ConsumeContext<ActivationLinkGeneratedEvent> context)
     {
@@ -57,11 +59,6 @@ public sealed class SendActivationMailConsumer(
         };
         emailMessage.Body = bodyBuilder.ToMessageBody();
 
-        using (var client = new MailKit.Net.Smtp.SmtpClient())
-        {
-            await client.ConnectAsync("localhost", 5007, MailKit.Security.SecureSocketOptions.Auto);
-            await client.SendAsync(emailMessage);
-            await client.DisconnectAsync(true);
-        }
+        await mailSender.SendEmailAsync(emailMessage, CancellationToken.None);
     }
 }

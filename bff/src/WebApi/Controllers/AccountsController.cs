@@ -29,9 +29,9 @@ public class AccountsController(
 
         return Ok(new
         {
-            EmailAddress = result.EmailAddress,
-            DisplayName = result.DisplayName,
-            IsUsed = result.IsUsed,
+            result.EmailAddress,
+            result.DisplayName,
+            result.IsUsed,
         });
     }
 }

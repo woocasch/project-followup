@@ -119,9 +119,16 @@ services:
     container_name: mailpit.projectfollowup.dev
     hostname: mailpit.projectfollowup.dev
     restart: unless-stopped
+    environment:
+      - MP_SMTP_AUTH_FILE=/passwords.txt
+      - MP_SMTP_REQUIRE_STARTTLS=true
+      - MP_SMTP_TLS_CERT=sans:localhost
+      - MP_SMTP_TLS_KEY=sans:localhost
     ports:
       - "4008:8025"  # Web UI
       - "4009:1025"  # SMTP
+    volumes:
+      - ./mailpit/passwords.txt:/passwords.txt
 
 networks:
   keycloak-network:

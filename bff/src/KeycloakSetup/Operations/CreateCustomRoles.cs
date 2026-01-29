@@ -39,12 +39,12 @@ public sealed class CreateCustomRoles(
 
     public async Task<bool> IsNeeded(CancellationToken cancellationToken)
     {
-        var existingRoles = (await keycloakClient.GetAllRealmRoles(
+        var existingRoles = await keycloakClient.GetAllRealmRoles(
             setupSettingsOptions.Value.ProjectFollowUpRealm.RealmId,
-            cancellationToken))
-            .ToList();
+            cancellationToken);
+        var existingRoleNames = existingRoles.Select(r => r.Name).ToHashSet();
         
-        return roles.Keys.Any(role => !existingRoles.Any(r => r.Name == role));
+        return roles.Keys.Any(role => !existingRoleNames.Contains(role));
     }
 
     private async Task<bool> CreateRoleIfNeeded(string roleName, string roleDescription, CancellationToken cancellationToken)

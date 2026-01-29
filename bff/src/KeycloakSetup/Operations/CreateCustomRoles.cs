@@ -42,7 +42,10 @@ public sealed class CreateCustomRoles(
         var existingRoles = await keycloakClient.GetAllRealmRoles(
             setupSettingsOptions.Value.ProjectFollowUpRealm.RealmId,
             cancellationToken);
-        var existingRoleNames = existingRoles.Select(r => r.Name).ToHashSet();
+        var existingRoleNames = existingRoles
+            .Where(r => r.Name is not null)
+            .Select(r => r.Name!)
+            .ToHashSet();
         
         return roles.Keys.Any(role => !existingRoleNames.Contains(role));
     }

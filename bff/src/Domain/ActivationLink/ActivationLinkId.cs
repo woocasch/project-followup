@@ -2,18 +2,21 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
 
-[method: JsonConstructor]
-public readonly struct ActivationLinkId(Guid value) : IAggregateId<ActivationLinkId>
+public readonly struct ActivationLinkId : IAggregateId<ActivationLinkId>
 {
-    public readonly Guid Value => value;
+    private ActivationLinkId(Guid value)
+    {
+        this.Value = value;
+    }
+
+    public readonly Guid Value { get; }
 
     public static ActivationLinkId FromGuid(Guid guid) => new(guid);
 
     public static ActivationLinkId NewId() => FromGuid(Guid.NewGuid());
 
-    public Guid ToGuid() => value;
+    public Guid ToGuid() => this.Value;
 
     public override bool Equals([NotNullWhen(true)] object? obj)
     {

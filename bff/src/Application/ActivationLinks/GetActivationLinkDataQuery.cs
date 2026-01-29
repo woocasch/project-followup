@@ -1,9 +1,10 @@
 ﻿namespace ProjectFollowUp.BFF.Application.ActivationLinks;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
+using ProjectFollowUp.BFF.Domain.ActivationLink;
 
 public sealed class GetActivationLinkDataQuery(
-    string linkCode) : IQuery<GetActivationLinkDataResult>
+    ActivationLinkId linkId) : IQuery<GetActivationLinkDataResult>
 {
-    public string LinkCode { get; } = linkCode;
+    public ActivationLinkId LinkId { get; } = linkId;
 }

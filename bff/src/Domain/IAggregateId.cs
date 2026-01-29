@@ -5,5 +5,7 @@ public interface IAggregateId<T>
 {
     Guid ToGuid();
 
+    static abstract T NewId();
+
     static abstract T FromGuid(Guid guid);
 }

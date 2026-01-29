@@ -9,13 +9,12 @@ using ProjectFollowUp.BFF.Domain.ActivationLink;
 using ProjectFollowUp.BFF.Domain.User;
 
 public sealed class GetActivationLinkDataQueryHandler(
-    IReadModel readModel,
     IEventStreamsRepository eventsRepository,
     IAggregateFactory aggregateFactory) : QueryHandlerBase<GetActivationLinkDataQuery, GetActivationLinkDataResult>
 {
     protected override async Task<GetActivationLinkDataResult?> HandleQuery(GetActivationLinkDataQuery query, CancellationToken cancellationToken)
     {
-        var activationLink = await this.GetActivationLink(query.LinkCode, cancellationToken);
+        var activationLink = await this.GetActivationLink(query.LinkId, cancellationToken);
         if (activationLink is null)
         {
             return null;
@@ -28,24 +27,19 @@ public sealed class GetActivationLinkDataQueryHandler(
         }
 
         var result = new GetActivationLinkDataResult(
-            query.LinkCode,
+            activationLink.LinkCode,
             user.Email.Value,
             user.DisplayName,
             activationLink.IsUsed);
         return result;
     }
 
-    private async Task<ActivationLinkAggregateRoot?> GetActivationLink(string linkCode, CancellationToken cancellationToken)
+    private async Task<ActivationLinkAggregateRoot?> GetActivationLink(ActivationLinkId linkId, CancellationToken cancellationToken)
     {
-        var activationLink = await readModel.GetAsync(linkCode, cancellationToken);
-        if (activationLink is null)
-        {
-            return null;
-        }
         var activationLinkEvents = await eventsRepository.ReadStreamAsync<ActivationLinkAggregateRoot>(
-            activationLink.LinkId,
+            linkId.ToGuid(),
             cancellationToken);
-        var result = aggregateFactory.Create<ActivationLinkAggregateRoot>(activationLinkEvents, ActivationLinkAggregateRoot.Rehydrate);
+        var result = aggregateFactory.Create(activationLinkEvents, ActivationLinkAggregateRoot.Rehydrate);
         return result;
     }
 

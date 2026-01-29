@@ -15,6 +15,7 @@ using ProjectFollowUp.BFF.Application.Projects;
 using ProjectFollowUp.BFF.Application.Projects.ReadModel;
 using ProjectFollowUp.BFF.Domain.Project;
 using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProcessing;
+using ProjectFollowUp.BFF.Infrastructure.Serialization.Json;
 
 public sealed class ProjectsReadModel(
     KurrentDBClient client,
@@ -71,7 +72,7 @@ public sealed class ProjectsReadModel(
 
     private static ProjectData? DeserializeProject(string json)
     {
-        var internalData = JsonSerializer.Deserialize<InternalProjectData>(json);
+        var internalData = JsonSerializer.Deserialize<InternalProjectData>(json, JsonSerializerOptionsFactory.GetOptions());
         if (internalData is null)
         {
             return null;

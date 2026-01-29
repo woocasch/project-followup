@@ -2,43 +2,45 @@
 
 using System.Threading.Tasks;
 
-using MassTransit;
+using Microsoft.Extensions.DependencyInjection;
 
 using MimeKit;
 
-using ProjectFollowUp.BFF.Application.EventSourcing;
-using ProjectFollowUp.BFF.Domain.ActivationLink;
-using ProjectFollowUp.BFF.Domain.User;
+using ProjectFollowUp.BFF.Application.ActivationLinks;
+using ProjectFollowUp.BFF.Application.Cqrs;
+using ProjectFollowUp.BFF.Domain.ActivationLink.DomainEvents;
 using ProjectFollowUp.BFF.Infrastructure.MailSender;
 
+using RabbitMQ.Client;
+
 public sealed class SendActivationMailConsumer(
-    IEventStreamsRepository eventsRepository,
-    IAggregateFactory aggregateFactory,
-    IMailSender mailSender) : IConsumer<ActivationLinkGeneratedEvent>
+    IMailSender mailSender,
+    IChannel channel,
+    IMediator mediator) : ConsumerBase<ActivationLinkGenerated>(channel), IConsumer<SendActivationMailConsumer>
 {
-    public async Task Consume(ConsumeContext<ActivationLinkGeneratedEvent> context)
+    public static SendActivationMailConsumer Create(IServiceProvider serviceProvider, IChannel channel)
     {
-        var activationLink = await this.GetActivationLink(context);
-        var user = await this.GetUser(activationLink.UserId, context.CancellationToken);
-        await this.SendEmail(activationLink.LinkCode, user.Email, user.DisplayName);
+        var mediator = serviceProvider.GetRequiredService<IMediator>();
+        var mailSender = serviceProvider.GetRequiredService<IMailSender>();
+        return new SendActivationMailConsumer(
+            mailSender,
+            channel,
+            mediator);
     }
 
-    private async Task<UserAggregateRoot> GetUser(UserId userId, CancellationToken cancellationToken)
+    public async override Task Handle(ActivationLinkGenerated context, CancellationToken cancellationToken)
     {
-        var userEvents = await eventsRepository.ReadStreamAsync<UserAggregateRoot>(
-            userId.ToGuid(),
-            cancellationToken);
-        var user = aggregateFactory.Create<UserAggregateRoot>(userEvents, UserAggregateRoot.Rehydrate);
-        return user;
-    }
+        var query = new GetActivationLinkDataQuery(context.ActivationLinkId);
+        var result = await mediator.Fetch(query, cancellationToken);
+        if (result is null)
+        {
+            return;
+        }
 
-    private async Task<ActivationLinkAggregateRoot> GetActivationLink(ConsumeContext<ActivationLinkGeneratedEvent> context)
-    {
-        var activationLinkEvents = await eventsRepository.ReadStreamAsync<ActivationLinkAggregateRoot>(
-            context.Message.ActivationLinkId.ToGuid(),
-            context.CancellationToken);
-        var activationLink = aggregateFactory.Create<ActivationLinkAggregateRoot>(activationLinkEvents, ActivationLinkAggregateRoot.Rehydrate);
-        return activationLink;
+        await SendEmail(
+            result.LinkCode,
+            result.EmailAddress,
+            result.DisplayName);
     }
 
     private async Task SendEmail(string linkCode, string emailAddress, string displayName)

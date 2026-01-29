@@ -7,6 +7,7 @@ using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.EventsBus;
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Domain.ActivationLink;
+using ProjectFollowUp.BFF.Domain.ActivationLink.DomainEvents;
 using ProjectFollowUp.BFF.Domain.User;
 
 public sealed class CreateActivationLinkCommandHandler(
@@ -15,13 +16,13 @@ public sealed class CreateActivationLinkCommandHandler(
 {
     protected override async Task<CommandResult> HandleCommand(CreateActivationLinkCommand command, CancellationToken cancellationToken)
     {
-        var activationLink = Domain.ActivationLink.ActivationLinkAggregateRoot.Create(
+        var activationLink = ActivationLinkAggregateRoot.Create(
             command.UserId,
             command.LinkCode);
         await eventsRepository.StoreStreamAsync(
             activationLink,
             cancellationToken);
-        var linkGeneratedEvent = new ActivationLinkGeneratedEvent()
+        var linkGeneratedEvent = new ActivationLinkGenerated
         {
             ActivationLinkId = activationLink.Id,
         };

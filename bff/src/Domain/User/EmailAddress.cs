@@ -1,12 +1,10 @@
 ﻿namespace ProjectFollowUp.BFF.Domain.User;
 
 using System.Diagnostics;
-using System.Text.Json.Serialization;
 
 [DebuggerDisplay("EmailAddress: {Value}")]
 public sealed class EmailAddress : IEquatable<EmailAddress>
 {
-    [JsonConstructor]
     private EmailAddress(string value)
     {
         Value = value;

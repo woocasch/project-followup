@@ -26,12 +26,14 @@ public sealed class UserAggregateRoot : AggregateRootBase<UserId>
         DateTimeOffset createdAt)
     {
         var user = new UserAggregateRoot();
-        var domainEvent = new UserCreated(
-            userId,
-            credentialsId,
-            displayName,
-            email,
-            createdAt);
+        var domainEvent = new UserCreated
+        {
+            UserId = userId,
+            CredentialsId = credentialsId,
+            DisplayName = displayName,
+            Email = email,
+            CreatedAt = createdAt
+        };
         user.Apply(domainEvent);
         return user;
     }
@@ -57,7 +59,7 @@ public sealed class UserAggregateRoot : AggregateRootBase<UserId>
 
     private void When(UserCreated userCreated)
     {
-        this.Id = userCreated.Id;
+        this.Id = userCreated.UserId;
         this.CredentialsId = userCreated.CredentialsId;
         this.DisplayName = userCreated.DisplayName;
         this.Email = userCreated.Email;

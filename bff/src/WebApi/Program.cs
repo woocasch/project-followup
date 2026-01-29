@@ -15,12 +15,13 @@ using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 using ProjectFollowUp.BFF.Application;
+using ProjectFollowUp.BFF.Infrastructure.EventBus;
 using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
 using ProjectFollowUp.BFF.Infrastructure.MailSender;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
-using ProjectFollowUp.BFF.WebApi.MassTransit;
+using ProjectFollowUp.BFF.WebApi.EventsSubscriptions;
 using ProjectFollowUp.BFF.WebApi.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -41,7 +42,10 @@ builder.Services.AddApplication();
 
 builder.Services.AddKurrentEventSourcing(builder.Configuration);
 
-builder.Services.ConfigureMassTransit();
+// Configure Event Subscriptions
+builder.Services.Configure<EventBusSettings>(builder.Configuration.GetSection("EventBus"));
+builder.Services.Configure<QueueMappings>(builder.Configuration.GetSection("QueueMappings"));
+builder.Services.ConfigureEventsSubscriptions();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();

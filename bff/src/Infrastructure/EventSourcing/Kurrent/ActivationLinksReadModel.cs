@@ -11,6 +11,7 @@ using KurrentDB.Client;
 
 using ProjectFollowUp.BFF.Application.ActivationLinks;
 using ProjectFollowUp.BFF.Application.ActivationLinks.ReadModel;
+using ProjectFollowUp.BFF.Infrastructure.Serialization.Json;
 
 public sealed class ActivationLinksReadModel(
     KurrentDBClient client) : IReadModel
@@ -44,7 +45,7 @@ public sealed class ActivationLinksReadModel(
 
     private static ActivationLinkData? DeserializeActivationLink(string json)
     {
-        var internalData = JsonSerializer.Deserialize<InternalActivationLinkData>(json);
+        var internalData = JsonSerializer.Deserialize<InternalActivationLinkData>(json, JsonSerializerOptionsFactory.GetOptions());
         if (internalData is null)
         {
             return null;

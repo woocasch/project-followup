@@ -23,14 +23,29 @@
     <PackageReference Include="Keycloak.Net.Core" />
     <PackageReference Include="KurrentDB.Client" />
     <PackageReference Include="MailKit" />
-    <PackageReference Include="MassTransit" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
     <PackageReference Include="Microsoft.Extensions.Http" />
     <PackageReference Include="Microsoft.Extensions.Options" />
+    <PackageReference Include="RabbitMQ.Client" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Application\Application.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="EventBus\EventPublisherResources.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EventPublisherResources.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="EventBus\EventPublisherResources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>EventPublisherResources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 
 </Project>

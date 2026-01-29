@@ -24,10 +24,12 @@ public sealed class ActivationLinkAggregateRoot : AggregateRootBase<ActivationLi
         string linkCode)
     {
         var id = ActivationLinkId.NewId();
-        var @event = new LinkCreated(
-            id,
-            userId,
-            linkCode);
+        var @event = new LinkCreated
+        {
+            LinkId = id,
+            UserId = userId,
+            LinkCode = linkCode
+        };
         var activationLink = new ActivationLinkAggregateRoot();
         activationLink.Apply(@event);
         return activationLink;

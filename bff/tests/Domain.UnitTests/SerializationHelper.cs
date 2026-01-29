@@ -2,11 +2,11 @@
 
 using System.Text.Json;
 
+using ProjectFollowUp.BFF.Infrastructure.Serialization.Json;
+
 public static class SerializationHelper
 {
-    private static readonly Lazy<JsonSerializerOptions> serializerOptions = new(SerializerFactory);
-
-    public static JsonSerializerOptions SerializerOptions => serializerOptions.Value;
+    public static JsonSerializerOptions SerializerOptions => JsonSerializerOptionsFactory.GetOptions();
 
     public static string Serialize<T>(this T instance)
     {
@@ -16,15 +16,5 @@ public static class SerializationHelper
     public static T? Deserialize<T>(this string serializedValue)
     {
         return JsonSerializer.Deserialize<T>(serializedValue, SerializerOptions);
-    }
-
-    private static JsonSerializerOptions SerializerFactory()
-    {
-        var options = new JsonSerializerOptions
-        {
-            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-            WriteIndented = false,
-        };
-        return options;
     }
 }

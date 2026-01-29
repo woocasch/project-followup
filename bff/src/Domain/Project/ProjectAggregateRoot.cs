@@ -31,9 +31,9 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
         return project;
     }
 
-    public void ChangeDetails(string title, string description)
+    public void ChangeDetails(string title, string description, DateTimeOffset changedAt)
     {
-        var domainEvent = new ProjectDetailsChanged(this.Id, title, description, DateTimeOffset.UtcNow);
+        var domainEvent = new ProjectDetailsChanged(this.Id, title, description, changedAt);
         this.Apply(domainEvent);
     }
 

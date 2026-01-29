@@ -8,7 +8,7 @@ using ProjectFollowUp.BFF.Application.EventsBus;
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Application.IdentityProvider;
 using ProjectFollowUp.BFF.Domain.User;
-using ProjectFollowUp.BFF.Domain.User.Events;
+using ProjectFollowUp.BFF.Domain.User.DomainEvents;
 
 public sealed class CreateUserCommandHandler(
     IIdentityProvider identityProvider,
@@ -29,7 +29,7 @@ public sealed class CreateUserCommandHandler(
 
         var userId = await this.CreateUserProfile(command, credentialsId.Value, cancellationToken);
         await eventPublisher.Publish(
-            new UserRegisteredEvent
+            new UserRegistered
             {
                 UserId = userId
             },

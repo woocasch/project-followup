@@ -9,16 +9,13 @@ using System.Threading.Tasks;
 using KurrentDB.Client;
 
 using ProjectFollowUp.BFF.Application.EventSourcing;
+using ProjectFollowUp.BFF.Infrastructure.Serialization.Json;
 
 public sealed class KurrentEventStreamsRepository(
     KurrentDBClient eventStoreClient,
     INamingService namingService) : IEventStreamsRepository
 {
-    private static readonly JsonSerializerOptions serializerOptions = new()
-    {
-        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-        WriteIndented = false,
-    };
+    private static readonly JsonSerializerOptions serializerOptions = JsonSerializerOptionsFactory.GetOptions();
 
     public async Task AppendToStreamAsync<TAggregate>(
         Guid aggregateId,

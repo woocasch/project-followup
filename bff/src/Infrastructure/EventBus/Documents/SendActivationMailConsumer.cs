@@ -45,7 +45,7 @@ public sealed class SendActivationMailConsumer(
 
     private async Task SendEmail(string linkCode, string emailAddress, string displayName)
     {
-        var emailMessage = new MimeMessage();
+        using var emailMessage = new MimeMessage();
         emailMessage.From.Add(new MailboxAddress("Project Follow-Up Notification", "no-reply@projectfollowup.local"));
         emailMessage.To.Add(new MailboxAddress(displayName, emailAddress));
         emailMessage.Subject = "Activate your Project Follow-Up account";

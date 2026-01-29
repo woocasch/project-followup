@@ -18,7 +18,7 @@ public sealed class UpdateProjectCommandHandler(
             command.ProjectId.ToGuid(),
             cancellationToken);
         var project = aggregateFactory.Create(existingProjectEvents, ProjectAggregateRoot.Rehydrate);
-        project.ChangeDetails(command.Title, command.Description);
+        project.ChangeDetails(command.Title, command.Description, command.ChangedAt);
         await eventsRepository.StoreStreamAsync(project, cancellationToken);
         return CommandResult.Success();
     }

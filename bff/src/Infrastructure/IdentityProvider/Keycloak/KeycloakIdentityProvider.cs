@@ -1,53 +1,44 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
 
-using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Options;
 
 using ProjectFollowUp.BFF.Application.IdentityProvider;
-using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak.KeycloakClient;
-using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak.KeycloakClient.Payloads;
 
 public sealed class KeycloakIdentityProvider(
-    IKeycloakClient keycloakClient,
-    IMemoryCache cache) : IIdentityProvider
+    IOptions<KeycloakSettings> options,
+    global::Keycloak.Net.KeycloakClient client) : IIdentityProvider
 {
     public async Task<CreateUserCredentialsResponse> CreateUserCredentials(
         CreateUserCredentialsRequest request,
         CancellationToken cancellationToken)
     {
-        var token = await this.GetToken(cancellationToken);
-        if (token is null)
+        var user = new global::Keycloak.Net.Models.Users.User
         {
-            return new CreateUserCredentialsResponse(false);
+            UserName = request.Email,
+            Email = request.Email,
+            FirstName = request.DisplayName,
+            Enabled = true,
+        };
+        var created = await client.CreateUserAsync(options.Value.Realm, user, cancellationToken);
+        if (!created)
+        {
+            return CreateUserCredentialsResponse.Failed();
         }
 
-        var createCredentialsRequest = new CreateCredentialsRequest(
-            token.Value.TokenType,
-            token.Value.AccessToken,
-            request.Email,
-            request.Email,
-            "INITIAL_PASSWORD");
-        var createCredentialsResponse = await keycloakClient.CreateCredentials(
-            createCredentialsRequest,
-            cancellationToken);
-        return new CreateUserCredentialsResponse(createCredentialsResponse.Created);
-    }
-
-    private async Task<(string TokenType, string AccessToken)?> GetToken(CancellationToken cancellationToken)
-    {
-        return await cache.GetOrCreateAsync<(string TokenType, string AccessToken)?>("KeycloakToken", async entry =>
+        var usersFound = (await client.GetUsersAsync(
+            options.Value.Realm,
+            email: request.Email,
+            cancellationToken: cancellationToken))
+            .ToList();
+        var createdUser = usersFound.SingleOrDefault();
+        if (createdUser is null)
         {
-            entry.AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(5);
-            var request = new GetServiceTokenRequest();
-            var response = await keycloakClient.GetServiceToken(request, cancellationToken);
-            if (response is null)
-            {
-                return null;
-            }
+            return CreateUserCredentialsResponse.Failed();
+        }
 
-            return (response.TokenType, response.AccessToken);
-        });
+        var userId = Guid.Parse(createdUser.Id);
+        return CreateUserCredentialsResponse.Succeeded(userId);
     }
 }

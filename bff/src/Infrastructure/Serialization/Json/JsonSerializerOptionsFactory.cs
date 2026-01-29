@@ -1,0 +1,26 @@
+﻿namespace ProjectFollowUp.BFF.Infrastructure.Serialization.Json;
+
+using System.Text.Json;
+
+public static class JsonSerializerOptionsFactory
+{
+    private static readonly Lazy<JsonSerializerOptions> options = new(CreateOptions, true);
+
+    public static JsonSerializerOptions GetOptions() => options.Value;
+
+    private static JsonSerializerOptions CreateOptions()
+    {
+        return new JsonSerializerOptions
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = false,
+            Converters =
+            {
+                new User.EmailAddressConverter(),
+                new User.UserIdConverter(),
+                new ActivationLink.ActivationLinkIdConverter(),
+                new Project.ProjectIdConverter(),
+            },
+        };
+    }
+}

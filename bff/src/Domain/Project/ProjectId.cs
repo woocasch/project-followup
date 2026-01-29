@@ -2,16 +2,22 @@
 
 using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
 
-[method: JsonConstructor]
-public readonly struct ProjectId(Guid value) : IAggregateId<ProjectId>
+
+public readonly struct ProjectId : IAggregateId<ProjectId>
 {
-    public readonly Guid Value => value;
+    private ProjectId(Guid value)
+    {
+        this.Value = value;
+    }
+
+    public readonly Guid Value { get; }
 
     public static ProjectId FromGuid(Guid guid) => new(guid);
 
-    public Guid ToGuid() => value;
+    public static ProjectId NewId() => FromGuid(Guid.NewGuid());
+
+    public Guid ToGuid() => this.Value;
 
     public override bool Equals([NotNullWhen(true)] object? obj)
     {

@@ -8,7 +8,7 @@ public sealed class UpdateProjectCommand(
     string title,
     string description,
     Guid userId,
-    DateTimeOffset createdAt) : ICommand
+    DateTimeOffset changedAt) : ICommand
 {
     public ProjectId ProjectId { get; } = projectId;
 
@@ -18,5 +18,5 @@ public sealed class UpdateProjectCommand(
 
     public Guid UserId { get; } = userId;
 
-    public DateTimeOffset CreatedAt { get; } = createdAt;
+    public DateTimeOffset ChangedAt { get; } = changedAt;
 }

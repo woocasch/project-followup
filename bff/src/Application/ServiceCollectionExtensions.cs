@@ -2,6 +2,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
+using ProjectFollowUp.BFF.Application.ActivationLinks;
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Application.Projects;
@@ -16,6 +17,7 @@ public static class ServiceCollectionExtensions
             .AddCqrs()
             .AddProjects()
             .AddUsers()
+            .AddActivationLinks()
             .AddSingleton<IAggregateFactory, AggregateFactory>();
         return services;
     }

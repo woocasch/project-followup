@@ -4,29 +4,48 @@ using System.Text.Json.Serialization;
 
 using FluentValidation;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Authorization;
+using Microsoft.IdentityModel.Tokens;
+
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 
 using ProjectFollowUp.BFF.Application;
+using ProjectFollowUp.BFF.Infrastructure.EventBus;
 using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
+using ProjectFollowUp.BFF.Infrastructure.MailSender;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
+using ProjectFollowUp.BFF.WebApi.EventsSubscriptions;
 using ProjectFollowUp.BFF.WebApi.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers(options =>
+{
+    var policy = new AuthorizationPolicyBuilder()
+        .RequireAuthenticatedUser()
+        .Build();
+    options.Filters.Add(new AuthorizeFilter(policy));
+});
 
 builder.Services.AddValidation();
 
 builder.Services.AddApplication();
 
 builder.Services.AddKurrentEventSourcing(builder.Configuration);
+
+// Configure Event Subscriptions
+builder.Services.Configure<EventBusSettings>(builder.Configuration.GetSection("EventBus"));
+builder.Services.Configure<QueueMappings>(builder.Configuration.GetSection("QueueMappings"));
+builder.Services.ConfigureEventsSubscriptions();
 
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
@@ -41,6 +60,44 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
 builder.Services.AddScoped<IValidator<UpdateInput>, UpdateInputValidator>();
 builder.Services.AddMemoryCache();
+
+// Configure mail sender
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
+builder.Services.AddMailSender();
+
+// Configure Keycloak Settings
+builder.Services.Configure<KeycloakSettings>(builder.Configuration.GetSection("Keycloak"));
+var keycloakBaseAddress = builder.Configuration.GetValue("Keycloak:BaseAddress", string.Empty);
+var keycloakRealm = builder.Configuration.GetValue("Keycloak:Realm", string.Empty);
+var keycloakAuthority = $"{keycloakBaseAddress.TrimEnd('/')}/realms/{keycloakRealm}";
+
+// Configure JWT Bearer Authentication
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = keycloakAuthority;
+        options.Audience = builder.Configuration.GetValue("Keycloak:ClientId", string.Empty);
+        options.RequireHttpsMetadata = false; // Set to true in production
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = false, // Keycloak may not include audience in token
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ClockSkew = TimeSpan.FromMinutes(5)
+        };
+        options.Events = new JwtBearerEvents
+        {
+            OnAuthenticationFailed = context =>
+            {
+                var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<ProjectFollowUp.BFF.WebApi.WebApiProgram>>();
+                logger.LogError(context.Exception, "Authentication failed");
+                return Task.CompletedTask;
+            }
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 // Configure OpenTelemetry
 var serviceName = builder.Configuration.GetValue("OpenTelemetry:ServiceName", "UNKNOWN"); ;
@@ -90,8 +147,6 @@ builder.Services.AddOpenTelemetry()
             options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.Grpc;
         }));
 builder.Services.AddKeycloakIdentityProvider();
-builder.Services.Configure<KeycloakSettings>(builder.Configuration.GetSection("Keycloak"));
-var keycloakBaseAddress = builder.Configuration.GetValue("Keycloak:BaseAddress", string.Empty);
 builder.Services.AddHttpClient("Keycloak", client =>
 {
     client.BaseAddress = new Uri(keycloakBaseAddress);
@@ -107,10 +162,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-
-app.MapControllers();
-
 app.UseCors(options =>
     options
         .AllowAnyHeader()
@@ -118,6 +169,10 @@ app.UseCors(options =>
         .SetIsOriginAllowed(_ => true)
         .AllowCredentials());
 
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
 
 var projectionsInitializer = app.Services.GetRequiredService<ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProcessing.IProjectionsInitializer>();
 await projectionsInitializer.InitializeProjections(CancellationToken.None);

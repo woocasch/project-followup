@@ -1,6 +1,6 @@
 import axios from 'axios';
-import type * as model from './projects.model';
 import { ApiClientBase } from './api-client-base';
+import type * as model from './projects.model';
 
 interface GetProjectOutput {
   projectId: string;
@@ -10,9 +10,8 @@ interface GetProjectOutput {
 
 export class ProjectsClient extends ApiClientBase implements model.ProjectsApi {
   async fetchProjectsList(): Promise<model.FetchListResult> {
-    const response = await this.createBffClient().get<model.FetchListResult>(
-      `api/Projects`,
-    );
+    const response =
+      await this.createBffClient().get<model.FetchListResult>(`api/Projects`);
     if (response.status !== 200) {
       return { projects: [] };
     }
@@ -32,7 +31,7 @@ export class ProjectsClient extends ApiClientBase implements model.ProjectsApi {
           id: response.data.projectId,
           title: response.data.title,
           description: response.data.description,
-        }
+        },
       };
     } catch (error) {
       if (axios.isAxiosError(error) && error.response?.status === 404) {
@@ -43,10 +42,7 @@ export class ProjectsClient extends ApiClientBase implements model.ProjectsApi {
   }
 
   async create(payload: model.CreatePayloadParameters): Promise<boolean> {
-    const response = await this.createBffClient().post(
-      `api/Projects`,
-      payload,
-    );
+    const response = await this.createBffClient().post(`api/Projects`, payload);
     return response.status === 201;
   }
 

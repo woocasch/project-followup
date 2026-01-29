@@ -12,6 +12,7 @@ body[data-theme="dark"] {
     // Errors and critical messages
     --colors-error: hsl(0, 70%, 50%);
     --colors-error-text: hsl(0, 0%, 10%);
+    --colors-error-light: hsl(0, 70%, 15%);
     // Background color
     --colors-background: hsl(0, 0%, 40%);
     // Cards, panels
@@ -20,4 +21,6 @@ body[data-theme="dark"] {
     --colors-text-primary: hsl(0, 0%, 90%);
     // Secondary text
     --colors-text-secondary: hsl(0, 0%, 60%);
+    // Borders
+    --colors-border: hsl(0, 0%, 50%);
 }

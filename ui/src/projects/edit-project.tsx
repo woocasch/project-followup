@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
-import styled from "@emotion/styled";
-import { Button, PageHeader, Text } from "@root/components";
+import styled from '@emotion/styled';
+import { Button, PageHeader, Text } from '@root/components';
 import { theme } from '@root/theme';
+import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
+import type * as model from './edit-project/edit-project.model';
 import editProjectService from './edit-project/edit-project.service';
-import * as model from './edit-project/edit-project.model';
 
 const EditProjectForm = styled.div(`
   margin: auto;
@@ -31,76 +31,75 @@ const ButtonsContainer = styled.div(`
 type RouteParams = Record<'projectId', string>;
 
 export default function EditProject() {
-    const [title, setTitle] = useState('');
-    const [description, setDescription] = useState('');
-    const { projectId } = useParams<RouteParams>();
-    const navigate = useNavigate();
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+  const { projectId } = useParams<RouteParams>();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        if (!projectId) {
-            navigate('/');
-            return;
-        }
-
-        const request: model.GetProjectRequest = {
-            projectId: projectId,
-        };
-
-        editProjectService.getProject(request)
-            .then(r => {
-                if (r.project) {
-                    setTitle(r.project.title);
-                    setDescription(r.project.description);
-                }
-            });
-    }, [projectId]);
-
-    async function onEditClick() {
-        const request: model.EditProjectRequest = {
-            projectId: projectId ?? '',
-            title,
-            description,
-        }
-
-        const response = await editProjectService.editProject(request);
-        if (response.success) {
-            navigate('/projects');
-            return;
-        }
+  useEffect(() => {
+    if (!projectId) {
+      navigate('/');
+      return;
     }
 
-    function onCancelClick() {
-        navigate('/');
-    }
+    const request: model.GetProjectRequest = {
+      projectId: projectId,
+    };
 
-    return (
-        <div>
-            <PageHeader>Edit project</PageHeader>
-            <EditProjectForm>
-                <Text
-                    value={title}
-                    setValue={(v) => setTitle(v)}
-                    label="Project Title"
-                />
-                <Text
-                    multiline={true}
-                    value={description}
-                    setValue={(v) => setDescription(v)}
-                    label="Project Description"
-                />
-                <ButtonsContainer>
-                    <Button variant="action" buttonType="rounded" onClick={onEditClick}>
-                        Update
-                    </Button>
-                    <Button
-                        variant="warning"
-                        buttonType="rounded"
-                        onClick={onCancelClick}
-                    >
-                        Cancel
-                    </Button>
-                </ButtonsContainer>
-            </EditProjectForm>
-        </div>
-    );
+    editProjectService.getProject(request).then((r) => {
+      if (r.project) {
+        setTitle(r.project.title);
+        setDescription(r.project.description);
+      }
+    });
+  }, [projectId, navigate]);
+
+  async function onEditClick() {
+    const request: model.EditProjectRequest = {
+      projectId: projectId ?? '',
+      title,
+      description,
+    };
+
+    const response = await editProjectService.editProject(request);
+    if (response.success) {
+      navigate('/projects');
+      return;
+    }
+  }
+
+  function onCancelClick() {
+    navigate('/');
+  }
+
+  return (
+    <div>
+      <PageHeader>Edit project</PageHeader>
+      <EditProjectForm>
+        <Text
+          value={title}
+          setValue={(v) => setTitle(v)}
+          label="Project Title"
+        />
+        <Text
+          multiline={true}
+          value={description}
+          setValue={(v) => setDescription(v)}
+          label="Project Description"
+        />
+        <ButtonsContainer>
+          <Button variant="action" buttonType="rounded" onClick={onEditClick}>
+            Update
+          </Button>
+          <Button
+            variant="warning"
+            buttonType="rounded"
+            onClick={onCancelClick}
+          >
+            Cancel
+          </Button>
+        </ButtonsContainer>
+      </EditProjectForm>
+    </div>
+  );
 }

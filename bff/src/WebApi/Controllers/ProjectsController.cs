@@ -1,5 +1,7 @@
 ﻿namespace ProjectFollowUp.BFF.WebApi.Controllers;
 
+using System.Security.Claims;
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,8 +19,13 @@ public sealed class ProjectsController(IMediator mediator) : ControllerBase
     [HttpGet]
     public async Task<IResult> FetchList(CancellationToken cancellationToken)
     {
-        // TODO: Retrieve user id from token.
-        var query = new FetchProjectsQuery(Guid.NewGuid());
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+        if (userIdClaim is null || !Guid.TryParse(userIdClaim.Value, out var userId))
+        {
+            return Results.Unauthorized();
+        }
+
+        var query = new FetchProjectsQuery(userId);
         var result = await mediator.Fetch(query, cancellationToken);
         var projects = result.Projects
             .Select(p => new ProjectListItem(
@@ -38,7 +45,13 @@ public sealed class ProjectsController(IMediator mediator) : ControllerBase
         Guid projectId,
         CancellationToken cancellationToken)
     {
-        var query = new GetProjectQuery(Guid.NewGuid(), ProjectId.FromGuid(projectId));
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+        if (userIdClaim is null || !Guid.TryParse(userIdClaim.Value, out var userId))
+        {
+            return Results.Unauthorized();
+        }
+
+        var query = new GetProjectQuery(userId, ProjectId.FromGuid(projectId));
         var result = await mediator.Fetch(query, cancellationToken);
         if (result is null)
         {
@@ -57,13 +70,18 @@ public sealed class ProjectsController(IMediator mediator) : ControllerBase
         CreateInput payload,
         CancellationToken cancellationToken)
     {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+        if (userIdClaim is null || !Guid.TryParse(userIdClaim.Value, out var userId))
+        {
+            return Results.Unauthorized();
+        }
+
         var projectId = Guid.NewGuid();
         var command = new CreateProjectCommand(
             ProjectId.FromGuid(projectId),
             payload.Title,
             payload.Description,
-            // TODO: Get user id from token
-            Guid.NewGuid(),
+            userId,
             DateTimeOffset.UtcNow);
         var result = await mediator.Send(command, cancellationToken);
         if (!result.IsSuccess)
@@ -80,11 +98,17 @@ public sealed class ProjectsController(IMediator mediator) : ControllerBase
         UpdateInput payload,
         CancellationToken cancellationToken)
     {
+        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
+        if (userIdClaim is null || !Guid.TryParse(userIdClaim.Value, out var userId))
+        {
+            return Results.Unauthorized();
+        }
+
         var command = new UpdateProjectCommand(
             ProjectId.FromGuid(projectId),
             payload.Title,
             payload.Description,
-            Guid.NewGuid(),
+            userId,
             DateTimeOffset.UtcNow);
         var result = await mediator.Send(command, cancellationToken);
         if (!result.IsSuccess)

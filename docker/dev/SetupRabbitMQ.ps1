@@ -1,0 +1,1 @@
+docker exec rabbitmq.projectfollowup.dev /bin/bash /configure.sh

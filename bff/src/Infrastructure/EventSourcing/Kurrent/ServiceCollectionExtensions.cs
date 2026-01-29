@@ -35,6 +35,7 @@ public static class ServiceCollectionExtensions
         services.AddSingleton<IProjectionFactory, ProjectionFactory>();
         services.AddSingleton<IProjectionsInitializer, ProjectionsInitializer>();
         services.AddScoped<Application.Projects.IReadModel, ProjectsReadModel>();
+        services.AddScoped<Application.ActivationLinks.IReadModel, ActivationLinksReadModel>();
         return services;
     }
 
@@ -44,7 +45,8 @@ public static class ServiceCollectionExtensions
         services
             .AddTransient<IProjection, UsersProjection>()
             .AddTransient<IProjection, ProjectsProjection>()
-            .AddTransient<IProjection, ProjectsListProjection>();
+            .AddTransient<IProjection, ProjectsListProjection>()
+            .AddTransient<IProjection, ActivationLinksProjection>();
         return services;
     }
 }

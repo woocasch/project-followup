@@ -1,0 +1,8 @@
+{
+    "bffRoot": "/",
+    "keycloak": {
+        "url": "/auth",
+        "realm": "project-follow-up",
+        "clientId": "frontend"
+    }
+}

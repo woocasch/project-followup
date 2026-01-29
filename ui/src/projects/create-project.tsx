@@ -2,9 +2,9 @@ import { Button, PageHeader, Text } from '@components/index';
 import styled from '@emotion/styled';
 import { theme } from '@root/theme';
 import { useState } from 'react';
-import * as model from './create-project/create-project.model';
-import createProjectService from './create-project/create-project.service';
 import { useNavigate } from 'react-router';
+import type * as model from './create-project/create-project.model';
+import createProjectService from './create-project/create-project.service';
 
 const CreateProjectForm = styled.div(`
   margin: auto;
@@ -38,8 +38,7 @@ export default function CreateProject() {
       title,
       description,
     };
-    createProjectService.createProject(request)
-    .then(r => {
+    createProjectService.createProject(request).then((r) => {
       if (r.success) {
         navigate('/projects');
         return;

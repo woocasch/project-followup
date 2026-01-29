@@ -1,13 +1,8 @@
 ﻿namespace ProjectFollowUp.BFF.Application.Cqrs;
 
-public sealed class Mediator : IMediator
+public sealed class Mediator(IHandlerFactory commandHandlerFactory) : IMediator
 {
-    private readonly IHandlerFactory commandHandlerFactory;
-
-    public Mediator(IHandlerFactory commandHandlerFactory)
-    {
-        this.commandHandlerFactory = commandHandlerFactory;
-    }
+    private readonly IHandlerFactory commandHandlerFactory = commandHandlerFactory;
 
     public async Task<CommandResult> Send(ICommand command, CancellationToken cancellationToken)
     {

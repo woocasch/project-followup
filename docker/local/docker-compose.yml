@@ -1,0 +1,180 @@
+name: project-follow-up
+
+services:  
+  bff.projectfollowup.local:
+    image: project-follow-up-bff:local
+    container_name: bff.projectfollowup.local
+    hostname: bff.projectfollowup.local
+    restart: unless-stopped
+    environment:
+      - Keycloak__baseAddress=http://keycloak.projectfollowup.local:8080
+      - Keycloak__clientSecret=LE6W5fO2GsZKMxTo7EWZzcXWL283GCk7
+      - OpenTelemetry__OtlpEndpoint=http://otel-collector.projectfollowup.local:4317
+      - OpenTelemetry__Environment=LocalDocker
+      - Kurrent__ConnectionString=esdb://kurrent.projectfollowup.local:2113?tls=false
+    networks:
+      - nginx-network
+      - monitoring
+
+  ui.projectfollowup.local:
+    image: project-follow-up-ui:local
+    container_name: ui.projectfollowup.local
+    hostname: ui.projectfollowup.local
+    restart: unless-stopped
+    volumes:
+      - ./ui/configuration.json:/usr/share/nginx/html/configuration.json
+    depends_on:
+      - bff.projectfollowup.local
+    networks:
+      - nginx-network
+
+  keycloak.storage.projectfollowup.local:
+    container_name: keycloak.storage.projectfollowup.local
+    hostname: keycloak.storage.projectfollowup.local
+    image: mysql:8.0
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret-password
+      - MYSQL_DATABASE=keycloak
+      - MYSQL_USER=keycloak
+      - MYSQL_PASSWORD=keycloak-password
+    volumes:
+      - type: volume
+        source: keycloak-data
+        target: /var/lib/mysql
+    networks:
+      - keycloak-network
+
+  keycloak.projectfollowup.local:
+    container_name: keycloak.projectfollowup.local
+    hostname: keycloak.projectfollowup.local
+    image: quay.io/keycloak/keycloak:26.5
+    command:
+      - start
+      - --hostname=http://localhost:5000/auth
+      - --hostname-strict=false
+      - --proxy-headers=xforwarded
+      # - --optimized
+    depends_on:
+      - keycloak.storage.projectfollowup.local
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT: false
+      KC_DB: mysql
+      KC_DB_URL_HOST: keycloak.storage
+      KC_DB_URL_PROPERTIES : '?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true'
+      KC_DB_SCHEMA: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: 'keycloak-password'
+    restart: unless-stopped
+    networks:
+      - keycloak-network
+      - nginx-network
+      - monitoring
+
+  otel-collector.projectfollowup.local:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector.projectfollowup.local
+    hostname: otel-collector.projectfollowup.local
+    restart: unless-stopped
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./otel-collector/otel-collector-config.yml:/etc/otel-collector-config.yml
+      - /var/log:/var/log:ro
+      - otel-data:/tmp
+    ports:
+      - "5001:4317"
+    # ports:
+    #   - "4317:4317"   # OTLP gRPC receiver
+    #   - "4318:4318"   # OTLP HTTP receiver
+    #   - "8888:8888"   # Prometheus metrics
+    #   - "8889:8889"   # Prometheus exporter metrics
+    networks:
+      - nginx-network
+      - monitoring
+
+  kurrent.projectfollowup.local:
+    image: docker.kurrent.io/kurrent-latest/kurrentdb:latest
+    container_name: kurrent.projectfollowup.local
+    hostname: kurrent.projectfollowup.local
+    restart: unless-stopped
+    command:
+      - --insecure
+      - --run-projections=All
+    environment:
+      - KURRENT_CLUSTER_SIZE=1
+      - KURRENT_EXT_TCP_PORT=1113
+      - KURRENT_EXT_HTTP_PORT=2113
+      - KURRENT_ENABLE_ATOM_PUB_OVER_HTTP=true
+      - EVENTSTORE_EnableAtomPubOverHttp=true
+    ports:
+      - "5002:2113"  # HTTP API
+      - "5003:1113"  # TCP interface
+    volumes:
+      - kurrent-data:/var/lib/kurrentdb
+      - kurrent-logs:/var/log/kurrentdb
+    networks:
+      - nginx-network
+      - monitoring
+
+  rabbitmq.projectfollowup.local:
+    image: rabbitmq:3-management
+    container_name: rabbitmq.projectfollowup.local
+    hostname: rabbitmq.projectfollowup.local
+    restart: unless-stopped
+    ports:
+      # AMQP – do komunikacji aplikacji (.NET / MassTransit)
+      - "5004:5672"
+      # Panel administracyjny RabbitMQ (UI)
+      - "5005:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_DEFAULT_VHOST: /
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+      - ./rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
+    networks:
+      - monitoring
+
+  nginx.projectfollowup.local:
+    image: nginx:latest
+    container_name: nginx.projectfollowup.local
+    hostname: nginx.projectfollowup.local
+    restart: unless-stopped
+    ports:
+      - "5000:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - ui.projectfollowup.local
+      - bff.projectfollowup.local
+      - keycloak.projectfollowup.local
+    networks:
+      - nginx-network
+
+  mailpit.projectfollowup.local:
+    image: axllent/mailpit
+    container_name: mailpit.projectfollowup.local
+    hostname: mailpit.projectfollowup.local
+    restart: unless-stopped
+    ports:
+      - "5006:8025"  # Web UI
+      - "5007:1025"  # SMTP
+
+networks:
+  keycloak-network:
+    driver: bridge
+  nginx-network:
+    driver: bridge
+  monitoring:
+    external: true
+
+volumes:
+  keycloak-data:
+  otel-data:
+  kurrent-data:
+  kurrent-logs:
+  rabbitmq_data:

@@ -46,9 +46,9 @@ public class EmailAddressTests
     [Fact]
     public void WhenInstanceIsSerializedThenSerializedValueIsCorrect()
     {
-        const string emailAddress = "user@domain.com";
+        const string testValue = "user@domain.com";
         const string expectedSerializedValue = "\"user@domain.com\"";
-        this.Given(t => t.InstanceIsCreated(emailAddress))
+        this.Given(t => t.InstanceIsCreated(testValue))
             .And(t => t.InstanceIsSerialized())
             .When(t => t.ActionDoesNotThrow())
             .Then(t => t.SerializedValueIs(v => v == expectedSerializedValue))

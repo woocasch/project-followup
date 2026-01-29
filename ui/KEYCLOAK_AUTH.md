@@ -12,9 +12,9 @@ The Keycloak configuration is stored in `/public/configuration.json`:
 
 ```json
 {
-  "bffRoot": "https://localhost:7037",
+  "bffRoot": "https://localhost:4001",
   "keycloak": {
-    "url": "http://localhost:5000/auth",
+    "url": "http://localhost:4002",
     "realm": "project-follow-up",
     "clientId": "frontend"
   }

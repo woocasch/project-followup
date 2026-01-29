@@ -43,15 +43,8 @@ public sealed class CreateCustomRoles(
             setupSettingsOptions.Value.ProjectFollowUpRealm.RealmId,
             cancellationToken))
             .ToList();
-        foreach (var role in roles.Keys)
-        {
-            if (!existingRoles.Any(r => r.Name == role))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        
+        return roles.Keys.Any(role => !existingRoles.Any(r => r.Name == role));
     }
 
     private async Task<bool> CreateRoleIfNeeded(string roleName, string roleDescription, CancellationToken cancellationToken)

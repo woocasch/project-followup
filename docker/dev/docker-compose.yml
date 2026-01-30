@@ -50,7 +50,7 @@ services:
       - monitoring
 
   otel-collector.projectfollowup.dev:
-    image: otel/opentelemetry-collector-contrib:latest
+    image: otel/opentelemetry-collector-contrib:0.144.0
     container_name: otel-collector.projectfollowup.dev
     hostname: otel-collector.projectfollowup.dev
     restart: unless-stopped
@@ -71,7 +71,7 @@ services:
       - monitoring
 
   kurrent.projectfollowup.dev:
-    image: docker.kurrent.io/kurrent-latest/kurrentdb:latest
+    image: docker.kurrent.io/kurrent-latest/kurrentdb:26.0.0
     container_name: kurrent.projectfollowup.dev
     hostname: kurrent.projectfollowup.dev
     restart: unless-stopped
@@ -95,7 +95,7 @@ services:
       - monitoring
 
   rabbitmq.projectfollowup.dev:
-    image: rabbitmq:3-management
+    image: rabbitmq:4.2.3-management
     container_name: rabbitmq.projectfollowup.dev
     hostname: rabbitmq.projectfollowup.dev
     restart: unless-stopped
@@ -114,7 +114,7 @@ services:
       - monitoring
 
   mailpit.projectfollowup.dev:
-    image: axllent/mailpit
+    image: axllent/mailpit:v1.28
     container_name: mailpit.projectfollowup.dev
     hostname: mailpit.projectfollowup.dev
     restart: unless-stopped
@@ -129,8 +129,26 @@ services:
     volumes:
       - ./mailpit/passwords.txt:/passwords.txt
 
+  mongo.projectfollowup.dev:
+    container_name: mongo.projectfollowup.dev
+    hostname: mongo.projectfollowup.dev
+    image: mongo:8.2.4
+    restart: always
+    networks:
+      - mongo-network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 4010:27017
+    volumes:
+      - mongo-configdb:/data/configdb
+      - mongo-volume:/data/db
+
 networks:
   keycloak-network:
+    driver: bridge
+  mongo-network:
     driver: bridge
   nginx-network:
     driver: bridge
@@ -143,3 +161,5 @@ volumes:
   kurrent-data:
   kurrent-logs:
   rabbitmq_data:
+  mongo-configdb:
+  mongo-volume:

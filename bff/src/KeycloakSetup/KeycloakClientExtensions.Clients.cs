@@ -34,21 +34,22 @@ public static partial class KeycloakClientExtensions
     {
         var isStandardFlowEnabled = (flowTypes & FlowType.Standard) == FlowType.Standard;
         var isServiceAccountEnabled = (flowTypes & FlowType.ServiceAccount) == FlowType.ServiceAccount;
+        var client = new Client()
+        {
+            ClientId = clientId,
+            Name = name,
+            Enabled = true,
+            PublicClient = isStandardFlowEnabled,
+            StandardFlowEnabled = isStandardFlowEnabled,
+            DirectAccessGrantsEnabled = false,
+            ServiceAccountsEnabled = isServiceAccountEnabled,
+            AuthorizationServicesEnabled = false,
+            RedirectUris = redirectUrls,
+            WebOrigins = webOrigins,
+        };
         return await keycloakClient.CreateClientAsync(
             realmId,
-            new()
-            {
-                ClientId = clientId,
-                Name = name,
-                Enabled = true,
-                PublicClient = false,
-                StandardFlowEnabled = isStandardFlowEnabled,
-                DirectAccessGrantsEnabled = false,
-                ServiceAccountsEnabled = isServiceAccountEnabled,
-                AuthorizationServicesEnabled = isServiceAccountEnabled,
-                RedirectUris = redirectUrls,
-                WebOrigins = webOrigins,
-            },
+            client,
             cancellationToken);
     }
 

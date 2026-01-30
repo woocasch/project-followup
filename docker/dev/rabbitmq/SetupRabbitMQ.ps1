@@ -21,8 +21,8 @@ $commands = @(
     'rabbitmqadmin -u admin -p admin --vhost "projectfollowup" declare queue name="QU.bff.activation-link.user.registered" durable=true auto_delete=false',
     'rabbitmqadmin -u admin -p admin --vhost "projectfollowup" declare queue name="QU.bff.documents.activation-link-generated" durable=true auto_delete=false',
     # Bind queues to exchanges
-    "rabbitmqadmin -u admin -p admin --vhost projectfollowup declare binding source=EX.bff.user.registered destination_type=queue destination=QU.bff.activation-link.user.registered",
-    "rabbitmqadmin -u admin -p admin --vhost projectfollowup declare binding source=EX.bff.activation-link.generated destination_type=queue destination=QU.bff.documents.activation-link-generated"
+    "rabbitmqadmin -u admin -p admin --vhost projectfollowup declare binding source=EX.bff.user.registered destination_type=queue destination=QU.bff.activation-link.user.registered routing_key=`"`"",
+    "rabbitmqadmin -u admin -p admin --vhost projectfollowup declare binding source=EX.bff.activation-link.generated destination_type=queue destination=QU.bff.documents.activation-link-generated routing_key=`"`""
 )
 
 foreach ($command in $commands) {

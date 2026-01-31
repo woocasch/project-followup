@@ -19,7 +19,7 @@ public sealed class EventPublisher(
     {
         using var connection = await connectionFactory.CreateConnectionAsync(cancellationToken);
         using var channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
-        var data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(domainEvent, JsonSerializerOptionsFactory.GetOptions()));
+        var data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(domainEvent, domainEvent.GetType(), JsonSerializerOptionsFactory.GetOptions()));
         var exchangeName = eventToExchangeMapper.GetExchangeNameForEvent(domainEvent);
         if (string.IsNullOrWhiteSpace(exchangeName))
         {

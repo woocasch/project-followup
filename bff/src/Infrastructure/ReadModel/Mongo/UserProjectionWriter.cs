@@ -1,11 +1,11 @@
-﻿namespace ProjectFollowUp.BFF.Infrastructure.ProjectionWriters.Mongo;
+﻿namespace ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo;
 
 using MongoDB.Driver;
 
 using ProjectFollowUp.BFF.Application.Users.ProjectionWorkers;
 using ProjectFollowUp.BFF.Application.Users.ReadModel;
 using ProjectFollowUp.BFF.Domain.User;
-using ProjectFollowUp.BFF.Infrastructure.ProjectionWriters.Mongo.UserProjection;
+using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo.UserProjection;
 
 public sealed class UserProjectionWriter(
     ICollectionProvider collectionProvider) : ProjectionWriterBase<UserRecord, UserDto, UserId>, IUserProjectionWriter

@@ -10,11 +10,14 @@ using ProjectFollowUp.BFF.Domain.User;
 
 public sealed class GetActivationLinkDataQueryHandler(
     IEventStreamsRepository eventsRepository,
+    IReadModel readModel,
     IAggregateFactory aggregateFactory) : QueryHandlerBase<GetActivationLinkDataQuery, GetActivationLinkDataResult>
 {
-    protected override async Task<GetActivationLinkDataResult?> HandleQuery(GetActivationLinkDataQuery query, CancellationToken cancellationToken)
+    protected override async Task<GetActivationLinkDataResult?> HandleQuery(
+        GetActivationLinkDataQuery query,
+        CancellationToken cancellationToken)
     {
-        var activationLink = await this.GetActivationLink(query.LinkId, cancellationToken);
+        var activationLink = await this.GetActivationLink(query, cancellationToken);
         if (activationLink is null)
         {
             return null;
@@ -34,16 +37,53 @@ public sealed class GetActivationLinkDataQueryHandler(
         return result;
     }
 
-    private async Task<ActivationLinkAggregateRoot?> GetActivationLink(ActivationLinkId linkId, CancellationToken cancellationToken)
+    private async Task<ActivationLinkAggregateRoot?> GetActivationLink(
+        GetActivationLinkDataQuery query,
+        CancellationToken cancellationToken)
     {
+        var linkId = await this.GetActivationLinkId(query, cancellationToken);
+        if (linkId is null)
+        {
+            return null;
+        }
+
         var activationLinkEvents = await eventsRepository.ReadStreamAsync<ActivationLinkAggregateRoot>(
-            linkId.ToGuid(),
+            linkId.Value.ToGuid(),
             cancellationToken);
         var result = aggregateFactory.Create(activationLinkEvents, ActivationLinkAggregateRoot.Rehydrate);
         return result;
     }
 
-    private async Task<UserAggregateRoot> GetUser(UserId userId, CancellationToken cancellationToken)
+    private async Task<ActivationLinkId?> GetActivationLinkId(
+        GetActivationLinkDataQuery query,
+        CancellationToken cancellationToken)
+    {
+        if (query.Mode == GetActivationLinkDataQuery.SearchMode.ByLinkId)
+        {
+            return query.LinkId;
+        }
+        else if (query.Mode == GetActivationLinkDataQuery.SearchMode.ByLinkCode)
+        {
+            var linkCode = query.LinkCode;
+            var activationLink = await readModel.GetAsync(
+                linkCode,
+                cancellationToken);
+            if (activationLink is null)
+            {
+                return null;
+            }
+
+            return activationLink.Value.LinkId;
+        }
+        else
+        {
+            throw new InvalidOperationException("Unsupported search mode.");
+        }
+    }
+
+    private async Task<UserAggregateRoot> GetUser(
+        UserId userId,
+        CancellationToken cancellationToken)
     {
         var userEvents = await eventsRepository.ReadStreamAsync<UserAggregateRoot>(
             userId.ToGuid(),

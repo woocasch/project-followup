@@ -6,11 +6,28 @@ using System.Threading.Tasks;
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Domain.ActivationLink.Events;
 
-public sealed class LinkCreatedProjectionWorker : ProjectionWorkerBase<LinkCreated>
+public sealed class LinkCreatedProjectionWorker(
+    IActivationLinkProjectionWriter projectionWriter) : ProjectionWorkerBase<LinkCreated>
 {
     protected override async Task Materialize(LinkCreated domainEvent, CancellationToken cancellationToken)
     {
-        Console.WriteLine($"Activation link '{domainEvent.LinkCode}' created for user '{domainEvent.UserId}'.");
-        await Task.Yield();
+        var activationLink = await projectionWriter.Get(domainEvent.LinkId, cancellationToken);
+        if (activationLink is not null)
+        {
+            activationLink = activationLink.Value with
+            {
+                UserId = domainEvent.UserId,
+                LinkCode = domainEvent.LinkCode
+            };
+            await projectionWriter.Update(activationLink.Value, cancellationToken);
+        }
+        else
+        {
+            activationLink = new(
+                domainEvent.LinkId,
+                domainEvent.UserId,
+                domainEvent.LinkCode);
+            await projectionWriter.Insert(activationLink.Value, cancellationToken);
+        }
     }
 }

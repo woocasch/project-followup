@@ -38,7 +38,6 @@ public static class ServiceCollectionExtensions
         services.AddScoped<IEventStreamsRepository, KurrentEventStreamsRepository>();
         services.AddSingleton<INamingService, DefaultNamingService>();
         services.AddMaterializers();
-        services.AddScoped<Application.ActivationLinks.IReadModel, ActivationLinksReadModel>();
         return services;
     }
 }

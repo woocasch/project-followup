@@ -1,4 +1,4 @@
-﻿namespace ProjectFollowUp.BFF.Infrastructure.ProjectionWriters.Mongo.UserProjection;
+﻿namespace ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo.UserProjection;
 
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;

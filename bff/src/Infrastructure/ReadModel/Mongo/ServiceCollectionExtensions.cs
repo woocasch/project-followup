@@ -1,7 +1,8 @@
-﻿namespace ProjectFollowUp.BFF.Infrastructure.ProjectionWriters.Mongo;
+﻿namespace ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using ProjectFollowUp.BFF.Application.ActivationLinks.ProjectionWorkers;
 using ProjectFollowUp.BFF.Application.Users.ProjectionWorkers;
 
 public static class ServiceCollectionExtensions
@@ -11,9 +12,11 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddTransient<IUserProjectionWriter, UserProjectionWriter>()
+            .AddTransient<IActivationLinkProjectionWriter, ActivationLinkProjectionWriter>()
             .AddSingleton<IDatabaseProvider, DatabaseProvider>()
             .AddSingleton<ICollectionProvider, CollectionProvider>()
-            .AddSingleton<IClientProvider, ClientProvider>();
+            .AddSingleton<IClientProvider, ClientProvider>()
+            .AddTransient<Application.ActivationLinks.IReadModel, ActivationLinksReadModel>();
         return services;
     }
 }

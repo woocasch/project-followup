@@ -4,7 +4,7 @@ using ProjectFollowUp.BFF.Application.ActivationLinks.ReadModel;
 
 public interface IReadModel
 {
-    Task<ActivationLinkData?> GetAsync(
+    Task<ActivationLinkRecord?> GetAsync(
         string linkCode,
         CancellationToken cancellationToken);
 }

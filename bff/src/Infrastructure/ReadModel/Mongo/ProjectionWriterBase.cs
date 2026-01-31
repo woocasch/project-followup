@@ -1,4 +1,4 @@
-﻿namespace ProjectFollowUp.BFF.Infrastructure.ProjectionWriters.Mongo;
+﻿namespace ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo;
 
 using System.Threading;
 using System.Threading.Tasks;

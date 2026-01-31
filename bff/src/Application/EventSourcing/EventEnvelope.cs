@@ -3,7 +3,7 @@
 using ProjectFollowUp.BFF.Domain;
 
 public readonly record struct EventEnvelope(
-    IEvent Event,
+    IAggregateEvent Event,
     string StreamType,
     string StreamId,
     ulong StreamVersion,

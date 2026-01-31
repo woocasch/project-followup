@@ -38,14 +38,14 @@ public sealed class UserAggregateRoot : AggregateRootBase<UserId>
         return user;
     }
 
-    public static UserAggregateRoot Rehydrate(IEnumerable<IEvent> domainEvents)
+    public static UserAggregateRoot Rehydrate(IEnumerable<IAggregateEvent> domainEvents)
     {
         var user = new UserAggregateRoot();
         user.RecreateFromHistory(domainEvents);
         return user;
     }
 
-    protected override void When(IEvent domainEvent)
+    protected override void When(IAggregateEvent domainEvent)
     {
         switch (domainEvent)
         {

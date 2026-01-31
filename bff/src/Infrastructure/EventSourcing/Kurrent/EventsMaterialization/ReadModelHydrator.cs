@@ -1,5 +1,7 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.EventsMaterialization;
 
+using System.Text;
+using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,9 +9,13 @@ using KurrentDB.Client;
 
 using Microsoft.Extensions.DependencyInjection;
 
+using ProjectFollowUp.BFF.Application.EventSourcing;
+using ProjectFollowUp.BFF.Domain;
+using ProjectFollowUp.BFF.Infrastructure.Serialization.Json;
+
 public sealed class ReadModelHydrator(
     KurrentDBPersistentSubscriptionsClient client,
-    IServiceProvider serviceProvider) : IReadModelHydrator
+    IProjectionWorkerFactory projectionWorkerFactory) : IReadModelHydrator
 {
     public async Task Subscribe(CancellationToken cancellationToken)
     {
@@ -21,8 +27,8 @@ public sealed class ReadModelHydrator(
             Console.WriteLine($"Received message '{message.GetType()}'.");
             Task action = message switch
             {
-                PersistentSubscriptionMessage.SubscriptionConfirmation c => Task.Run(() => Console.WriteLine($"Subscription to all confirmed with id: {subscription.SubscriptionId}")),
-                PersistentSubscriptionMessage.Event e => this.HandleEvent(subscription, e.ResolvedEvent, cancellationToken),
+                PersistentSubscriptionMessage.SubscriptionConfirmation c => Task.Run(() => Console.WriteLine($"Subscription to all confirmed with id: {subscription.SubscriptionId}"), cancellationToken),
+                PersistentSubscriptionMessage.Event e => this.HandleEvent(subscription, e),
                 _ => Task.CompletedTask
             };
 
@@ -32,9 +38,9 @@ public sealed class ReadModelHydrator(
 
     private async Task HandleEvent(
         KurrentDBPersistentSubscriptionsClient.PersistentSubscriptionResult subscription,
-        ResolvedEvent resolvedEvent,
-        CancellationToken cancellationToken)
+        PersistentSubscriptionMessage.Event subscriptionEvent)
     {
+        var resolvedEvent = subscriptionEvent.ResolvedEvent;
         try
         {
             var metadata = GetMetadata(resolvedEvent);
@@ -45,16 +51,17 @@ public sealed class ReadModelHydrator(
             }
 
             Console.WriteLine("Handling event of type: " + metadata.EventTypeName);
-            var @event = await GetEvent(subscription, resolvedEvent, metadata.EventTypeName);
-            if (@event is null)
+            var aggregateEvent = await GetEvent(subscription, resolvedEvent, metadata.EventTypeName);
+            if (aggregateEvent is null)
             {
                 Console.WriteLine("Failed to deserialize event of type: " + metadata.EventTypeName);
                 return;
             }
 
-            Console.WriteLine($"Handling event {@event}");
-            var materializer = serviceProvider.GetRequiredKeyedService<IEventMaterializer>(metadata.EventTypeName);
-            await materializer.Materialize(@event, cancellationToken);
+            Console.WriteLine($"Handling event {aggregateEvent}");
+
+            await this.FeedProjections(aggregateEvent, CancellationToken.None);
+
             await subscription.Ack([resolvedEvent]);
         }
         catch
@@ -67,7 +74,15 @@ public sealed class ReadModelHydrator(
         }
     }
 
-    private static async Task<object?> GetEvent(
+    private async Task FeedProjections(IAggregateEvent aggregateEvent, CancellationToken cancellationToken)
+    {
+        var workers = projectionWorkerFactory.Create(aggregateEvent.GetType());
+        var work = workers.Select(workers => workers.Materialize(aggregateEvent, cancellationToken))
+            .ToList();
+        await Task.WhenAll(work);
+    }
+
+    private static async Task<IAggregateEvent?> GetEvent(
         KurrentDBPersistentSubscriptionsClient.PersistentSubscriptionResult subscription,
         ResolvedEvent resolvedEvent,
         string eventTypeName)
@@ -77,22 +92,22 @@ public sealed class ReadModelHydrator(
         {
             Console.WriteLine("Unknown event type: " + eventTypeName);
             await subscription.Ack([resolvedEvent]);
-            return false;
+            return null;
         }
 
-        var eventDataString = System.Text.Encoding.UTF8.GetString(resolvedEvent.Event.Data.ToArray());
-        return System.Text.Json.JsonSerializer.Deserialize(
+        var eventDataString = Encoding.UTF8.GetString(resolvedEvent.Event.Data.ToArray());
+        return JsonSerializer.Deserialize(
             eventDataString,
             eventType,
-            Infrastructure.Serialization.Json.JsonSerializerOptionsFactory.GetOptions());
+            JsonSerializerOptionsFactory.GetOptions()) as IAggregateEvent;
     }
 
     private static EventMetadata GetMetadata(ResolvedEvent resolvedEvent)
     {
-        var metadataString = System.Text.Encoding.UTF8.GetString(resolvedEvent.Event.Metadata.ToArray());
-        var metadata = System.Text.Json.JsonSerializer.Deserialize<EventMetadata>(
+        var metadataString = Encoding.UTF8.GetString(resolvedEvent.Event.Metadata.ToArray());
+        var metadata = JsonSerializer.Deserialize<EventMetadata>(
             metadataString,
-            Infrastructure.Serialization.Json.JsonSerializerOptionsFactory.GetOptions());
+            JsonSerializerOptionsFactory.GetOptions());
         return metadata;
     }
 }

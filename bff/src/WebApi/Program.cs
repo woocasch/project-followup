@@ -17,10 +17,10 @@ using OpenTelemetry.Trace;
 using ProjectFollowUp.BFF.Application;
 using ProjectFollowUp.BFF.Infrastructure.EventBus;
 using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent;
-using ProjectFollowUp.BFF.Infrastructure.EventSourcing.ReadModel.MongoDb;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
 using ProjectFollowUp.BFF.Infrastructure.MailSender;
+using ProjectFollowUp.BFF.Infrastructure.ProjectionWriters.Mongo;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 using ProjectFollowUp.BFF.WebApi.EventsSubscriptions;
 using ProjectFollowUp.BFF.WebApi.Validation;
@@ -61,7 +61,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
 builder.Services.AddScoped<IValidator<UpdateInput>, UpdateInputValidator>();
 builder.Services.AddMemoryCache();
-builder.Services.UserMongoReadModel();
+builder.Services.AddMongoProjectionWriters();
 
 // Configure mail sender
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));

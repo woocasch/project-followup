@@ -4,4 +4,4 @@ public record struct ProjectDetailsChanged(
     ProjectId ProjectId,
     string Title,
     string Description,
-    DateTimeOffset ChangedAt) : IEvent;
+    DateTimeOffset ChangedAt) : IAggregateEvent;

@@ -3,6 +3,6 @@
 /// <summary>
 /// Marker interface for aggregate events.
 /// </summary>
-public interface IEvent
+public interface IAggregateEvent
 {
 }

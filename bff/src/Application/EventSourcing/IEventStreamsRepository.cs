@@ -6,7 +6,7 @@ public interface IEventStreamsRepository
 {
     Task AppendToStreamAsync<TAggregate>(
         Guid aggregateId,
-        IEnumerable<IEvent> events,
+        IEnumerable<IAggregateEvent> events,
         ulong expectedVersion,
         CancellationToken cancellationToken)
         where TAggregate : class;

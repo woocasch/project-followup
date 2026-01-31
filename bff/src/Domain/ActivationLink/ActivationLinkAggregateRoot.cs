@@ -35,14 +35,14 @@ public sealed class ActivationLinkAggregateRoot : AggregateRootBase<ActivationLi
         return activationLink;
     }
 
-    public static ActivationLinkAggregateRoot Rehydrate(IEnumerable<IEvent> domainEvents)
+    public static ActivationLinkAggregateRoot Rehydrate(IEnumerable<IAggregateEvent> domainEvents)
     {
         var user = new ActivationLinkAggregateRoot();
         user.RecreateFromHistory(domainEvents);
         return user;
     }
 
-    protected override void When(IEvent domainEvent)
+    protected override void When(IAggregateEvent domainEvent)
     {
         switch (domainEvent)
         {

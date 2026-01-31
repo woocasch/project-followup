@@ -20,7 +20,7 @@ public sealed class KurrentEventStreamsRepository(
 
     public async Task AppendToStreamAsync<TAggregate>(
         Guid aggregateId,
-        IEnumerable<IEvent> events,
+        IEnumerable<IAggregateEvent> events,
         ulong expectedVersion,
         CancellationToken cancellationToken)
         where TAggregate : class
@@ -119,12 +119,12 @@ public sealed class KurrentEventStreamsRepository(
                 continue;
             }
 
-            if (!eventType.IsAssignableTo(typeof(IEvent)))
+            if (!eventType.IsAssignableTo(typeof(IAggregateEvent)))
             {
                 continue;
             }
 
-            var eventData = (IEvent?)JsonSerializer.Deserialize(
+            var eventData = (IAggregateEvent?)JsonSerializer.Deserialize(
                 Encoding.UTF8.GetString(resolvedEvent.Event.Data.Span),
                 eventType,
                 serializerOptions);

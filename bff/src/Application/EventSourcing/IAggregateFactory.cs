@@ -6,6 +6,6 @@ public interface IAggregateFactory
 {
     TAggregate Create<TAggregate>(
         IEnumerable<EventEnvelope> events,
-        Func<IEnumerable<IEvent>, TAggregate> rehydrationFunction)
+        Func<IEnumerable<IAggregateEvent>, TAggregate> rehydrationFunction)
         where TAggregate : class;
 }

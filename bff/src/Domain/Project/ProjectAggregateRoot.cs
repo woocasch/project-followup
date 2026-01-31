@@ -24,7 +24,7 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
         return project;
     }
 
-    public static ProjectAggregateRoot Rehydrate(IEnumerable<IEvent> domainEvents)
+    public static ProjectAggregateRoot Rehydrate(IEnumerable<IAggregateEvent> domainEvents)
     {
         var project = new ProjectAggregateRoot();
         project.RecreateFromHistory(domainEvents);
@@ -37,7 +37,7 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
         this.Apply(domainEvent);
     }
 
-    protected override void When(IEvent domainEvent)
+    protected override void When(IAggregateEvent domainEvent)
     {
         switch (domainEvent)
         {

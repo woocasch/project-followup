@@ -102,16 +102,17 @@ public sealed class KurrentEventStreamsRepository(
 
         await foreach (var resolvedEvent in result)
         {
-            var eventMetadata = JsonSerializer.Deserialize<EventMetadata>(
+            var eventMetadata = JsonSerializer.Deserialize<EventMetadata?>(
                 Encoding.UTF8.GetString(resolvedEvent.Event.Metadata.Span),
                 serializerOptions);
 
-            if (eventMetadata?.EventTypeName == null)
+            if (string.IsNullOrWhiteSpace(eventMetadata?.EventTypeName))
             {
                 continue;
             }
 
-            var eventType = Type.GetType(eventMetadata.EventTypeName);
+            var eventTypeName = eventMetadata.Value.EventTypeName;
+            var eventType = Type.GetType(eventTypeName);
             if (eventType == null)
             {
                 continue;
@@ -161,10 +162,5 @@ public sealed class KurrentEventStreamsRepository(
     {
         var parts = aggregateId.Split('-', 2);
         return parts.Length > 0 ? parts[0] : "Unknown";
-    }
-
-    private sealed class EventMetadata(string eventTypeName)
-    {
-        public string EventTypeName { get; } = eventTypeName;
     }
 }

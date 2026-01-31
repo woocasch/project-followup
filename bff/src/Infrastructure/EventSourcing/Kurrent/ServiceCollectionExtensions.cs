@@ -7,7 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using ProjectFollowUp.BFF.Application.EventSourcing;
-using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProcessing;
+using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.EventsMaterialization;
 
 public static class ServiceCollectionExtensions
 {
@@ -26,27 +26,19 @@ public static class ServiceCollectionExtensions
         {
             var settings = sp.GetRequiredService<IOptions<KurrentSettings>>();
             var clientSettings = KurrentDBClientSettings.Create(settings.Value.ConnectionString);
+            return new KurrentDBPersistentSubscriptionsClient(clientSettings);
+        });
+        services.AddSingleton(sp =>
+        {
+            var settings = sp.GetRequiredService<IOptions<KurrentSettings>>();
+            var clientSettings = KurrentDBClientSettings.Create(settings.Value.ConnectionString);
             return new KurrentDBProjectionManagementClient(clientSettings);
         });
 
         services.AddScoped<IEventStreamsRepository, KurrentEventStreamsRepository>();
         services.AddSingleton<INamingService, DefaultNamingService>();
-        services.AddProjections();
-        services.AddSingleton<IProjectionFactory, ProjectionFactory>();
-        services.AddSingleton<IProjectionsInitializer, ProjectionsInitializer>();
-        services.AddScoped<Application.Projects.IReadModel, ProjectsReadModel>();
+        services.AddMaterializers();
         services.AddScoped<Application.ActivationLinks.IReadModel, ActivationLinksReadModel>();
-        return services;
-    }
-
-    private static IServiceCollection AddProjections(
-        this IServiceCollection services)
-    {
-        services
-            .AddTransient<IProjection, UsersProjection>()
-            .AddTransient<IProjection, ProjectsProjection>()
-            .AddTransient<IProjection, ProjectsListProjection>()
-            .AddTransient<IProjection, ActivationLinksProjection>();
         return services;
     }
 }

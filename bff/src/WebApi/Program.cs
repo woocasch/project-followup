@@ -17,6 +17,7 @@ using OpenTelemetry.Trace;
 using ProjectFollowUp.BFF.Application;
 using ProjectFollowUp.BFF.Infrastructure.EventBus;
 using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent;
+using ProjectFollowUp.BFF.Infrastructure.EventSourcing.ReadModel.MongoDb;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
 using ProjectFollowUp.BFF.Infrastructure.MailSender;
@@ -60,6 +61,7 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
 builder.Services.AddScoped<IValidator<UpdateInput>, UpdateInputValidator>();
 builder.Services.AddMemoryCache();
+builder.Services.UserMongoReadModel();
 
 // Configure mail sender
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
@@ -119,7 +121,6 @@ builder.Services.AddOpenTelemetry()
             ["deployment.environment"] = environment,
         }))
     .WithLogging(logging => logging
-        .AddConsoleExporter()
         .AddOtlpExporter(options =>
         {
             // OTLP gRPC endpoint
@@ -173,9 +174,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-var projectionsInitializer = app.Services.GetRequiredService<ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProcessing.IProjectionsInitializer>();
-await projectionsInitializer.InitializeProjections(CancellationToken.None);
 
 app.Run();
 

@@ -9,17 +9,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="EventSourcing\Kurrent\ProjectionsProcessing\ProjectsList.js" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="EventSourcing\Kurrent\ProjectionsProcessing\ActivationLinks.js" />
-    <EmbeddedResource Include="EventSourcing\Kurrent\ProjectionsProcessing\Projects.js" />
-    <EmbeddedResource Include="EventSourcing\Kurrent\ProjectionsProcessing\ProjectsList.js" />
-    <EmbeddedResource Include="EventSourcing\Kurrent\ProjectionsProcessing\Users.js" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Keycloak.Net.Core" />
     <PackageReference Include="KurrentDB.Client" />
     <PackageReference Include="MailKit" />

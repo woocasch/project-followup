@@ -21,6 +21,7 @@ public static class ServiceCollectionExtensions
         });
         services.AddEventBus();
         services.AddHostedService<SubscriptionsManager>();
+        services.AddHostedService<ModelHydration>();
         return services;
     }
 }

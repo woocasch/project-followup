@@ -1,6 +1,8 @@
 ﻿namespace ProjectFollowUp.BFF.Application.EventsBus;
 
+using ProjectFollowUp.BFF.Domain;
+
 public interface IEventPublisher
 {
-    Task Publish(object @event, CancellationToken cancellationToken);
+    Task Publish(IDomainEvent @event, CancellationToken cancellationToken);
 }

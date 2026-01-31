@@ -5,4 +5,4 @@ public record struct UserCreated(
     Guid CredentialsId,
     string DisplayName,
     EmailAddress Email,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt) : IEvent;

@@ -1,10 +1,12 @@
 ﻿namespace ProjectFollowUp.BFF.Application.EventSourcing;
 
+using ProjectFollowUp.BFF.Domain;
+
 public interface IEventStreamsRepository
 {
     Task AppendToStreamAsync<TAggregate>(
         Guid aggregateId,
-        IEnumerable<object> events,
+        IEnumerable<IEvent> events,
         ulong expectedVersion,
         CancellationToken cancellationToken)
         where TAggregate : class;

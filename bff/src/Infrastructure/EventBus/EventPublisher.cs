@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using ProjectFollowUp.BFF.Application.EventsBus;
-
+using ProjectFollowUp.BFF.Domain;
 using ProjectFollowUp.BFF.Infrastructure.Serialization.Json;
 
 using RabbitMQ.Client;
@@ -15,18 +15,18 @@ public sealed class EventPublisher(
     IConnectionFactory connectionFactory,
     INamesMappings eventToExchangeMapper) : IEventPublisher
 {
-    public async Task Publish(object @event, CancellationToken cancellationToken)
+    public async Task Publish(IDomainEvent domainEvent, CancellationToken cancellationToken)
     {
         using var connection = await connectionFactory.CreateConnectionAsync(cancellationToken);
         using var channel = await connection.CreateChannelAsync(cancellationToken: cancellationToken);
-        var data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(@event, JsonSerializerOptionsFactory.GetOptions()));
-        var exchangeName = eventToExchangeMapper.GetExchangeNameForEvent(@event);
+        var data = Encoding.UTF8.GetBytes(JsonSerializer.Serialize(domainEvent, JsonSerializerOptionsFactory.GetOptions()));
+        var exchangeName = eventToExchangeMapper.GetExchangeNameForEvent(domainEvent);
         if (string.IsNullOrWhiteSpace(exchangeName))
         {
             var messageFormat = EventPublisherResources.ExchangeNameNotFound;
             var message = string.Format(
                 messageFormat,
-                @event.GetType().FullName);
+                domainEvent.GetType().FullName);
             throw new InvalidOperationException(
                 message);
         }

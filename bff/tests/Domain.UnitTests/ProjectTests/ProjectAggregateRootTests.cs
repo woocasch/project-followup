@@ -71,7 +71,7 @@ public sealed class ProjectAggregateRootTests
 
     private void InstanceContainsEvent(Predicate<object> predicate, string message)
     {
-        this.instance.GetUncommitedDomainEvents()
+        this.instance.GetUncommitedEvents()
             .ShouldContain(e => predicate(e), message);
     }
 }

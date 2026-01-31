@@ -5,5 +5,7 @@ public interface IProjectionWriter<TRecord, TId>
 {
     Task<TRecord?> Get(TId id, CancellationToken cancellationToken);
 
-    Task Upsert(TRecord record, CancellationToken cancellationToken);
+    Task Insert(TRecord record, CancellationToken cancellationToken);
+
+    Task Update(TRecord record, CancellationToken cancellationToken);
 }

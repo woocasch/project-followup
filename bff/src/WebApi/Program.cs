@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -61,7 +64,6 @@ builder.Services.ConfigureHttpJsonOptions(options =>
 builder.Services.AddScoped<IValidator<CreateInput>, CreateInputValidator>();
 builder.Services.AddScoped<IValidator<UpdateInput>, UpdateInputValidator>();
 builder.Services.AddMemoryCache();
-builder.Services.AddMongoProjectionWriters();
 
 // Configure mail sender
 builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
@@ -72,6 +74,11 @@ builder.Services.Configure<KeycloakSettings>(builder.Configuration.GetSection("K
 var keycloakBaseAddress = builder.Configuration.GetValue("Keycloak:BaseAddress", string.Empty);
 var keycloakRealm = builder.Configuration.GetValue("Keycloak:Realm", string.Empty);
 var keycloakAuthority = $"{keycloakBaseAddress.TrimEnd('/')}/realms/{keycloakRealm}";
+
+// Configure MongoDB
+builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("Mongo"));
+builder.Services.AddMongoProjectionWriters();
+BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.GuidRepresentation.Standard));
 
 // Configure JWT Bearer Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

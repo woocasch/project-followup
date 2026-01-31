@@ -24,6 +24,7 @@ public sealed class UserCreatedProjectionWorker(
                 DisplayName = domainEvent.DisplayName,
                 CreatedAt = domainEvent.CreatedAt,
             };
+            await projectionWriter.Update(user.Value, cancellationToken);
         }
         else
         {
@@ -33,8 +34,7 @@ public sealed class UserCreatedProjectionWorker(
                 domainEvent.Email,
                 domainEvent.DisplayName,
                 domainEvent.CreatedAt);
+            await projectionWriter.Insert(user.Value, cancellationToken);
         }
-
-        await projectionWriter.Upsert(user.Value, cancellationToken);
     }
 }

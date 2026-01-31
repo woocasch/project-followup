@@ -10,7 +10,10 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services)
     {
         services
-            .AddTransient<IUserProjectionWriter, UserProjectionWriter>();
+            .AddTransient<IUserProjectionWriter, UserProjectionWriter>()
+            .AddSingleton<IDatabaseProvider, DatabaseProvider>()
+            .AddSingleton<ICollectionProvider, CollectionProvider>()
+            .AddSingleton<IClientProvider, ClientProvider>();
         return services;
     }
 }

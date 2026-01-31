@@ -133,7 +133,7 @@ services:
     container_name: mongo.projectfollowup.dev
     hostname: mongo.projectfollowup.dev
     image: mongo:8.2.4
-    restart: always
+    restart: unless-stopped
     networks:
       - mongo-network
     environment:
@@ -144,6 +144,28 @@ services:
     volumes:
       - mongo-configdb:/data/configdb
       - mongo-volume:/data/db
+
+  mongo-express.projectfollowup.dev:
+    container_name: mongo-express.projectfollowup.dev
+    hostname: mongo-express.projectfollowup.dev
+    image: mongo-express:1.0.2-20-alpine3.19
+    ports:
+      - 4011:8081
+    restart: unless-stopped
+    depends_on:
+      - mongo.projectfollowup.dev
+    networks:
+      - mongo-network
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo.projectfollowup.dev:27017
+      - ME_CONFIG_MONGODB_SERVER=mongo.projectfollowup.dev
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin
 
 networks:
   keycloak-network:

@@ -19,7 +19,7 @@ public sealed class UserProjectionWriter(
     {
         return builder
             .Set(u => u.CredentialsId, record.CredentialsId)
-            .Set(u => u.Email, record.Email.ToString())
+            .Set(u => u.Email, record.Email.Value)
             .Set(u => u.DisplayName, record.DisplayName)
             .Set(u => u.CreatedAt, record.CreatedAt);
     }

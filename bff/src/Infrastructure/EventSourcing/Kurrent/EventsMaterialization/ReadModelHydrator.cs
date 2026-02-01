@@ -29,7 +29,7 @@ public sealed class ReadModelHydrator(
                 Console.WriteLine($"Received message '{message.GetType()}'.");
                 Task action = message switch
                 {
-                    PersistentSubscriptionMessage.SubscriptionConfirmation c => Task.Run(() => Console.WriteLine($"Subscription to all confirmed with id: {subscription.SubscriptionId}"), cancellationToken),
+                    PersistentSubscriptionMessage.SubscriptionConfirmation => Task.Run(() => Console.WriteLine($"Subscription to all confirmed with id: {subscription.SubscriptionId}"), cancellationToken),
                     PersistentSubscriptionMessage.Event e => this.HandleEvent(subscription, e),
                     _ => Task.CompletedTask
                 };

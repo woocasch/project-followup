@@ -33,7 +33,7 @@ public sealed class ActivationLinkAggregateRootTests
 
     private void InstanceContainsEvent(Predicate<object> predicate, string message)
     {
-        this.instance.GetUncommitedEvents()
+        this.instance.GetUncommittedEvents()
             .ShouldContain(e => predicate(e), message);
     }
 }

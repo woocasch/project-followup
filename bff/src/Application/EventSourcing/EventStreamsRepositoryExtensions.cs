@@ -10,7 +10,7 @@ public static class EventStreamsRepositoryExtensions
         CancellationToken cancellationToken)
         where TAggregate : class, IAggregateRoot
     {
-        var eventsToStore = aggregate.GetUncommitedEvents();
+        var eventsToStore = aggregate.GetUncommittedEvents();
         var id = aggregate.AggregateId;
         await repository.AppendToStreamAsync<TAggregate>(
             id,

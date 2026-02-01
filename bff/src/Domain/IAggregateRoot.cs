@@ -6,5 +6,5 @@ public interface IAggregateRoot
 
     string AggregateType { get; }
 
-    IEnumerable<IAggregateEvent> GetUncommitedEvents();
+    IEnumerable<IAggregateEvent> GetUncommittedEvents();
 }

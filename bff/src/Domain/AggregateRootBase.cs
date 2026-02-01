@@ -7,9 +7,7 @@ using System.Collections.ObjectModel;
 public abstract class AggregateRootBase<TId> : IAggregateRoot
     where TId : notnull
 {
-    private readonly Collection<IAggregateEvent> commitedEvents = [];
-
-    private readonly Collection<IAggregateEvent> uncommitedEvents = [];
+    private readonly Collection<IAggregateEvent> uncommittedEvents = [];
 
     public TId Id { get; protected set; } = default!;
 
@@ -17,23 +15,22 @@ public abstract class AggregateRootBase<TId> : IAggregateRoot
 
     public virtual string AggregateType => this.GetType().FullName!;
 
-    public IEnumerable<IAggregateEvent> GetUncommitedEvents()
+    public IEnumerable<IAggregateEvent> GetUncommittedEvents()
     {
-        return this.uncommitedEvents.ToList().AsReadOnly();
+        return this.uncommittedEvents.ToList().AsReadOnly();
     }
 
     protected void RecreateFromHistory(IEnumerable<IAggregateEvent> domainEvents)
     {
         foreach (var domainEvent in domainEvents)
         {
-            this.commitedEvents.Add(domainEvent);
             this.When(domainEvent);
         }
     }
 
     protected void Apply(IAggregateEvent domainEvent)
     {
-        this.uncommitedEvents.Add(domainEvent);
+        this.uncommittedEvents.Add(domainEvent);
         this.When(domainEvent);
     }
 

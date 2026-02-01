@@ -1,13 +1,10 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo.UserProjection;
 
-using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 public sealed class UserDto
 {
     [BsonId]
-    public ObjectId BsonId { get; set; } = default;
-
     public Guid Id { get; set; }
 
     public Guid CredentialsId { get; set; }

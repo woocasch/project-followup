@@ -3,6 +3,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
 using ProjectFollowUp.BFF.Application.ActivationLinks.ProjectionWorkers;
+using ProjectFollowUp.BFF.Application.Projects.ProjectionWorkers;
 using ProjectFollowUp.BFF.Application.Users.ProjectionWorkers;
 
 public static class ServiceCollectionExtensions
@@ -11,12 +12,30 @@ public static class ServiceCollectionExtensions
         this IServiceCollection services)
     {
         services
-            .AddTransient<IUserProjectionWriter, UserProjectionWriter>()
-            .AddTransient<IActivationLinkProjectionWriter, ActivationLinkProjectionWriter>()
+            .AddProjectionWriters()
+            .AddReadModels()
             .AddSingleton<IDatabaseProvider, DatabaseProvider>()
             .AddSingleton<ICollectionProvider, CollectionProvider>()
-            .AddSingleton<IClientProvider, ClientProvider>()
-            .AddTransient<Application.ActivationLinks.IReadModel, ActivationLinksReadModel>();
+            .AddSingleton<IClientProvider, ClientProvider>();
+        return services;
+    }
+
+    private static IServiceCollection AddProjectionWriters(
+        this IServiceCollection services)
+    {
+        services
+            .AddTransient<IUserProjectionWriter, UserProjectionWriter>()
+            .AddTransient<IActivationLinkProjectionWriter, ActivationLinkProjectionWriter>()
+            .AddTransient<IProjectProjectionWriter, ProjectProjectionWriter>();
+        return services;
+    }
+
+    private static IServiceCollection AddReadModels(
+        this IServiceCollection services)
+    {
+        services
+            .AddTransient<Application.ActivationLinks.IReadModel, ActivationLinksReadModel>()
+            .AddTransient<Application.Projects.IReadModel, ProjectsReadModel>();
         return services;
     }
 }

@@ -19,21 +19,6 @@ public sealed class ModelHydration(
         var serviceProvider = scope.ServiceProvider;
         await this.Configure(serviceProvider, stoppingToken);
         await this.StartHydration(serviceProvider, stoppingToken);
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            try
-            {
-                // Maybe some status check or something.
-            }
-            catch
-            {
-                // Log exception.
-            }
-            finally
-            {
-                await Task.Delay(TimeSpan.FromSeconds(5));
-            }
-        }
     }
 
     private async Task Configure(

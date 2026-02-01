@@ -22,17 +22,29 @@ public sealed class ReadModelHydrator(
         await using var subscription = client.SubscribeToAll(
             "read-model-hydrator-subscription",
             cancellationToken: cancellationToken);
-        await foreach (var message in subscription.Messages)
+        try
         {
-            Console.WriteLine($"Received message '{message.GetType()}'.");
-            Task action = message switch
+            await foreach (var message in subscription.Messages)
             {
-                PersistentSubscriptionMessage.SubscriptionConfirmation c => Task.Run(() => Console.WriteLine($"Subscription to all confirmed with id: {subscription.SubscriptionId}"), cancellationToken),
-                PersistentSubscriptionMessage.Event e => this.HandleEvent(subscription, e),
-                _ => Task.CompletedTask
-            };
+                Console.WriteLine($"Received message '{message.GetType()}'.");
+                Task action = message switch
+                {
+                    PersistentSubscriptionMessage.SubscriptionConfirmation c => Task.Run(() => Console.WriteLine($"Subscription to all confirmed with id: {subscription.SubscriptionId}"), cancellationToken),
+                    PersistentSubscriptionMessage.Event e => this.HandleEvent(subscription, e),
+                    _ => Task.CompletedTask
+                };
 
-            await action;
+                await action;
+            }
+        }
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+        {
+            // Graceful shutdown.
+        }
+        catch (Exception)
+        {
+            // Add some logging here. Some big crash happened.
+            throw;
         }
     }
 
@@ -43,13 +55,15 @@ public sealed class ReadModelHydrator(
         var resolvedEvent = subscriptionEvent.ResolvedEvent;
         try
         {
-            var metadata = GetMetadata(resolvedEvent);
-            if (string.IsNullOrWhiteSpace(metadata.EventTypeName))
+            var rawMetadata = GetMetadata(resolvedEvent);
+            if (string.IsNullOrWhiteSpace(rawMetadata?.EventTypeName))
             {
+                Console.WriteLine("ACKing: " + resolvedEvent.Event.EventType);
                 await subscription.Ack([resolvedEvent]);
                 return;
             }
 
+            var metadata = rawMetadata.Value;
             Console.WriteLine("Handling event of type: " + metadata.EventTypeName);
             var aggregateEvent = await GetEvent(subscription, resolvedEvent, metadata.EventTypeName);
             if (aggregateEvent is null)
@@ -64,8 +78,9 @@ public sealed class ReadModelHydrator(
 
             await subscription.Ack([resolvedEvent]);
         }
-        catch
+        catch (Exception ex)
         {
+            Console.WriteLine("NACKing failed: " + resolvedEvent.Event.EventType + " due to " + ex);
             await subscription.Nack(
                 PersistentSubscriptionNakEventAction.Park,
                 "Error handling event",
@@ -102,9 +117,14 @@ public sealed class ReadModelHydrator(
             JsonSerializerOptionsFactory.GetOptions()) as IAggregateEvent;
     }
 
-    private static EventMetadata GetMetadata(ResolvedEvent resolvedEvent)
+    private static EventMetadata? GetMetadata(ResolvedEvent resolvedEvent)
     {
         var metadataString = Encoding.UTF8.GetString(resolvedEvent.Event.Metadata.ToArray());
+        if (string.IsNullOrWhiteSpace(metadataString))
+        {
+            return null;
+        }
+
         var metadata = JsonSerializer.Deserialize<EventMetadata>(
             metadataString,
             JsonSerializerOptionsFactory.GetOptions());

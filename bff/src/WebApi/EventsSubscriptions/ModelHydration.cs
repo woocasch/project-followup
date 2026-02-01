@@ -5,9 +5,6 @@ using System.Threading.Tasks;
 
 using KurrentDB.Client;
 
-using MimeKit.Cryptography;
-
-using ProjectFollowUp.BFF.Infrastructure.EventBus;
 using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.EventsMaterialization;
 
 public sealed class ModelHydration(

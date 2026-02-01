@@ -30,7 +30,7 @@ public sealed class SendActivationMailConsumer(
 
     public async override Task Handle(ActivationLinkGenerated context, CancellationToken cancellationToken)
     {
-        var query = new GetActivationLinkDataQuery(context.ActivationLinkId);
+        var query = GetActivationLinkDataQuery.ByLinkId(context.ActivationLinkId);
         var result = await mediator.Fetch(query, cancellationToken);
         if (result is null)
         {

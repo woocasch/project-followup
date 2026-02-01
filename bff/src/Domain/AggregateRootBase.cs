@@ -4,12 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-using ProjectFollowUp.BFF.Domain.User;
-
 public abstract class AggregateRootBase<TId> : IAggregateRoot
     where TId : notnull
 {
-    private readonly Collection<object> uncommitedDomainEvents = [];
+    private readonly Collection<IAggregateEvent> uncommittedEvents = [];
 
     public TId Id { get; protected set; } = default!;
 
@@ -17,12 +15,12 @@ public abstract class AggregateRootBase<TId> : IAggregateRoot
 
     public virtual string AggregateType => this.GetType().FullName!;
 
-    public IEnumerable<object> GetUncommitedDomainEvents()
+    public IEnumerable<IAggregateEvent> GetUncommittedEvents()
     {
-        return this.uncommitedDomainEvents.ToList().AsReadOnly();
+        return this.uncommittedEvents.ToList().AsReadOnly();
     }
 
-    protected void RecreateFromHistory(IEnumerable<object> domainEvents)
+    protected void RecreateFromHistory(IEnumerable<IAggregateEvent> domainEvents)
     {
         foreach (var domainEvent in domainEvents)
         {
@@ -30,11 +28,11 @@ public abstract class AggregateRootBase<TId> : IAggregateRoot
         }
     }
 
-    protected void Apply(object domainEvent)
+    protected void Apply(IAggregateEvent domainEvent)
     {
-        this.uncommitedDomainEvents.Add(domainEvent);
+        this.uncommittedEvents.Add(domainEvent);
         this.When(domainEvent);
     }
 
-    protected abstract void When(object domainEvent);
+    protected abstract void When(IAggregateEvent domainEvent);
 }

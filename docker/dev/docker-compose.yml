@@ -50,7 +50,7 @@ services:
       - monitoring
 
   otel-collector.projectfollowup.dev:
-    image: otel/opentelemetry-collector-contrib:latest
+    image: otel/opentelemetry-collector-contrib:0.144.0
     container_name: otel-collector.projectfollowup.dev
     hostname: otel-collector.projectfollowup.dev
     restart: unless-stopped
@@ -71,7 +71,7 @@ services:
       - monitoring
 
   kurrent.projectfollowup.dev:
-    image: docker.kurrent.io/kurrent-latest/kurrentdb:latest
+    image: docker.kurrent.io/kurrent-latest/kurrentdb:26.0.0
     container_name: kurrent.projectfollowup.dev
     hostname: kurrent.projectfollowup.dev
     restart: unless-stopped
@@ -95,7 +95,7 @@ services:
       - monitoring
 
   rabbitmq.projectfollowup.dev:
-    image: rabbitmq:3-management
+    image: rabbitmq:4.2.3-management
     container_name: rabbitmq.projectfollowup.dev
     hostname: rabbitmq.projectfollowup.dev
     restart: unless-stopped
@@ -114,7 +114,7 @@ services:
       - monitoring
 
   mailpit.projectfollowup.dev:
-    image: axllent/mailpit
+    image: axllent/mailpit:v1.28
     container_name: mailpit.projectfollowup.dev
     hostname: mailpit.projectfollowup.dev
     restart: unless-stopped
@@ -129,8 +129,48 @@ services:
     volumes:
       - ./mailpit/passwords.txt:/passwords.txt
 
+  mongo.projectfollowup.dev:
+    container_name: mongo.projectfollowup.dev
+    hostname: mongo.projectfollowup.dev
+    image: mongo:8.2.4
+    restart: unless-stopped
+    networks:
+      - mongo-network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    ports:
+      - 4010:27017
+    volumes:
+      - mongo-configdb:/data/configdb
+      - mongo-volume:/data/db
+
+  mongo-express.projectfollowup.dev:
+    container_name: mongo-express.projectfollowup.dev
+    hostname: mongo-express.projectfollowup.dev
+    image: mongo-express:1.0.2-20-alpine3.19
+    ports:
+      - 4011:8081
+    restart: unless-stopped
+    depends_on:
+      - mongo.projectfollowup.dev
+    networks:
+      - mongo-network
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongo.projectfollowup.dev:27017
+      - ME_CONFIG_MONGODB_SERVER=mongo.projectfollowup.dev
+      - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_ENABLE_ADMIN=true
+      - ME_CONFIG_MONGODB_AUTH_DATABASE=admin
+      - ME_CONFIG_MONGODB_ADMINUSERNAME=root
+      - ME_CONFIG_MONGODB_ADMINPASSWORD=password
+      - ME_CONFIG_BASICAUTH_USERNAME=admin
+      - ME_CONFIG_BASICAUTH_PASSWORD=admin
+
 networks:
   keycloak-network:
+    driver: bridge
+  mongo-network:
     driver: bridge
   nginx-network:
     driver: bridge
@@ -143,3 +183,5 @@ volumes:
   kurrent-data:
   kurrent-logs:
   rabbitmq_data:
+  mongo-configdb:
+  mongo-volume:

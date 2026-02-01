@@ -5,4 +5,4 @@ using ProjectFollowUp.BFF.Domain.User;
 public record struct LinkCreated(
     ActivationLinkId LinkId,
     UserId UserId,
-    string LinkCode);
+    string LinkCode): IAggregateEvent;

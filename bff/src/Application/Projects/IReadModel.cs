@@ -1,15 +1,11 @@
 ﻿namespace ProjectFollowUp.BFF.Application.Projects;
 
-using System.Collections.ObjectModel;
-
 using ProjectFollowUp.BFF.Application.Projects.ReadModel;
+using ProjectFollowUp.BFF.Domain.Project;
 
 public interface IReadModel
 {
-    Task<ProjectData?> GetAsync(
-        Guid projectId,
-        CancellationToken cancellationToken);
+    Task<IEnumerable<ProjectListItem>> Fetch(CancellationToken cancellationToken);
 
-    Task<ReadOnlyCollection<ProjectData>> FetchAsync(
-        CancellationToken cancellationToken);
+    Task<ProjectRecord?> Get(ProjectId id, CancellationToken cancellationToken);
 }

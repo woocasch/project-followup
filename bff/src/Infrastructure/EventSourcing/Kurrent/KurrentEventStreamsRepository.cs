@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using KurrentDB.Client;
 
 using ProjectFollowUp.BFF.Application.EventSourcing;
+using ProjectFollowUp.BFF.Domain;
 using ProjectFollowUp.BFF.Infrastructure.Serialization.Json;
 
 public sealed class KurrentEventStreamsRepository(
@@ -19,7 +20,7 @@ public sealed class KurrentEventStreamsRepository(
 
     public async Task AppendToStreamAsync<TAggregate>(
         Guid aggregateId,
-        IEnumerable<object> events,
+        IEnumerable<IAggregateEvent> events,
         ulong expectedVersion,
         CancellationToken cancellationToken)
         where TAggregate : class
@@ -102,22 +103,28 @@ public sealed class KurrentEventStreamsRepository(
 
         await foreach (var resolvedEvent in result)
         {
-            var eventMetadata = JsonSerializer.Deserialize<EventMetadata>(
+            var eventMetadata = JsonSerializer.Deserialize<EventMetadata?>(
                 Encoding.UTF8.GetString(resolvedEvent.Event.Metadata.Span),
                 serializerOptions);
 
-            if (eventMetadata?.EventTypeName == null)
+            if (string.IsNullOrWhiteSpace(eventMetadata?.EventTypeName))
             {
                 continue;
             }
 
-            var eventType = Type.GetType(eventMetadata.EventTypeName);
+            var eventTypeName = eventMetadata.Value.EventTypeName;
+            var eventType = Type.GetType(eventTypeName);
             if (eventType == null)
             {
                 continue;
             }
 
-            var eventData = JsonSerializer.Deserialize(
+            if (!eventType.IsAssignableTo(typeof(IAggregateEvent)))
+            {
+                continue;
+            }
+
+            var eventData = (IAggregateEvent?)JsonSerializer.Deserialize(
                 Encoding.UTF8.GetString(resolvedEvent.Event.Data.Span),
                 eventType,
                 serializerOptions);
@@ -128,12 +135,12 @@ public sealed class KurrentEventStreamsRepository(
             }
 
             var envelope = new EventEnvelope(
-                @event: eventData,
-                streamType: streamType,
-                streamId: streamId,
-                streamVersion: (ulong)resolvedEvent.Event.EventNumber.ToInt64() + 1,
-                timestamp: resolvedEvent.Event.Created,
-                eventTypeName: resolvedEvent.Event.EventType);
+                Event: eventData,
+                StreamType: streamType,
+                StreamId: streamId,
+                StreamVersion: (ulong)resolvedEvent.Event.EventNumber.ToInt64() + 1,
+                Timestamp: resolvedEvent.Event.Created,
+                EventTypeName: resolvedEvent.Event.EventType);
 
             events.Add(envelope);
         }
@@ -161,10 +168,5 @@ public sealed class KurrentEventStreamsRepository(
     {
         var parts = aggregateId.Split('-', 2);
         return parts.Length > 0 ? parts[0] : "Unknown";
-    }
-
-    private sealed class EventMetadata(string eventTypeName)
-    {
-        public string EventTypeName { get; } = eventTypeName;
     }
 }

@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.IdentityModel.Tokens;
 
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
+
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -20,6 +23,7 @@ using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider;
 using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
 using ProjectFollowUp.BFF.Infrastructure.MailSender;
+using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 using ProjectFollowUp.BFF.WebApi.EventsSubscriptions;
 using ProjectFollowUp.BFF.WebApi.Validation;
@@ -71,6 +75,11 @@ var keycloakBaseAddress = builder.Configuration.GetValue("Keycloak:BaseAddress",
 var keycloakRealm = builder.Configuration.GetValue("Keycloak:Realm", string.Empty);
 var keycloakAuthority = $"{keycloakBaseAddress.TrimEnd('/')}/realms/{keycloakRealm}";
 
+// Configure MongoDB
+builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("Mongo"));
+builder.Services.AddMongoProjectionWriters();
+BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.GuidRepresentation.Standard));
+
 // Configure JWT Bearer Authentication
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -119,7 +128,6 @@ builder.Services.AddOpenTelemetry()
             ["deployment.environment"] = environment,
         }))
     .WithLogging(logging => logging
-        .AddConsoleExporter()
         .AddOtlpExporter(options =>
         {
             // OTLP gRPC endpoint
@@ -173,9 +181,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-var projectionsInitializer = app.Services.GetRequiredService<ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.ProjectionsProcessing.IProjectionsInitializer>();
-await projectionsInitializer.InitializeProjections(CancellationToken.None);
 
 app.Run();
 

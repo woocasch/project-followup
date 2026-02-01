@@ -4,4 +4,4 @@ public record struct ProjectCreated(
     ProjectId ProjectId,
     string Title,
     string Description,
-    DateTimeOffset CreatedAt);
+    DateTimeOffset CreatedAt) : IAggregateEvent;

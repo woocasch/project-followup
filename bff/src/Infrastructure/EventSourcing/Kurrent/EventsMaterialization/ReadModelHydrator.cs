@@ -69,6 +69,7 @@ public sealed class ReadModelHydrator(
             if (aggregateEvent is null)
             {
                 Console.WriteLine("Failed to deserialize event of type: " + metadata.EventTypeName);
+                await subscription.Nack(PersistentSubscriptionNakEventAction.Unknown, "Failed to deserialize event", [resolvedEvent]);
                 return;
             }
 

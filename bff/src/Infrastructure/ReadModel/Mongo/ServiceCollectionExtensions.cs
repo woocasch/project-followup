@@ -1,6 +1,9 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+
+using MongoDB.Driver;
 
 using ProjectFollowUp.BFF.Application.ActivationLinks.ProjectionWorkers;
 using ProjectFollowUp.BFF.Application.Projects.ProjectionWorkers;
@@ -16,7 +19,12 @@ public static class ServiceCollectionExtensions
             .AddReadModels()
             .AddSingleton<IDatabaseProvider, DatabaseProvider>()
             .AddSingleton<ICollectionProvider, CollectionProvider>()
-            .AddSingleton<IClientProvider, ClientProvider>();
+            .AddSingleton<IClientProvider, ClientProvider>()
+            .AddSingleton<IMongoClient>(sp =>
+            {
+                var settings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
+                return new MongoClient(settings.ConnectionString);
+            });
         return services;
     }
 

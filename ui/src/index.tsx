@@ -15,6 +15,7 @@ import { AuthProvider, ProtectedRoute } from './infrastructure/auth';
 import { loadConfiguration } from './infrastructure/configuration';
 import StylingPage from './styling';
 import UserInfoPage from './user-info/user-info';
+import ProjectDetails from './projects/project-details';
 
 const router = createBrowserRouter([
   {
@@ -53,6 +54,14 @@ const router = createBrowserRouter([
             element: (
               <ProtectedRoute>
                 <EditProject />
+              </ProtectedRoute>
+            ),
+          },
+          {
+            path: ':projectId/details',
+            element: (
+              <ProtectedRoute>
+                <ProjectDetails />
               </ProtectedRoute>
             ),
           },

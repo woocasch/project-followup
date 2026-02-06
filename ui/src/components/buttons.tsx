@@ -1,6 +1,5 @@
 import styled from '@emotion/styled';
 import { theme } from '@root/theme';
-import type { LucideIcon } from 'lucide-react';
 import type { ReactNode } from 'react';
 
 export type ButtonVariant =
@@ -16,11 +15,6 @@ export interface ButtonProps {
   variant?: ButtonVariant;
   buttonType?: ButtonType;
   title?: string;
-  onClick?: () => void;
-}
-
-export interface IconButtonProps {
-  icon: LucideIcon;
   onClick?: () => void;
 }
 
@@ -83,9 +77,3 @@ export function Button(props: ButtonProps) {
   );
 }
 
-export function IconButton(props: IconButtonProps) {
-  const { icon: Icon, onClick = () => {} } = props;
-  return (
-    <Icon onClick={onClick} style={{ display: 'inline', cursor: 'pointer' }} />
-  );
-}

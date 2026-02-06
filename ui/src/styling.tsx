@@ -1,10 +1,8 @@
 import styled from '@emotion/styled';
-import { Calendar } from 'lucide-react';
 import {
   Button,
   Card,
   CardSize,
-  IconButton,
   PageHeader,
   SectionHeader,
 } from './components';
@@ -52,10 +50,6 @@ function Cards() {
             <Button variant="success" onClick={() => alert('Success clicked!')}>
               Variant: Success
             </Button>
-            <IconButton
-              icon={Calendar}
-              onClick={() => alert('Calendar clicked!')}
-            />
           </Card.Footer>
         </Card>
         <Card size={CardSize.Large}>

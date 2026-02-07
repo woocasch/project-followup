@@ -1,47 +1,36 @@
 import type * as model from './project-details.model';
-
+import projectsApi from '@apiClient/projects.client';
 
 export class ProjectDetailsWebService implements model.ProjectDetailsService {
-    getProject(request: model.GetProjectRequest): Promise<model.GetProjectResponse> {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                resolve({
-                    project: {
-                        id: request.projectId,
-                        title: 'Project Title',
-                        description: 'Project Description',
-                    },
-                });
-            }, 1000);
+    async getProject(request: model.GetProjectRequest): Promise<model.GetProjectResponse> {
+        const response = await projectsApi.getProject({
+            projectId: request.projectId,
         });
+
+        if (!response.project) {
+            return { project: null };
+        }
+
+        const projectDetails: model.ProjectDetails = {
+            id: response.project.id,
+            title: response.project.title,
+            description: response.project.description,
+        };
+        return { project: projectDetails };
     }
 
-    fetchProjectUsers(_: model.FetchProjectUsersRequest): Promise<model.FetchProjectUsersResponse> {
-        return new Promise((resolve) => {
-            const delay = Math.random() * 2000 + 800; // Simulate network delay between 800 and 2800ms
-            setTimeout(() => {
-                resolve({
-                    users: [
-                        { id: '1', displayName: 'User 1' },
-                        { id: '2', displayName: 'User 2' },
-                    ],
-                });
-            }, delay);
+    async fetchProjectUsers(request: model.FetchProjectUsersRequest): Promise<model.FetchProjectUsersResponse> {
+        const response = await projectsApi.fetchProjectUsers({
+            projectId: request.projectId,
         });
+        return response;
     }
 
-    fetchProjectTasks(_: model.FetchProjectTasksRequest): Promise<model.FetchProjectTasksResponse> {
-        return new Promise((resolve) => {
-            const delay = Math.random() * 2000 + 800; // Simulate network delay between 800 and 2800ms
-            setTimeout(() => {
-                resolve({
-                    tasks: [
-                        { id: '1', title: 'Task 1', status: 'Open' },
-                        { id: '2', title: 'Task 2', status: 'In Progress' },
-                    ],
-                });
-            }, delay);
+    async fetchProjectTasks(request: model.FetchProjectTasksRequest): Promise<model.FetchProjectTasksResponse> {
+        const response = await projectsApi.fetchProjectTasks({
+            projectId: request.projectId,
         });
+        return response;
     }
 }
 

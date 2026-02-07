@@ -7,6 +7,17 @@ export interface ProjectListItem {
   tasksTotal: number;
 }
 
+export interface UserData {
+  id: string;
+  displayName: string;
+}
+
+export interface TaskData {
+  id: string;
+  title: string;
+  status: string;
+}
+
 export interface FetchListResult {
   projects: ProjectListItem[];
 }
@@ -36,6 +47,22 @@ export interface EditPayloadParameters {
   description: string;
 }
 
+export interface FetchProjectUsersParameters {
+  projectId: string;
+}
+
+export interface FetchProjectUsersResult {
+  users: UserData[];
+}
+
+export interface FetchProjectTasksParameters {
+  projectId: string;
+}
+
+export interface FetchProjectTasksResult {
+  tasks: TaskData[];
+}
+
 export interface ProjectsApi {
   fetchProjectsList(): Promise<FetchListResult>;
 
@@ -44,4 +71,8 @@ export interface ProjectsApi {
   create(payload: CreatePayloadParameters): Promise<boolean>;
 
   edit(payload: EditPayloadParameters): Promise<boolean>;
+
+  fetchProjectUsers(parameters: FetchProjectUsersParameters): Promise<FetchProjectUsersResult>;
+
+  fetchProjectTasks(parameters: FetchProjectTasksParameters): Promise<FetchProjectTasksResult>;
 }

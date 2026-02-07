@@ -33,7 +33,7 @@ public abstract class TaskStatusChangedProjectionWorkerBase<TAggregateEvent>(
         }
 
         var existingIndex = currentTasks.IndexOf(existing);
-        existing = existing with { Status = (int)this.TargetStatus };
+        existing = existing with { Status = this.TargetStatus };
         currentTasks[existingIndex] = existing;
         project = project with { Tasks = currentTasks };
         await projectionWriter.Update(project, cancellationToken);

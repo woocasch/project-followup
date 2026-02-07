@@ -68,7 +68,7 @@ public sealed class ProjectProjectionWriter(
         {
             Id = record.Id,
             Title = record.Title,
-            Status = record.Status,
+            Status = (int)record.Status,
         };
     }
 
@@ -84,6 +84,6 @@ public sealed class ProjectProjectionWriter(
         return new ProjectRecord.Task(
             dto.Id,
             dto.Title,
-            dto.Status);
+            (ProjectTaskStatus)dto.Status);
     }
 }

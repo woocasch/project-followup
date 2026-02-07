@@ -12,10 +12,17 @@ export interface UserData {
   displayName: string;
 }
 
+export enum ProjectTaskStatus {
+  Created = 'Created',
+  InProgress = 'InProgress',
+  Completed = 'Completed',
+  Removed = 'Removed',
+}
+
 export interface TaskData {
   id: string;
   title: string;
-  status: string;
+  status: ProjectTaskStatus;
 }
 
 export interface FetchListResult {

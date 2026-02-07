@@ -2,6 +2,8 @@
 
 using System.Collections.ObjectModel;
 
+using ProjectFollowUp.BFF.Domain.Project;
+
 public sealed class FetchProjectTasksResult(
     IEnumerable<FetchProjectTasksResult.TaskData> tasks)
 {
@@ -10,12 +12,12 @@ public sealed class FetchProjectTasksResult(
     public sealed class TaskData(
         Guid id,
         string title,
-        int status)
+        ProjectTaskStatus status)
     {
         public Guid Id { get; } = id;
 
         public string Title { get; } = title;
 
-        public int Status { get; } = status;
+        public ProjectTaskStatus Status { get; } = status;
     }
 }

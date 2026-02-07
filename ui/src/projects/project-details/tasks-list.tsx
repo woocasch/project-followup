@@ -1,12 +1,24 @@
 import styled from '@emotion/styled';
-import { LoadingSpinner, NamedPanel } from '@root/components';
+import { Button, LoadingSpinner, NamedPanel } from '@root/components';
 import { theme } from '@root/theme';
 import { useEffect, useState } from 'react';
 import type * as model from './project-details.model';
 import projectDetailsService from './project-details.service';
+import * as apiModel from '@apiClient/projects.model';
 
 export interface TasksListProps {
   projectId: string;
+}
+
+const taskStatusColors: Record<apiModel.ProjectTaskStatus, string> = {
+  [apiModel.ProjectTaskStatus.Created]: theme.colors.surface,
+  [apiModel.ProjectTaskStatus.InProgress]: theme.colors.warning,
+  [apiModel.ProjectTaskStatus.Completed]: theme.colors.success,
+  [apiModel.ProjectTaskStatus.Removed]: theme.colors.error,
+};
+
+function mapTaskStatusColor(status: apiModel.ProjectTaskStatus): string {
+  return taskStatusColors[status] || theme.colors.surface;
 }
 
 const ListStyled = styled.ul(`
@@ -17,10 +29,14 @@ const ListStyled = styled.ul(`
     overflow-y: auto;
 `);
 
-const TaskContainer = styled.div(`
+interface TaskContainerProps {
+  status: apiModel.ProjectTaskStatus;
+}
+
+const TaskContainer = styled('div')<TaskContainerProps>`
     margin: ${theme.spaces.medium};
     padding: ${theme.spaces.medium};
-    background-color: ${theme.colors.surface};
+    background-color: ${(props: TaskContainerProps) => mapTaskStatusColor(props.status)};
     border: 1px solid ${theme.colors.border};
     border-radius: ${theme.borderRadius.medium};
     &>h3 {
@@ -31,18 +47,24 @@ const TaskContainer = styled.div(`
         max-width: 100%;
         font-size: ${theme.fontSizes.medium};
     }
-`);
+`;
 
 const EmptyListMessage = styled.p(`
     margin: ${theme.spaces.medium};
     font-size: ${theme.fontSizes.medium};
 `);
 
+function onOpenTaskDetails(task: model.TaskData) {
+  alert(`Opening details for task ${task.title} with status ${task.status}`);
+}
+
 function displayTask(task: model.TaskData) {
   return (
-    <TaskContainer>
-      <h3>{task.title}</h3>
-      <p>Status: {task.status}</p>
+    <TaskContainer status={task.rawStatus}>
+      <h3>{task.title} is {task.status}</h3>
+      <div>
+        <Button buttonType='rounded' variant='action' title='View task details' onClick={() => onOpenTaskDetails(task)}>Details</Button>
+      </div>
     </TaskContainer>
   );
 }

@@ -1,3 +1,5 @@
+import * as apiModel from '@apiClient/projects.model';
+
 export interface ProjectDetails {
   id: string;
   title: string;
@@ -13,6 +15,7 @@ export interface TaskData {
   id: string;
   title: string;
   status: string;
+  rawStatus: apiModel.ProjectTaskStatus;
 }
 
 export interface GetProjectRequest {

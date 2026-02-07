@@ -15,9 +15,6 @@ const ListStyled = styled.ul(`
     padding-left: 0;
     max-height: 200px;
     overflow-y: auto;
-    &>li {
-        inline-width: 100%;
-    }
 `);
 
 const TaskContainer = styled.div(`

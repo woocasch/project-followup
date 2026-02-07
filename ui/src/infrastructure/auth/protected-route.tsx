@@ -1,7 +1,7 @@
+import { Button } from '@root/components';
 import type { ReactNode } from 'react';
 import LoadingSpinner from '../../components/loading-spinner';
 import { useAuth } from './auth.context';
-import { Button } from '@root/components';
 
 interface ProtectedRouteProps {
   children: ReactNode;
@@ -33,7 +33,17 @@ export function ProtectedRoute({
           }}
         >
           <div>You need to be authenticated to access this page.</div>
-          <div>To login click <Button buttonType='rounded' variant='action' onClick={() => login()}>here</Button>.</div>
+          <div>
+            To login click{' '}
+            <Button
+              buttonType="rounded"
+              variant="action"
+              onClick={() => login()}
+            >
+              here
+            </Button>
+            .
+          </div>
         </div>
       )
     );

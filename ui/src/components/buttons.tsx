@@ -76,4 +76,3 @@ export function Button(props: ButtonProps) {
     </ButtonStyled>
   );
 }
-

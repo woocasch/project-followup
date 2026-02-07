@@ -13,9 +13,9 @@ import CreateUser from '@user-accounts/create-user';
 import ActivateAccount from './account/activate-account';
 import { AuthProvider, ProtectedRoute } from './infrastructure/auth';
 import { loadConfiguration } from './infrastructure/configuration';
+import ProjectDetailsPage from './projects/project-details/page';
 import StylingPage from './styling';
 import UserInfoPage from './user-info/user-info';
-import ProjectDetailsPage from './projects/project-details/page';
 
 const router = createBrowserRouter([
   {

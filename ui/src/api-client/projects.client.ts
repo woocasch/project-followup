@@ -57,17 +57,23 @@ export class ProjectsClient extends ApiClientBase implements model.ProjectsApi {
     return response.status === 202;
   }
 
-  async fetchProjectUsers(parameters: model.FetchProjectUsersParameters): Promise<model.FetchProjectUsersResult> {
-    const response = await this.createBffClient().get<model.FetchProjectUsersResult>(
-      `api/Projects/${parameters.projectId}/users`
-    );
+  async fetchProjectUsers(
+    parameters: model.FetchProjectUsersParameters,
+  ): Promise<model.FetchProjectUsersResult> {
+    const response =
+      await this.createBffClient().get<model.FetchProjectUsersResult>(
+        `api/Projects/${parameters.projectId}/users`,
+      );
     return response.data;
   }
 
-  async fetchProjectTasks(parameters: model.FetchProjectTasksParameters): Promise<model.FetchProjectTasksResult> {
-    const response = await this.createBffClient().get<model.FetchProjectTasksResult>(
-      `api/Projects/${parameters.projectId}/tasks`
-    );
+  async fetchProjectTasks(
+    parameters: model.FetchProjectTasksParameters,
+  ): Promise<model.FetchProjectTasksResult> {
+    const response =
+      await this.createBffClient().get<model.FetchProjectTasksResult>(
+        `api/Projects/${parameters.projectId}/tasks`,
+      );
     return response.data;
   }
 }

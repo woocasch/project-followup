@@ -7,8 +7,8 @@ interface NamedPanelContentProps {
 }
 
 interface NamedPanelProps {
-    title: string;
-    children: ReactNode;
+  title: string;
+  children: ReactNode;
 }
 
 const NamedPanelStyled = styled.div(`
@@ -32,20 +32,20 @@ const NamedPanelContentStyled = styled.div(`
     border-top-left-radius: 0;
 `);
 
-function NamedPanelContent({children }: NamedPanelContentProps){
-    return <NamedPanelContentStyled>{children}</NamedPanelContentStyled>;
+function NamedPanelContent({ children }: NamedPanelContentProps) {
+  return <NamedPanelContentStyled>{children}</NamedPanelContentStyled>;
 }
 
 function NamedPanelRoot(props: NamedPanelProps) {
-    const { children, title } = props;
-    return (
-        <NamedPanelStyled>
-            <h2>{title}</h2>
-            <NamedPanelContent>{children}</NamedPanelContent>
-        </NamedPanelStyled>
-    );
+  const { children, title } = props;
+  return (
+    <NamedPanelStyled>
+      <h2>{title}</h2>
+      <NamedPanelContent>{children}</NamedPanelContent>
+    </NamedPanelStyled>
+  );
 }
 
 export const NamedPanel = Object.assign(NamedPanelRoot, {
-    Content: NamedPanelContent,
+  Content: NamedPanelContent,
 });

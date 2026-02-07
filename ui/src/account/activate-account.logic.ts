@@ -1,18 +1,20 @@
-import accountActivationService from './account-activation/account-activation.service';
 import { z } from 'zod';
+import accountActivationService from './account-activation/account-activation.service';
 
-const activationFormSchema = z.object({
+const activationFormSchema = z
+  .object({
     password: z.string().min(8, 'Password must be at least 8 characters long'),
     repeatPassword: z.string(),
-}).superRefine(({ repeatPassword, password }, ctx) => {
-  if (repeatPassword !== password) {
-    ctx.addIssue({
-      code: "custom",
-      message: "The passwords did not match",
-      path: ['repeatPassword']
-    });
-  }
-});
+  })
+  .superRefine(({ repeatPassword, password }, ctx) => {
+    if (repeatPassword !== password) {
+      ctx.addIssue({
+        code: 'custom',
+        message: 'The passwords did not match',
+        path: ['repeatPassword'],
+      });
+    }
+  });
 
 export interface SetupActivationComponentInput {
   linkCode: string;
@@ -22,8 +24,8 @@ export interface SetupActivationComponentInput {
 }
 
 export interface ActivateAccountInput {
-    linkCode: string;
-    password: string;
+  linkCode: string;
+  password: string;
 }
 
 export class ActivateAccountLogic {
@@ -43,9 +45,9 @@ export class ActivateAccountLogic {
 
   async activateAccount(input: ActivateAccountInput) {
     return new Promise<void>((resolve) => {
-        console.log('Activating account with', input);
-        resolve();
-    })
+      console.log('Activating account with', input);
+      resolve();
+    });
   }
 
   getFormSchema() {

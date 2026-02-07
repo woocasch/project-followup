@@ -72,7 +72,11 @@ export interface ProjectsApi {
 
   edit(payload: EditPayloadParameters): Promise<boolean>;
 
-  fetchProjectUsers(parameters: FetchProjectUsersParameters): Promise<FetchProjectUsersResult>;
+  fetchProjectUsers(
+    parameters: FetchProjectUsersParameters,
+  ): Promise<FetchProjectUsersResult>;
 
-  fetchProjectTasks(parameters: FetchProjectTasksParameters): Promise<FetchProjectTasksResult>;
+  fetchProjectTasks(
+    parameters: FetchProjectTasksParameters,
+  ): Promise<FetchProjectTasksResult>;
 }

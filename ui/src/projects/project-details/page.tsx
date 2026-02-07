@@ -1,11 +1,11 @@
-import { NamedPanel, PageHeader } from "@root/components";
+import styled from '@emotion/styled';
+import { PageHeader } from '@root/components';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import type * as model from './project-details.model';
 import projectDetailsService from './project-details.service';
-import styled from "@emotion/styled";
-import UsersList from "./users-list";
-import TasksList from "./tasks-list";
+import TasksList from './tasks-list';
+import UsersList from './users-list';
 
 type RouteParams = Record<'projectId', string>;
 
@@ -42,14 +42,17 @@ export default function ProjectDetailsPage() {
     });
   }, [projectId, navigate]);
 
+  if (!projectId) {
+    return <p>Project not found</p>;
+  }
 
   return (
     <div style={{ textAlign: 'center' }}>
       <PageHeader>{title}</PageHeader>
       <ContentStyled>
         <div className="description">{description}</div>
-        <UsersList projectId={projectId!} />
-        <TasksList projectId={projectId!} />
+        <UsersList projectId={projectId} />
+        <TasksList projectId={projectId} />
       </ContentStyled>
     </div>
   );

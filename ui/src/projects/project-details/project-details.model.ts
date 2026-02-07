@@ -1,18 +1,18 @@
 export interface ProjectDetails {
-    id: string;
-    title: string;
-    description: string;
+  id: string;
+  title: string;
+  description: string;
 }
 
 export interface UserData {
-    id: string;
-    displayName: string;
+  id: string;
+  displayName: string;
 }
 
 export interface TaskData {
-    id: string;
-    title: string;
-    status: string;
+  id: string;
+  title: string;
+  status: string;
 }
 
 export interface GetProjectRequest {
@@ -24,23 +24,27 @@ export interface GetProjectResponse {
 }
 
 export interface FetchProjectUsersRequest {
-    projectId: string;
+  projectId: string;
 }
 
 export interface FetchProjectUsersResponse {
-    users: UserData[];
+  users: UserData[];
 }
 
 export interface FetchProjectTasksRequest {
-    projectId: string;
+  projectId: string;
 }
 
 export interface FetchProjectTasksResponse {
-    tasks: TaskData[];
+  tasks: TaskData[];
 }
 
 export interface ProjectDetailsService {
   getProject(request: GetProjectRequest): Promise<GetProjectResponse>;
-  fetchProjectUsers(request: FetchProjectUsersRequest): Promise<FetchProjectUsersResponse>;
-  fetchProjectTasks(request: FetchProjectTasksRequest): Promise<FetchProjectTasksResponse>;
+  fetchProjectUsers(
+    request: FetchProjectUsersRequest,
+  ): Promise<FetchProjectUsersResponse>;
+  fetchProjectTasks(
+    request: FetchProjectTasksRequest,
+  ): Promise<FetchProjectTasksResponse>;
 }

@@ -22,6 +22,19 @@ const ListStyled = styled.ul(`
     }
 `);
 
+function displayTasks(tasks: model.TaskData[]) {
+    if (tasks.length === 0) {
+        return <p>No tasks assigned to this project</p>;
+    }
+
+    return <ListStyled>
+        {tasks.map((task) => (
+            <li key={task.id}>
+                <Button buttonType="rounded" variant="success" title={task.title}>{task.title}</Button>
+            </li>))}
+    </ListStyled>;
+}
+
 export default function TasksList({ projectId }: TasksListProps) {
     const [loadingTasks, setLoadingTasks] = useState(false);
     const [tasks, setTasks] = useState<model.TaskData[]>([]);
@@ -39,10 +52,6 @@ export default function TasksList({ projectId }: TasksListProps) {
     }, [projectId]);
 
     return (<NamedPanel title='Tasks'>
-        {loadingTasks ? <LoadingSpinner /> : <ListStyled>
-            {tasks.map((task) => (<li key={task.id}>
-                <Button buttonType="rounded" variant="success" title={task.title}>{task.title}</Button>
-            </li>))}
-        </ListStyled>}
+        {loadingTasks ? <LoadingSpinner /> : displayTasks(tasks)}
     </NamedPanel>);
 }

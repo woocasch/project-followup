@@ -17,6 +17,19 @@ const ListStyled = styled.ul(`
     gap: ${theme.spaces.medium}
 `);
 
+function displayUsers(users: model.UserData[]) {
+    if (users.length === 0) {
+        return <p>No users assigned to this project</p>;
+    }
+
+    return <ListStyled>
+        {users.map((user) => (
+            <li key={user.id}>
+                <Button buttonType="rounded" variant="success" title={user.displayName}>{user.displayName}</Button>
+            </li>))}
+    </ListStyled>;
+}
+
 export default function UsersList({ projectId }: UsersListProps) {
     const [loadingUsers, setLoadingUsers] = useState(false);
     const [users, setUsers] = useState<model.UserData[]>([]);
@@ -34,11 +47,6 @@ export default function UsersList({ projectId }: UsersListProps) {
     }, [projectId]);
 
     return (<NamedPanel title='Assigned users'>
-        {loadingUsers ? <LoadingSpinner /> : <ListStyled>
-            {users.map((user) => (
-                <li key={user.id}>
-                    <Button buttonType="rounded" variant="success" title={user.displayName}>{user.displayName}</Button>
-                </li>))}
-        </ListStyled>}
+        {loadingUsers ? <LoadingSpinner /> : displayUsers(users)}
     </NamedPanel>);
 }

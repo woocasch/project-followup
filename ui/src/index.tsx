@@ -15,7 +15,7 @@ import { AuthProvider, ProtectedRoute } from './infrastructure/auth';
 import { loadConfiguration } from './infrastructure/configuration';
 import StylingPage from './styling';
 import UserInfoPage from './user-info/user-info';
-import ProjectDetails from './projects/project-details';
+import ProjectDetailsPage from './projects/project-details/page';
 
 const router = createBrowserRouter([
   {
@@ -61,7 +61,7 @@ const router = createBrowserRouter([
             path: ':projectId/details',
             element: (
               <ProtectedRoute>
-                <ProjectDetails />
+                <ProjectDetailsPage />
               </ProtectedRoute>
             ),
           },

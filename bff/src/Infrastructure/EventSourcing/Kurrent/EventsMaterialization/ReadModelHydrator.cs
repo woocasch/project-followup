@@ -1,6 +1,5 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.EventsMaterialization;
 
-using System.Formats.Asn1;
 using System.Text;
 using System.Text.Json;
 using System.Threading;

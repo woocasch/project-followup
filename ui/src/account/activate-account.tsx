@@ -1,9 +1,9 @@
 import styled from '@emotion/styled';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button, PageHeader, Password } from '@root/components';
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { theme } from '@root/theme';
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { useNavigate, useParams } from 'react-router';
 import activateAccountLogic from './activate-account.logic';
 
@@ -41,8 +41,8 @@ export default function ActivateAccount() {
 
   const [displayName, setDisplayName] = useState('');
   const [emailAddress, setEmailAddress] = useState('');
-//   const [password, setPassword] = useState('');
-//   const [repeatPassword, setRepeatPassword] = useState('');
+  //   const [password, setPassword] = useState('');
+  //   const [repeatPassword, setRepeatPassword] = useState('');
   const form = useForm({
     resolver: zodResolver(activateAccountLogic.getFormSchema()),
   });
@@ -58,8 +58,8 @@ export default function ActivateAccount() {
 
   async function onSubmit() {
     const input = {
-        linkCode: linkCode || '',
-        password: form.getValues('password'),
+      linkCode: linkCode || '',
+      password: form.getValues('password'),
     };
     await activateAccountLogic.activateAccount(input);
   }
@@ -74,7 +74,9 @@ export default function ActivateAccount() {
         You were invited to <strong>Project Follow-Up</strong> application
         through e-mail address <UserDatum>{emailAddress}</UserDatum>
       </div>
-      <div className="description">Select a password to activate your account:</div>
+      <div className="description">
+        Select a password to activate your account:
+      </div>
       <Password
         label="Password"
         {...form.register('password')}

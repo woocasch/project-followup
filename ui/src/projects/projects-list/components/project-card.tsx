@@ -1,14 +1,8 @@
-import { Card, CardSize, IconButton } from '@components/index';
+import { Card, CardSize } from '@components/index';
 import styled from '@emotion/styled';
 import { theme } from '@root/theme';
-import {
-  ClipboardCheck,
-  Pencil,
-  Presentation,
-  ReceiptText,
-  User,
-} from 'lucide-react';
-import { useNavigate } from 'react-router';
+import { ClipboardCheck, Pencil, Search, User } from 'lucide-react';
+import { NavLink } from 'react-router';
 import type * as model from '../projects-list.model';
 
 interface ProjectCardComponentProps {
@@ -51,11 +45,6 @@ const ButtonsContainer = styled.div(`
 `);
 
 export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
-  const navigate = useNavigate();
-  function onEditClick() {
-    navigate(`/projects/${project.id}/edit`);
-  }
-
   return (
     <Card size={CardSize.Medium}>
       <Card.Header>
@@ -66,9 +55,23 @@ export function ProjectCardComponent({ project }: ProjectCardComponentProps) {
       </Card.Content>
       <Card.Footer>
         <ButtonsContainer>
-          <IconButton icon={Presentation} />
-          <IconButton icon={ReceiptText} />
-          <IconButton icon={Pencil} onClick={onEditClick} />
+          {/* <NavLink to={`/projects/${project.id}/meeting`} title='Start follow-up meeting' aria-label='Start follow-up meeting'>
+            <Presentation />
+          </NavLink> */}
+          <NavLink
+            to={`/projects/${project.id}/details`}
+            title="View project details"
+            aria-label="View project details"
+          >
+            <Search />
+          </NavLink>
+          <NavLink
+            to={`/projects/${project.id}/edit`}
+            title="Edit project"
+            aria-label="Edit project"
+          >
+            <Pencil />
+          </NavLink>
           <MembersCount>
             <User />
             {project.usersCount}

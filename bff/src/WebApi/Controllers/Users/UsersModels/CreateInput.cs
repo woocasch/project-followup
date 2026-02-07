@@ -1,4 +1,4 @@
-﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Users;
+﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Users.UsersModels;
 
 public sealed class CreateInput(
     string email,

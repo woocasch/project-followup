@@ -25,6 +25,7 @@ using ProjectFollowUp.BFF.Infrastructure.IdentityProvider.Keycloak;
 using ProjectFollowUp.BFF.Infrastructure.MailSender;
 using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
+using ProjectFollowUp.BFF.WebApi.Controllers.Projects.ProjectsModels;
 using ProjectFollowUp.BFF.WebApi.EventsSubscriptions;
 using ProjectFollowUp.BFF.WebApi.Validation;
 

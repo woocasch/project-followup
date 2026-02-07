@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using ProjectFollowUp.BFF.Application.Projects.ProjectionWorkers;
 using ProjectFollowUp.BFF.Application.Projects.ReadModel;
 using ProjectFollowUp.BFF.Domain.Project;
+using ProjectFollowUp.BFF.Domain.User;
 using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo.ProjectProjection;
 
 public sealed class ProjectProjectionWriter(
@@ -33,7 +34,9 @@ public sealed class ProjectProjectionWriter(
             ProjectId.FromGuid(dto.Id),
             dto.Title,
             dto.Description,
-            dto.CreatedAt);
+            dto.CreatedAt,
+            [.. dto.AssignedUsers.Select(MapToRecord)],
+            [.. dto.Tasks.Select(MapToRecord)]);
     }
 
     protected override ProjectDto MapFromRecord(ProjectRecord record)
@@ -44,6 +47,42 @@ public sealed class ProjectProjectionWriter(
             Title = record.Title,
             Description = record.Description,
             CreatedAt = record.CreatedAt,
+            AssignedUsers = [.. record.AssignedUsers.Select(MapFromRecord)],
+            Tasks = [.. record.Tasks.Select(MapFromRecord)],
         };
+    }
+
+    private static ProjectDto.AssignedUserDto MapFromRecord(ProjectRecord.AssignedUser record)
+    {
+        return new ProjectDto.AssignedUserDto
+        {
+            Id = record.Id.ToGuid(),
+            DisplayName = record.DisplayName,
+        };
+    }
+
+    private static ProjectDto.TaskDto MapFromRecord(ProjectRecord.Task record)
+    {
+        return new()
+        {
+            Id = record.Id,
+            Title = record.Title,
+            Status = record.Status,
+        };
+    }
+
+    private static ProjectRecord.AssignedUser MapToRecord(ProjectDto.AssignedUserDto dto)
+    {
+        return new ProjectRecord.AssignedUser(
+            UserId.FromGuid(dto.Id),
+            dto.DisplayName);
+    }
+
+    private static ProjectRecord.Task MapToRecord(ProjectDto.TaskDto dto)
+    {
+        return new ProjectRecord.Task(
+            dto.Id,
+            dto.Title,
+            dto.Status);
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Projects;
+﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Projects.ProjectsModels;
 
 using System.Collections.ObjectModel;
 

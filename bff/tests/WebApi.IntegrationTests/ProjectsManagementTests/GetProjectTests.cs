@@ -2,7 +2,7 @@
 
 using System.Net.Http.Json;
 
-using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
+using ProjectFollowUp.BFF.WebApi.Controllers.Projects.ProjectsModels;
 
 public sealed class GetProjectTests : TestBase
 {

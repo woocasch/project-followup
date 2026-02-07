@@ -62,7 +62,8 @@ public sealed class GetActivationLinkDataQueryHandler(
         {
             return query.LinkId;
         }
-        else if (query.Mode == GetActivationLinkDataQuery.SearchMode.ByLinkCode)
+
+        if (query.Mode == GetActivationLinkDataQuery.SearchMode.ByLinkCode)
         {
             var linkCode = query.LinkCode;
             var activationLink = await readModel.GetAsync(
@@ -75,10 +76,8 @@ public sealed class GetActivationLinkDataQueryHandler(
 
             return activationLink.Value.LinkId;
         }
-        else
-        {
-            throw new InvalidOperationException("Unsupported search mode.");
-        }
+
+        throw new InvalidOperationException("Unsupported search mode.");
     }
 
     private async Task<UserAggregateRoot> GetUser(

@@ -1,4 +1,4 @@
-﻿namespace ProjectFollowUp.BFF.WebApi.Controllers;
+﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Users;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.Users;
 using ProjectFollowUp.BFF.Domain.User;
-using ProjectFollowUp.BFF.WebApi.Controllers.Users;
+using ProjectFollowUp.BFF.WebApi.Controllers.Users.UsersModels;
 
 [Route("api/[controller]")]
 [ApiController]

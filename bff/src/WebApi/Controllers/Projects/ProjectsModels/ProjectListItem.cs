@@ -1,4 +1,4 @@
-﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Projects;
+﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Projects.ProjectsModels;
 
 public sealed class ProjectListItem(
     Guid id,

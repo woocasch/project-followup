@@ -1,5 +1,6 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.EventsMaterialization;
 
+using System.Formats.Asn1;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -29,9 +30,9 @@ public sealed class ReadModelHydrator(
                 Console.WriteLine($"Received message '{message.GetType()}'.");
                 Task action = message switch
                 {
-                    PersistentSubscriptionMessage.SubscriptionConfirmation => Task.Run(() => Console.WriteLine($"Subscription to all confirmed with id: {subscription.SubscriptionId}"), cancellationToken),
+                    PersistentSubscriptionMessage.SubscriptionConfirmation e => this.HandleSubscriptionConfirmation(subscription, e),
                     PersistentSubscriptionMessage.Event e => this.HandleEvent(subscription, e),
-                    _ => Task.CompletedTask
+                    _ => this.HandleUnknownEvent(subscription, message),
                 };
 
                 await action;
@@ -46,6 +47,22 @@ public sealed class ReadModelHydrator(
             // Add some logging here. Some big crash happened.
             throw;
         }
+    }
+
+    private async Task HandleSubscriptionConfirmation(
+        KurrentDBPersistentSubscriptionsClient.PersistentSubscriptionResult subscription,
+        PersistentSubscriptionMessage.SubscriptionConfirmation confirmation)
+    {
+        Console.WriteLine($"Handling subscription confirmation ('{confirmation}') on subscription {subscription.SubscriptionId}.");
+        await Task.Yield();
+    }
+
+    private async Task HandleUnknownEvent(
+        KurrentDBPersistentSubscriptionsClient.PersistentSubscriptionResult subscription,
+        PersistentSubscriptionMessage message)
+    {
+        Console.WriteLine($"Handling message '{message}' on subscription {subscription.SubscriptionId}.");
+        await Task.Yield();
     }
 
     private async Task HandleEvent(
@@ -65,7 +82,7 @@ public sealed class ReadModelHydrator(
 
             var metadata = rawMetadata.Value;
             Console.WriteLine("Handling event of type: " + metadata.EventTypeName);
-            var aggregateEvent = await GetEvent(subscription, resolvedEvent, metadata.EventTypeName);
+            var aggregateEvent = await GetEvent(resolvedEvent, metadata.EventTypeName);
             if (aggregateEvent is null)
             {
                 Console.WriteLine("Failed to deserialize event of type: " + metadata.EventTypeName);
@@ -99,7 +116,6 @@ public sealed class ReadModelHydrator(
     }
 
     private static async Task<IAggregateEvent?> GetEvent(
-        KurrentDBPersistentSubscriptionsClient.PersistentSubscriptionResult subscription,
         ResolvedEvent resolvedEvent,
         string eventTypeName)
     {
@@ -107,7 +123,6 @@ public sealed class ReadModelHydrator(
         if (eventType is null)
         {
             Console.WriteLine("Unknown event type: " + eventTypeName);
-            await subscription.Ack([resolvedEvent]);
             return null;
         }
 

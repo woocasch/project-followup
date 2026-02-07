@@ -9,6 +9,7 @@ using MongoDB.Driver;
 using ProjectFollowUp.BFF.Application.Projects;
 using ProjectFollowUp.BFF.Application.Projects.ReadModel;
 using ProjectFollowUp.BFF.Domain.Project;
+using ProjectFollowUp.BFF.Domain.User;
 using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo.ProjectProjection;
 
 public sealed class ProjectsReadModel(
@@ -60,6 +61,7 @@ public sealed class ProjectsReadModel(
             ProjectId.FromGuid(found.Id),
             found.Title,
             found.Description,
-            found.CreatedAt);
+            found.CreatedAt,
+            [.. found.AssignedUsers.Select(u => new ProjectRecord.AssignedUser(UserId.FromGuid(u.Id), u.DisplayName))]);
     }
 }

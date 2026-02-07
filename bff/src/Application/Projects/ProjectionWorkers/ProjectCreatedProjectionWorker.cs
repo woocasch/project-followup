@@ -31,7 +31,8 @@ public sealed class ProjectCreatedProjectionWorker(
                 domainEvent.ProjectId,
                 domainEvent.Title,
                 domainEvent.Description,
-                domainEvent.CreatedAt);
+                domainEvent.CreatedAt,
+                []);
             await projectionWriter.Insert(project.Value, cancellationToken);
         }
     }

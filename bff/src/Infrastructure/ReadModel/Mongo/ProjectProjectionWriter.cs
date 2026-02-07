@@ -35,7 +35,8 @@ public sealed class ProjectProjectionWriter(
             dto.Title,
             dto.Description,
             dto.CreatedAt,
-            [.. dto.AssignedUsers.Select(MapToRecord)]);
+            [.. dto.AssignedUsers.Select(MapToRecord)],
+            [.. dto.Tasks.Select(MapToRecord)]);
     }
 
     protected override ProjectDto MapFromRecord(ProjectRecord record)
@@ -64,5 +65,13 @@ public sealed class ProjectProjectionWriter(
         return new ProjectRecord.AssignedUser(
             UserId.FromGuid(dto.Id),
             dto.DisplayName);
+    }
+
+    private static ProjectRecord.Task MapToRecord(ProjectDto.TaskDto dto)
+    {
+        return new ProjectRecord.Task(
+            dto.Id,
+            dto.Title,
+            dto.Status);
     }
 }

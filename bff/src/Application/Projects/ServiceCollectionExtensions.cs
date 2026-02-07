@@ -17,7 +17,8 @@ public static class ServiceCollectionExtensions
             .RegisterCommandHandler<UpdateProjectCommand, UpdateProjectCommandHandler>()
             .RegisterQueryHandler<FetchProjectsQuery, FetchProjectsResult, FetchProjectsQueryHandler>()
             .RegisterQueryHandler<GetProjectQuery, GetProjectResult, GetProjectQueryHandler>()
-            .RegisterQueryHandler<FetchProjectUsersQuery, FetchProjectUsersResult, FetchProjectUsersQueryHandler>();
+            .RegisterQueryHandler<FetchProjectUsersQuery, FetchProjectUsersResult, FetchProjectUsersQueryHandler>()
+            .RegisterQueryHandler<FetchProjectTasksQuery, FetchProjectTasksResult, FetchProjectTasksQueryHandler>();
 
         // Projection workers
         services

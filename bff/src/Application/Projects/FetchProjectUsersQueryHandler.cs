@@ -1,11 +1,9 @@
 ﻿namespace ProjectFollowUp.BFF.Application.Projects;
 
-using System.Security.Cryptography;
 using System.Threading;
 using System.Threading.Tasks;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
-using ProjectFollowUp.BFF.Domain.User;
 
 public sealed class FetchProjectUsersQueryHandler(
     IReadModel readModel) : QueryHandlerBase<FetchProjectUsersQuery, FetchProjectUsersResult>
@@ -13,7 +11,7 @@ public sealed class FetchProjectUsersQueryHandler(
     protected override async Task<FetchProjectUsersResult?> HandleQuery(FetchProjectUsersQuery query, CancellationToken cancellationToken)
     {
         var project = await readModel.Get(query.ProjectId, cancellationToken);
-        if (project is null)
+        if (project is null || project.Value.AssignedUsers.Count == 0)
         {
             return new FetchProjectUsersResult([]);
         }

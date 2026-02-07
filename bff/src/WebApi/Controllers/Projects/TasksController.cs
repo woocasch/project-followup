@@ -2,11 +2,15 @@
 
 using Microsoft.AspNetCore.Mvc;
 
+using ProjectFollowUp.BFF.Application.Cqrs;
+using ProjectFollowUp.BFF.Application.Projects;
+using ProjectFollowUp.BFF.Domain.Project;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects.TasksModels;
 
 [Route("api/projects/{projectId:guid}/tasks")]
 [ApiController]
-public class TasksController : ControllerBase
+public class TasksController(
+    IMediator mediator) : ControllerBase
 {
     public const string FetchRouteName = "FetchProjectTasks";
 
@@ -15,23 +19,17 @@ public class TasksController : ControllerBase
        Guid projectId,
        CancellationToken cancellationToken)
     {
-        await Task.Yield();
-        if (projectId == Guid.Empty)
-        {
-            return Results.NotFound();
-        }
+        var query = new FetchProjectTasksQuery(ProjectId.FromGuid(projectId));
+        var result = await mediator.Fetch(query, cancellationToken);
 
-        return Results.Ok(
-            new FetchListOutput(
-                [
-                    new FetchListOutput.TaskListItem(
-                        Guid.NewGuid(),
-                        "Investigate hosting possibilities",
-                        "In progress"),
-                    new FetchListOutput.TaskListItem(
-                        Guid.NewGuid(),
-                        "Design system architecture",
-                        "Completed"),
-                ]));
+        var tasks = result.Tasks.Select(t => new FetchListOutput.TaskListItem
+        {
+            Id = t.Id,
+            Title = t.Title,
+            Status = t.Status.ToString()
+        });
+        var output = new FetchListOutput([.. tasks]);
+
+        return Results.Ok(output);
     }
 }

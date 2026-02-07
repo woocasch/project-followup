@@ -114,14 +114,14 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
             taskAdded.TaskId,
             taskAdded.Title,
             taskAdded.Description,
-            TaskStatus.Created,
+            ProjectTaskStatus.Created,
             taskAdded.CreatedAt);
         this.tasks.Add(taskData);
     }
 
     private void When(TaskWorkStarted taskWorkStarted)
     {
-        this.ChangeTaskStatus(taskWorkStarted.TaskId, TaskStatus.InProgress);
+        this.ChangeTaskStatus(taskWorkStarted.TaskId, ProjectTaskStatus.InProgress);
     }
 
     private void When(TaskRemoved taskRemoved)
@@ -132,10 +132,10 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
 
     private void When(TaskCompleted taskCompleted)
     {
-        this.ChangeTaskStatus(taskCompleted.TaskId, TaskStatus.Completed);
+        this.ChangeTaskStatus(taskCompleted.TaskId, ProjectTaskStatus.Completed);
     }
 
-    private void ChangeTaskStatus(Guid taskId, TaskStatus status)
+    private void ChangeTaskStatus(Guid taskId, ProjectTaskStatus status)
     {
         var task = this.tasks.Single(t => t.TaskId == taskId);
         var taskIndex = this.tasks.IndexOf(task);

@@ -3,4 +3,4 @@
 public readonly record struct TaskWorkStarted(
     ProjectId ProjectId,
     Guid TaskId,
-    DateTimeOffset StartedAt) : IAggregateEvent;
+    DateTimeOffset StartedAt) : IAggregateEvent, IProjectTaskEvent;

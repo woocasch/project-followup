@@ -1,6 +1,6 @@
 ﻿namespace ProjectFollowUp.BFF.Domain.Project;
 
-public enum TaskStatus
+public enum ProjectTaskStatus
 {
     Created = 0,
 

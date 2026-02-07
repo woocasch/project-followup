@@ -23,7 +23,11 @@ public static class ServiceCollectionExtensions
         // Projection workers
         services
             .RegisterProjectionWorker<ProjectCreated, ProjectCreatedProjectionWorker>()
-            .RegisterProjectionWorker<ProjectDetailsChanged, ProjectDetailsChangedProjectionWorker>();
+            .RegisterProjectionWorker<ProjectDetailsChanged, ProjectDetailsChangedProjectionWorker>()
+            .RegisterProjectionWorker<TaskAdded, TaskAddedProjectionWorker>()
+            .RegisterProjectionWorker<TaskCompleted, TaskCompletedProjectionWorker>()
+            .RegisterProjectionWorker<TaskRemoved, TaskRemovedProjectionWorker>()
+            .RegisterProjectionWorker<TaskWorkStarted, TaskWorkStartedProjectionWorker>();
         return services;
     }
 }

@@ -3,4 +3,4 @@
 public readonly record struct TaskRemoved(
     ProjectId ProjectId,
     Guid TaskId,
-    DateTimeOffset RemovedAt) : IAggregateEvent;
+    DateTimeOffset RemovedAt) : IAggregateEvent, IProjectTaskEvent;

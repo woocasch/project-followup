@@ -4,5 +4,5 @@ public readonly record struct TaskData(
     Guid TaskId,
     string Title,
     string Description,
-    TaskStatus Status,
+    ProjectTaskStatus Status,
     DateTimeOffset CreatedAt);

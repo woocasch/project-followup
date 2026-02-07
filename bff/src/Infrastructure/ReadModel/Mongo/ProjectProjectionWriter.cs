@@ -21,7 +21,8 @@ public sealed class ProjectProjectionWriter(
         return builder
             .Set(dto => dto.Title, record.Title)
             .Set(dto => dto.Description, record.Description)
-            .Set(dto => dto.CreatedAt, record.CreatedAt);
+            .Set(dto => dto.CreatedAt, record.CreatedAt)
+            .Set(dto => dto.Tasks, [.. record.Tasks.Select(MapFromRecord)]);
     }
 
     protected override IMongoCollection<ProjectDto> GetCollection() => collectionProvider.Projects;

@@ -48,6 +48,7 @@ public sealed class ProjectProjectionWriter(
             Description = record.Description,
             CreatedAt = record.CreatedAt,
             AssignedUsers = [.. record.AssignedUsers.Select(MapFromRecord)],
+            Tasks = [.. record.Tasks.Select(MapFromRecord)],
         };
     }
 
@@ -57,6 +58,16 @@ public sealed class ProjectProjectionWriter(
         {
             Id = record.Id.ToGuid(),
             DisplayName = record.DisplayName,
+        };
+    }
+
+    private static ProjectDto.TaskDto MapFromRecord(ProjectRecord.Task record)
+    {
+        return new()
+        {
+            Id = record.Id,
+            Title = record.Title,
+            Status = record.Status,
         };
     }
 

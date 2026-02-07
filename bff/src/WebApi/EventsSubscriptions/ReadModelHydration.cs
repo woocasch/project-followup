@@ -49,7 +49,7 @@ public sealed class ReadModelHydration(
 
         if (!subscriptionExists)
         {
-            await client.UpdateToAllAsync(
+            await client.CreateToAllAsync(
                 this.Settings.ReadModelHydration.SubscriptionName,
                 this.CreateSubscriptionSettings(),
                 cancellationToken: cancellationToken);

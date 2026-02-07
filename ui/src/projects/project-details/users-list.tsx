@@ -17,9 +17,14 @@ const ListStyled = styled.ul(`
     gap: ${theme.spaces.medium}
 `);
 
+const EmptyListMessage = styled.p(`
+    margin: ${theme.spaces.medium};
+    font-size: ${theme.fontSizes.medium};
+`);
+
 function displayUsers(users: model.UserData[]) {
   if (users.length === 0) {
-    return <p>No users assigned to this project</p>;
+    return <EmptyListMessage>No users assigned to this project</EmptyListMessage>;
   }
 
   return (

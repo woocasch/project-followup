@@ -36,6 +36,11 @@ const TaskContainer = styled.div(`
     }
 `);
 
+const EmptyListMessage = styled.p(`
+    margin: ${theme.spaces.medium};
+    font-size: ${theme.fontSizes.medium};
+`);
+
 function displayTask(task: model.TaskData) {
   return (
     <TaskContainer>
@@ -47,7 +52,7 @@ function displayTask(task: model.TaskData) {
 
 function displayTasks(tasks: model.TaskData[]) {
   if (tasks.length === 0) {
-    return <p>No tasks assigned to this project</p>;
+    return <EmptyListMessage>No tasks assigned to this project</EmptyListMessage>;
   }
 
   return (

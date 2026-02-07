@@ -1,18 +1,19 @@
-﻿namespace ProjectFollowUp.BFF.WebApi.Controllers;
+﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Users;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 using ProjectFollowUp.BFF.Application.ActivationLinks;
 using ProjectFollowUp.BFF.Application.Cqrs;
+using ProjectFollowUp.BFF.WebApi.Controllers.Users.LinkCodesModels;
 
-[Route("api/[controller]")]
+[Route("api/users/linkCodes")]
 [ApiController]
-public class AccountsController(
+public class LinkCodesController(
     IMediator mediator) : ControllerBase
 {
     [AllowAnonymous]
-    [HttpGet("linkCodes/{linkCode}")]
+    [HttpGet("{linkCode}")]
     public async Task<IActionResult> GetByLinkCode(string linkCode, CancellationToken cancellationToken)
     {
         if (string.IsNullOrEmpty(linkCode))
@@ -27,11 +28,9 @@ public class AccountsController(
             return NotFound();
         }
 
-        return Ok(new
-        {
+        return Ok(new GetByLinkCodeOutput(
             result.EmailAddress,
             result.DisplayName,
-            result.IsUsed,
-        });
+            result.IsUsed));
     }
 }

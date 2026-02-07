@@ -6,7 +6,7 @@ export class AccountsClient extends ApiClientBase implements model.AccountsApi {
     params: model.GetLinkCodeDataParams,
   ): Promise<model.LinkCodeData> {
     const response = await this.createBffClient().get(
-      `api/Accounts/LinkCodes/${params.linkCode}`,
+      `api/users/linkCodes/${params.linkCode}`,
     );
     return response.data;
   }

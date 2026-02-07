@@ -1,15 +1,18 @@
 ﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 
 using System.Text.RegularExpressions;
+
 using FluentValidation;
 
-public sealed partial class CreateInputValidator : AbstractValidator<CreateInput>
+using ProjectFollowUp.BFF.WebApi.Controllers.Projects.ProjectsModels;
+
+public sealed partial class UpdateInputValidator : AbstractValidator<UpdateInput>
 {
     private static readonly Regex TitleRegex = TitleValidationRegex();
 
     private static readonly Regex DescriptionRegex = DescriptionValidationRegex();
 
-    public CreateInputValidator()
+    public UpdateInputValidator()
     {
         RuleFor(x => x.Title)
             .NotNull().WithErrorCode("Required")

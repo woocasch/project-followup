@@ -1,15 +1,25 @@
 import type * as model from './create-task.model';
+import tasksApi from '@apiClient/tasks.client';
+import * as taskApiModel from '@apiClient/tasks.model';
 
 export class CreateTaskWebService implements model.CreateTaskService {
   async createTask(
-    _: model.CreateTaskRequest,
+    request: model.CreateTaskRequest,
   ): Promise<model.CreateTaskResponse> {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        console.log('Creating task with data:', _);
-        resolve({ taskId: '' });
-      }, 1000);
-    });
+    const parameters: taskApiModel.CreateTaskParameters = {
+      projectId: request.projectId,
+      taskDetails: {
+        title: request.taskDetails.title,
+        description: request.taskDetails.description,
+        dueDate: request.taskDetails.dueDate
+          ? new Date(request.taskDetails.dueDate)
+          : undefined,
+      },
+    };
+    const result = await tasksApi.createTask(parameters);
+    return {
+      taskId: result.taskId,
+    };
   }
 }
 

@@ -33,4 +33,13 @@ public class TasksController(
 
         return Results.Ok(output);
     }
+
+    [HttpPost]
+    public async Task<IResult> CreateTask(CreateTaskInput input, Guid projectId, CancellationToken cancellationToken)
+    {
+        await Task.Yield();
+        var taskId = Guid.NewGuid();
+        var result = new CreateTaskOutput(taskId);
+        return Results.Created($"/api/projects/{projectId}/tasks/{taskId}", result);
+    }
 }

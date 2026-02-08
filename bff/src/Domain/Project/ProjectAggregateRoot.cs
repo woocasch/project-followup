@@ -114,6 +114,7 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
             taskAdded.TaskId,
             taskAdded.Title,
             taskAdded.Description,
+            taskAdded.DueDate,
             ProjectTaskStatus.Created,
             taskAdded.CreatedAt);
         this.tasks.Add(taskData);

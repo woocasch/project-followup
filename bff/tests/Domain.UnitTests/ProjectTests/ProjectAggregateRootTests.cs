@@ -15,7 +15,7 @@ public sealed class ProjectAggregateRootTests
         var title = "Test Project Title";
         var description = "Test Project Description";
         var createdAt = new DateTimeOffset(2024, 1, 2, 3, 4, 5, TimeSpan.Zero);
-        this.Given(t => t.ProjectIsCrated(projectId, title, description, createdAt))
+        this.Given(t => t.ProjectIsCreated(projectId, title, description, createdAt))
             .Then(t => t.InstanceContainsEvent(
                 e => e.GetType() == typeof(ProjectCreated)
                     && ((ProjectCreated)e).ProjectId == projectId
@@ -36,7 +36,7 @@ public sealed class ProjectAggregateRootTests
         var changedDescription = "Updated Project Description";
         var createdAt = new DateTimeOffset(2024, 1, 2, 3, 4, 5, TimeSpan.Zero);
         var changedAt = new DateTimeOffset(2024, 1, 3, 3, 4, 5, TimeSpan.Zero);
-        this.Given(t => t.ProjectIsCrated(projectId, title, description, createdAt))
+        this.Given(t => t.ProjectIsCreated(projectId, title, description, createdAt))
             .When(t => t.ProjectIsChanged(changedTitle, changedDescription, changedAt))
             .Then(t => t.InstanceContainsEvent(
                 e => e.GetType() == typeof(ProjectDetailsChanged)
@@ -48,7 +48,7 @@ public sealed class ProjectAggregateRootTests
             .BDDfy();
     }
 
-    private void ProjectIsCrated(
+    private void ProjectIsCreated(
         ProjectId projectId,
         string title,
         string description,
@@ -79,7 +79,7 @@ public sealed class ProjectAggregateRootTests
         var dueDate = new DateOnly(2024, 12, 31);
         var createdAt = new DateTimeOffset(2024, 1, 2, 3, 4, 5, TimeSpan.Zero);
         var taskCreatedAt = new DateTimeOffset(2024, 1, 3, 4, 5, 6, TimeSpan.Zero);
-        this.Given(t => t.ProjectIsCrated(projectId, "Project Title", "Project Description", createdAt))
+        this.Given(t => t.ProjectIsCreated(projectId, "Project Title", "Project Description", createdAt))
             .When(t => t.TaskIsAdded(taskId, title, description, dueDate, taskCreatedAt))
             .Then(t => t.InstanceContainsEvent(
                 e => e.GetType() == typeof(TaskAdded)
@@ -101,7 +101,7 @@ public sealed class ProjectAggregateRootTests
         var createdAt = new DateTimeOffset(2024, 1, 2, 3, 4, 5, TimeSpan.Zero);
         var taskCreatedAt = new DateTimeOffset(2024, 1, 3, 4, 5, 6, TimeSpan.Zero);
         var startedAt = new DateTimeOffset(2024, 1, 4, 5, 6, 7, TimeSpan.Zero);
-        this.Given(t => t.ProjectIsCrated(projectId, "Project Title", "Project Description", createdAt))
+        this.Given(t => t.ProjectIsCreated(projectId, "Project Title", "Project Description", createdAt))
             .And(t => t.TaskIsAdded(taskId, "Task Title", "Task Description", null, taskCreatedAt))
             .When(t => t.WorkIsStartedOnTask(taskId, startedAt))
             .Then(t => t.InstanceContainsEvent(
@@ -121,7 +121,7 @@ public sealed class ProjectAggregateRootTests
         var createdAt = new DateTimeOffset(2024, 1, 2, 3, 4, 5, TimeSpan.Zero);
         var taskCreatedAt = new DateTimeOffset(2024, 1, 3, 4, 5, 6, TimeSpan.Zero);
         var completedAt = new DateTimeOffset(2024, 1, 5, 6, 7, 8, TimeSpan.Zero);
-        this.Given(t => t.ProjectIsCrated(projectId, "Project Title", "Project Description", createdAt))
+        this.Given(t => t.ProjectIsCreated(projectId, "Project Title", "Project Description", createdAt))
             .And(t => t.TaskIsAdded(taskId, "Task Title", "Task Description", null, taskCreatedAt))
             .When(t => t.TaskIsCompleted(taskId, completedAt))
             .Then(t => t.InstanceContainsEvent(
@@ -141,7 +141,7 @@ public sealed class ProjectAggregateRootTests
         var createdAt = new DateTimeOffset(2024, 1, 2, 3, 4, 5, TimeSpan.Zero);
         var taskCreatedAt = new DateTimeOffset(2024, 1, 3, 4, 5, 6, TimeSpan.Zero);
         var removedAt = new DateTimeOffset(2024, 1, 6, 7, 8, 9, TimeSpan.Zero);
-        this.Given(t => t.ProjectIsCrated(projectId, "Project Title", "Project Description", createdAt))
+        this.Given(t => t.ProjectIsCreated(projectId, "Project Title", "Project Description", createdAt))
             .And(t => t.TaskIsAdded(taskId, "Task Title", "Task Description", null, taskCreatedAt))
             .When(t => t.TaskIsRemoved(taskId, removedAt))
             .Then(t => t.InstanceContainsEvent(

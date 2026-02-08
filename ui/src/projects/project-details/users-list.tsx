@@ -24,7 +24,9 @@ const EmptyListMessage = styled.p(`
 
 function displayUsers(users: model.UserData[]) {
   if (users.length === 0) {
-    return <EmptyListMessage>No users assigned to this project</EmptyListMessage>;
+    return (
+      <EmptyListMessage>No users assigned to this project</EmptyListMessage>
+    );
   }
 
   return (

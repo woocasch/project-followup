@@ -1,4 +1,4 @@
-import * as apiModel from '@apiClient/projects.model';
+import type * as apiModel from '@apiClient/projects.model';
 
 export interface ProjectDetails {
   id: string;

@@ -51,7 +51,7 @@ export class ProjectDetailsWebService implements model.ProjectDetailsService {
     const tasks: model.TaskData[] = response.tasks.map((task) => ({
       id: task.id,
       title: task.title,
-      dueDate: new Date(2025,1,2,3,4,5), // Mocked due date for demonstration
+      dueDate: task.dueDate,
       status: mapTaskStatus(task.status),
       rawStatus: task.status,
     }));

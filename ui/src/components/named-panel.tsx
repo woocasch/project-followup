@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-//import { theme } from '@root/theme';
+import { theme } from '@root/theme';
 import type { ReactNode } from 'react';
 
 interface NamedPanelContentProps {
@@ -17,7 +17,7 @@ const NamedPanelStyled = styled.div(`
         margin-bottom: 0;
         border: solid black 1px;
         border-bottom: none;
-        border-radius: 5px;
+        border-radius: ${theme.borderRadius.medium};
         border-bottom-left-radius: 0;
         border-bottom-right-radius: 0;
         width: fit-content;
@@ -28,8 +28,9 @@ const NamedPanelStyled = styled.div(`
 
 const NamedPanelContentStyled = styled.div(`
     border: solid black 1px;
-    border-radius: 5px;
+    border-radius: ${theme.borderRadius.medium};
     border-top-left-radius: 0;
+    padding: ${theme.spaces.medium};
 `);
 
 function NamedPanelContent({ children }: NamedPanelContentProps) {

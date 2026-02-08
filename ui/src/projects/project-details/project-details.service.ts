@@ -1,5 +1,17 @@
 import projectsApi from '@apiClient/projects.client';
+import * as apiModel from '@apiClient/projects.model';
 import type * as model from './project-details.model';
+
+const taskStatusMapping: Record<apiModel.ProjectTaskStatus, string> = {
+  [apiModel.ProjectTaskStatus.Created]: 'created',
+  [apiModel.ProjectTaskStatus.InProgress]: 'in progress',
+  [apiModel.ProjectTaskStatus.Completed]: 'completed',
+  [apiModel.ProjectTaskStatus.Removed]: 'removed',
+};
+
+function mapTaskStatus(status: apiModel.ProjectTaskStatus): string {
+  return taskStatusMapping[status] || 'Unknown';
+}
 
 export class ProjectDetailsWebService implements model.ProjectDetailsService {
   async getProject(
@@ -36,7 +48,14 @@ export class ProjectDetailsWebService implements model.ProjectDetailsService {
     const response = await projectsApi.fetchProjectTasks({
       projectId: request.projectId,
     });
-    return response;
+    const tasks: model.TaskData[] = response.tasks.map((task) => ({
+      id: task.id,
+      title: task.title,
+      dueDate: task.dueDate ? new Date(task.dueDate) : undefined,
+      status: mapTaskStatus(task.status),
+      rawStatus: task.status,
+    }));
+    return { tasks };
   }
 }
 

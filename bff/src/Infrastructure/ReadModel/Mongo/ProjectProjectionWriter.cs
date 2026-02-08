@@ -21,7 +21,9 @@ public sealed class ProjectProjectionWriter(
         return builder
             .Set(dto => dto.Title, record.Title)
             .Set(dto => dto.Description, record.Description)
-            .Set(dto => dto.CreatedAt, record.CreatedAt);
+            .Set(dto => dto.CreatedAt, record.CreatedAt)
+            .Set(dto => dto.AssignedUsers, [.. record.AssignedUsers.Select(MapFromRecord)])
+            .Set(dto => dto.Tasks, [.. record.Tasks.Select(MapFromRecord)]);
     }
 
     protected override IMongoCollection<ProjectDto> GetCollection() => collectionProvider.Projects;
@@ -67,7 +69,8 @@ public sealed class ProjectProjectionWriter(
         {
             Id = record.Id,
             Title = record.Title,
-            Status = record.Status,
+            DueDate = record.DueDate,
+            Status = (int)record.Status,
         };
     }
 
@@ -83,6 +86,7 @@ public sealed class ProjectProjectionWriter(
         return new ProjectRecord.Task(
             dto.Id,
             dto.Title,
-            dto.Status);
+            dto.DueDate,
+            (ProjectTaskStatus)dto.Status);
     }
 }

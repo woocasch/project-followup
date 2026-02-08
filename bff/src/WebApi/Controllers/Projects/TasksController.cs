@@ -26,7 +26,8 @@ public class TasksController(
         {
             Id = t.Id,
             Title = t.Title,
-            Status = t.Status.ToString()
+            DueDate = t.DueDate,
+            Status = t.Status
         });
         var output = new FetchListOutput([.. tasks]);
 

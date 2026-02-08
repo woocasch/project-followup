@@ -1,6 +1,8 @@
+import * as apiModel from '@apiClient/projects.model';
 import styled from '@emotion/styled';
-import { LoadingSpinner, NamedPanel } from '@root/components';
+import { Button, LoadingSpinner, NamedPanel } from '@root/components';
 import { theme } from '@root/theme';
+import { format } from 'date-fns';
 import { useEffect, useState } from 'react';
 import type * as model from './project-details.model';
 import projectDetailsService from './project-details.service';
@@ -9,18 +11,33 @@ export interface TasksListProps {
   projectId: string;
 }
 
+const taskStatusColors: Record<apiModel.ProjectTaskStatus, string> = {
+  [apiModel.ProjectTaskStatus.Created]: theme.colors.surface,
+  [apiModel.ProjectTaskStatus.InProgress]: theme.colors.warning,
+  [apiModel.ProjectTaskStatus.Completed]: theme.colors.success,
+  [apiModel.ProjectTaskStatus.Removed]: theme.colors.error,
+};
+
+function mapTaskStatusColor(status: apiModel.ProjectTaskStatus): string {
+  return taskStatusColors[status] || theme.colors.surface;
+}
+
 const ListStyled = styled.ul(`
-    margin: ${theme.spaces.medium};
     list-style: none;
     padding-left: 0;
-    max-height: 200px;
     overflow-y: auto;
+    &>li {
+      margin-top: ${theme.spaces.medium};
+    }
 `);
 
-const TaskContainer = styled.div(`
-    margin: ${theme.spaces.medium};
+interface TaskContainerProps {
+  status: apiModel.ProjectTaskStatus;
+}
+
+const TaskContainer = styled('div')<TaskContainerProps>`
     padding: ${theme.spaces.medium};
-    background-color: ${theme.colors.surface};
+    background-color: ${(props: TaskContainerProps) => mapTaskStatusColor(props.status)};
     border: 1px solid ${theme.colors.border};
     border-radius: ${theme.borderRadius.medium};
     &>h3 {
@@ -31,25 +48,61 @@ const TaskContainer = styled.div(`
         max-width: 100%;
         font-size: ${theme.fontSizes.medium};
     }
-`);
+`;
 
 const EmptyListMessage = styled.p(`
-    margin: ${theme.spaces.medium};
     font-size: ${theme.fontSizes.medium};
 `);
 
+const ButtonsContainer = styled.div(`
+    display: flex;
+    gap: ${theme.spaces.medium};
+    text-align: left;
+`);
+
+const DueDate = styled.div(`
+    font-size: ${theme.fontSizes.small};
+`);
+
+function onOpenTaskDetails(task: model.TaskData) {
+  alert(`Opening details for task ${task.title} with status ${task.status}`);
+}
+
+function displayDueDate(dueDate?: Date) {
+  if (!dueDate) {
+    return null;
+  }
+
+  const formattedDate = format(dueDate, 'yyyy-MM-dd');
+  return <DueDate>Due date: {formattedDate}</DueDate>;
+}
+
 function displayTask(task: model.TaskData) {
   return (
-    <TaskContainer>
-      <h3>{task.title}</h3>
-      <p>Status: {task.status}</p>
+    <TaskContainer status={task.rawStatus}>
+      <h3>
+        {task.title} is {task.status}
+      </h3>
+      {displayDueDate(task.dueDate)}
+      <div>
+        <Button
+          buttonType="rounded"
+          variant="action"
+          title="View task details"
+          onClick={() => onOpenTaskDetails(task)}
+        >
+          Details
+        </Button>
+      </div>
     </TaskContainer>
   );
 }
 
 function displayTasks(tasks: model.TaskData[]) {
   if (tasks.length === 0) {
-    return <EmptyListMessage>No tasks assigned to this project</EmptyListMessage>;
+    return (
+      <EmptyListMessage>No tasks assigned to this project</EmptyListMessage>
+    );
   }
 
   return (
@@ -58,6 +111,21 @@ function displayTasks(tasks: model.TaskData[]) {
         <li key={task.id}>{displayTask(task)}</li>
       ))}
     </ListStyled>
+  );
+}
+
+function displayTasksButtons() {
+  return (
+    <ButtonsContainer>
+      <Button
+        buttonType="rounded"
+        variant="action"
+        title="Add task"
+        onClick={() => alert('Adding new task')}
+      >
+        Add Task
+      </Button>
+    </ButtonsContainer>
   );
 }
 
@@ -79,6 +147,7 @@ export default function TasksList({ projectId }: TasksListProps) {
 
   return (
     <NamedPanel title="Tasks">
+      {displayTasksButtons()}
       {loadingTasks ? <LoadingSpinner /> : displayTasks(tasks)}
     </NamedPanel>
   );

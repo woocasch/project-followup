@@ -1,9 +1,13 @@
 ﻿namespace ProjectFollowUp.BFF.Domain.Project;
 
+using System.Collections.ObjectModel;
+
 using ProjectFollowUp.BFF.Domain.Project.Events;
 
 public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
 {
+    private readonly Collection<TaskData> tasks = [];
+
     private ProjectAggregateRoot()
     {
     }
@@ -15,6 +19,8 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
     public string Description { get; private set; } = null!;
 
     public DateTimeOffset CreatedAt { get; private set; }
+
+    public IReadOnlyCollection<TaskData> Tasks => this.tasks;
 
     public static ProjectAggregateRoot Create(ProjectId projectId, string title, string description, DateTimeOffset createdAt)
     {
@@ -37,6 +43,30 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
         this.Apply(domainEvent);
     }
 
+    public void AddTask(Guid taskId, string title, string description, DateOnly? dueDate, DateTimeOffset createdAt)
+    {
+        var domainEvent = new TaskAdded(this.Id, taskId, title, description, dueDate, createdAt);
+        this.Apply(domainEvent);
+    }
+
+    public void StartWorkOnTask(Guid taskId, DateTimeOffset startedAt)
+    {
+        var domainEvent = new TaskWorkStarted(this.Id, taskId, startedAt);
+        this.Apply(domainEvent);
+    }
+
+    public void CompleteTask(Guid taskId, DateTimeOffset completedAt)
+    {
+        var domainEvent = new TaskCompleted(this.Id, taskId, completedAt);
+        this.Apply(domainEvent);
+    }
+
+    public void RemoveTask(Guid taskId, DateTimeOffset removedAt)
+    {
+        var domainEvent = new TaskRemoved(this.Id, taskId, removedAt);
+        this.Apply(domainEvent);
+    }
+
     protected override void When(IAggregateEvent domainEvent)
     {
         switch (domainEvent)
@@ -46,6 +76,18 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
                 break;
             case ProjectDetailsChanged projectDetailsChanged:
                 this.When(projectDetailsChanged);
+                break;
+            case TaskAdded taskAdded:
+                this.When(taskAdded);
+                break;
+            case TaskWorkStarted taskWorkStarted:
+                this.When(taskWorkStarted);
+                break;
+            case TaskCompleted taskCompleted:
+                this.When(taskCompleted);
+                break;
+            case TaskRemoved taskRemoved:
+                this.When(taskRemoved);
                 break;
             default:
                 throw new InvalidOperationException($"Unknown domain event type: {domainEvent.GetType().FullName}");
@@ -64,5 +106,43 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
     {
         this.Title = projectDetailsChanged.Title;
         this.Description = projectDetailsChanged.Description;
+    }
+
+    private void When(TaskAdded taskAdded)
+    {
+        var taskData = new TaskData(
+            taskAdded.TaskId,
+            taskAdded.Title,
+            taskAdded.Description,
+            taskAdded.DueDate,
+            ProjectTaskStatus.Created,
+            taskAdded.CreatedAt);
+        this.tasks.Add(taskData);
+    }
+
+    private void When(TaskWorkStarted taskWorkStarted)
+    {
+        this.ChangeTaskStatus(taskWorkStarted.TaskId, ProjectTaskStatus.InProgress);
+    }
+
+    private void When(TaskRemoved taskRemoved)
+    {
+        this.ChangeTaskStatus(taskRemoved.TaskId, ProjectTaskStatus.Removed);
+    }
+
+    private void When(TaskCompleted taskCompleted)
+    {
+        this.ChangeTaskStatus(taskCompleted.TaskId, ProjectTaskStatus.Completed);
+    }
+
+    private void ChangeTaskStatus(Guid taskId, ProjectTaskStatus status)
+    {
+        var task = this.tasks.Single(t => t.TaskId == taskId);
+        var taskIndex = this.tasks.IndexOf(task);
+        task = task with
+        {
+            Status = status,
+        };
+        this.tasks[taskIndex] = task;
     }
 }

@@ -32,6 +32,8 @@ public sealed class ProjectDto
 
         public string Title { get; set; } = default!;
 
+        public DateOnly? DueDate { get; set; }
+
         public int Status { get; set; }
     }
 }

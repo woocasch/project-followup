@@ -20,5 +20,6 @@ public readonly record struct ProjectRecord(
     public readonly record struct Task(
         Guid Id,
         string Title,
-        int Status);
+        DateOnly? DueDate,
+        ProjectTaskStatus Status);
 }

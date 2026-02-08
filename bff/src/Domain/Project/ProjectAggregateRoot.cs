@@ -126,8 +126,7 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
 
     private void When(TaskRemoved taskRemoved)
     {
-        var task = this.tasks.Single(t => t.TaskId == taskRemoved.TaskId);
-        this.tasks.Remove(task);
+        this.ChangeTaskStatus(taskRemoved.TaskId, ProjectTaskStatus.Removed);
     }
 
     private void When(TaskCompleted taskCompleted)

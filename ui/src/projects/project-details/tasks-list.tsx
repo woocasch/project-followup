@@ -155,7 +155,12 @@ export default function TasksList({ projectId }: TasksListProps) {
     <NamedPanel title="Tasks">
       {displayTasksButtons(setIsCreateTaskOpen)}
       {loadingTasks ? <LoadingSpinner /> : displayTasks(tasks)}
-      <CreateTask isOpen={isCreateTaskOpen} setIsOpen={setIsCreateTaskOpen} onTaskCreated={onTaskCreated} />
+      <CreateTask
+        projectId={projectId}
+        isOpen={isCreateTaskOpen}
+        setIsOpen={setIsCreateTaskOpen}
+        onTaskCreated={onTaskCreated}
+      />
     </NamedPanel>
   );
 }

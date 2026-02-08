@@ -12,8 +12,10 @@ import { useLayoutEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import createTaskLogic from './create-task.logic';
 import type * as model from './create-task.model';
+import createTaskService from './create-task.service';
 
 export interface CreateTaskProps {
+  projectId: string;
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
   onTaskCreated: () => void;
@@ -30,7 +32,7 @@ const FormContainer = styled.div(`
 `);
 
 export default function CreateTask(props: CreateTaskProps) {
-  const { isOpen, setIsOpen, onTaskCreated } = props;
+  const { projectId, isOpen, setIsOpen, onTaskCreated } = props;
   const dialogRef = useRef<HTMLDialogElement>(null);
   const form = useForm({
     resolver: zodResolver(createTaskLogic.getFormSchema()),
@@ -43,9 +45,14 @@ export default function CreateTask(props: CreateTaskProps) {
     if (dialogRef.current.open && !isOpen) {
       dialogRef.current.close();
     } else if (!dialogRef.current.open && isOpen) {
+      form.reset({
+        title: '',
+        description: '',
+        dueDate: '',
+      });
       dialogRef.current.showModal();
     }
-  }, [isOpen]);
+  }, [isOpen, form.reset]);
 
   function onDialogClosed() {
     if (isOpen) {
@@ -54,9 +61,17 @@ export default function CreateTask(props: CreateTaskProps) {
   }
 
   async function onSubmit(data: model.NewTaskData): Promise<void> {
-    console.log('Raw form data', data);
-    data.dueDate = data.dueDate ? new Date(data.dueDate) : undefined;
-    console.log('Submitting form with data', data);
+    const request: model.CreateTaskRequest = {
+      projectId: projectId,
+      taskDetails: data,
+    };
+    const response = await createTaskService.createTask(request);
+    if (!response?.taskId) {
+      console.error('Failed to create task');
+      // Maybe toastr here some day? For now, just log the error.
+      return;
+    }
+
     setIsOpen(false);
     onTaskCreated();
   }

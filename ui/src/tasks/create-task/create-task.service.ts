@@ -6,7 +6,8 @@ export class CreateTaskWebService implements model.CreateTaskService {
   ): Promise<model.CreateTaskResponse> {
     return new Promise((resolve) => {
       setTimeout(() => {
-        resolve({ taskId: 'mocked-task-id' });
+        console.log('Creating task with data:', _);
+        resolve({ taskId: '' });
       }, 1000);
     });
   }

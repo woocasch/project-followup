@@ -69,6 +69,115 @@ public sealed class ProjectAggregateRootTests
         this.instance.ChangeDetails(newTitle, newDescription, changedAt);
     }
 
+    [Fact]
+    public void WhenTaskIsAddedThenTaskAddedEventIsRaised()
+    {
+        var projectId = ProjectId.NewId();
+        var taskId = Guid.NewGuid();
+        var title = "Test Task Title";
+        var description = "Test Task Description";
+        var dueDate = new DateOnly(2024, 12, 31);
+        var createdAt = new DateTimeOffset(2024, 1, 2, 3, 4, 5, TimeSpan.Zero);
+        var taskCreatedAt = new DateTimeOffset(2024, 1, 3, 4, 5, 6, TimeSpan.Zero);
+        this.Given(t => t.ProjectIsCrated(projectId, "Project Title", "Project Description", createdAt))
+            .When(t => t.TaskIsAdded(taskId, title, description, dueDate, taskCreatedAt))
+            .Then(t => t.InstanceContainsEvent(
+                e => e.GetType() == typeof(TaskAdded)
+                    && ((TaskAdded)e).ProjectId == projectId
+                    && ((TaskAdded)e).TaskId == taskId
+                    && ((TaskAdded)e).Title == title
+                    && ((TaskAdded)e).Description == description
+                    && ((TaskAdded)e).DueDate == dueDate
+                    && ((TaskAdded)e).CreatedAt == taskCreatedAt,
+                "TaskAdded event was not raised with correct values."))
+            .BDDfy();
+    }
+
+    [Fact]
+    public void WhenWorkIsStartedOnTaskThenTaskWorkStartedEventIsRaised()
+    {
+        var projectId = ProjectId.NewId();
+        var taskId = Guid.NewGuid();
+        var createdAt = new DateTimeOffset(2024, 1, 2, 3, 4, 5, TimeSpan.Zero);
+        var taskCreatedAt = new DateTimeOffset(2024, 1, 3, 4, 5, 6, TimeSpan.Zero);
+        var startedAt = new DateTimeOffset(2024, 1, 4, 5, 6, 7, TimeSpan.Zero);
+        this.Given(t => t.ProjectIsCrated(projectId, "Project Title", "Project Description", createdAt))
+            .And(t => t.TaskIsAdded(taskId, "Task Title", "Task Description", null, taskCreatedAt))
+            .When(t => t.WorkIsStartedOnTask(taskId, startedAt))
+            .Then(t => t.InstanceContainsEvent(
+                e => e.GetType() == typeof(TaskWorkStarted)
+                    && ((TaskWorkStarted)e).ProjectId == projectId
+                    && ((TaskWorkStarted)e).TaskId == taskId
+                    && ((TaskWorkStarted)e).StartedAt == startedAt,
+                "TaskWorkStarted event was not raised with correct values."))
+            .BDDfy();
+    }
+
+    [Fact]
+    public void WhenTaskIsCompletedThenTaskCompletedEventIsRaised()
+    {
+        var projectId = ProjectId.NewId();
+        var taskId = Guid.NewGuid();
+        var createdAt = new DateTimeOffset(2024, 1, 2, 3, 4, 5, TimeSpan.Zero);
+        var taskCreatedAt = new DateTimeOffset(2024, 1, 3, 4, 5, 6, TimeSpan.Zero);
+        var completedAt = new DateTimeOffset(2024, 1, 5, 6, 7, 8, TimeSpan.Zero);
+        this.Given(t => t.ProjectIsCrated(projectId, "Project Title", "Project Description", createdAt))
+            .And(t => t.TaskIsAdded(taskId, "Task Title", "Task Description", null, taskCreatedAt))
+            .When(t => t.TaskIsCompleted(taskId, completedAt))
+            .Then(t => t.InstanceContainsEvent(
+                e => e.GetType() == typeof(TaskCompleted)
+                    && ((TaskCompleted)e).ProjectId == projectId
+                    && ((TaskCompleted)e).TaskId == taskId
+                    && ((TaskCompleted)e).CompletedAt == completedAt,
+                "TaskCompleted event was not raised with correct values."))
+            .BDDfy();
+    }
+
+    [Fact]
+    public void WhenTaskIsRemovedThenTaskRemovedEventIsRaised()
+    {
+        var projectId = ProjectId.NewId();
+        var taskId = Guid.NewGuid();
+        var createdAt = new DateTimeOffset(2024, 1, 2, 3, 4, 5, TimeSpan.Zero);
+        var taskCreatedAt = new DateTimeOffset(2024, 1, 3, 4, 5, 6, TimeSpan.Zero);
+        var removedAt = new DateTimeOffset(2024, 1, 6, 7, 8, 9, TimeSpan.Zero);
+        this.Given(t => t.ProjectIsCrated(projectId, "Project Title", "Project Description", createdAt))
+            .And(t => t.TaskIsAdded(taskId, "Task Title", "Task Description", null, taskCreatedAt))
+            .When(t => t.TaskIsRemoved(taskId, removedAt))
+            .Then(t => t.InstanceContainsEvent(
+                e => e.GetType() == typeof(TaskRemoved)
+                    && ((TaskRemoved)e).ProjectId == projectId
+                    && ((TaskRemoved)e).TaskId == taskId
+                    && ((TaskRemoved)e).RemovedAt == removedAt,
+                "TaskRemoved event was not raised with correct values."))
+            .BDDfy();
+    }
+
+    private void TaskIsAdded(
+        Guid taskId,
+        string title,
+        string description,
+        DateOnly? dueDate,
+        DateTimeOffset createdAt)
+    {
+        this.instance.AddTask(taskId, title, description, dueDate, createdAt);
+    }
+
+    private void WorkIsStartedOnTask(Guid taskId, DateTimeOffset startedAt)
+    {
+        this.instance.StartWorkOnTask(taskId, startedAt);
+    }
+
+    private void TaskIsCompleted(Guid taskId, DateTimeOffset completedAt)
+    {
+        this.instance.CompleteTask(taskId, completedAt);
+    }
+
+    private void TaskIsRemoved(Guid taskId, DateTimeOffset removedAt)
+    {
+        this.instance.RemoveTask(taskId, removedAt);
+    }
+
     private void InstanceContainsEvent(Predicate<object> predicate, string message)
     {
         this.instance.GetUncommittedEvents()

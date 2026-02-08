@@ -14,6 +14,7 @@ export interface UserData {
 export interface TaskData {
   id: string;
   title: string;
+  dueDate?: Date;
   status: string;
   rawStatus: apiModel.ProjectTaskStatus;
 }

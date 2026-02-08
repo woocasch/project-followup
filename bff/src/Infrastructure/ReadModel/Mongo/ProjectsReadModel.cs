@@ -63,6 +63,6 @@ public sealed class ProjectsReadModel(
             found.Description,
             found.CreatedAt,
             [.. found.AssignedUsers.Select(u => new ProjectRecord.AssignedUser(UserId.FromGuid(u.Id), u.DisplayName))],
-            [.. found.Tasks.Select(t => new ProjectRecord.Task(t.Id, t.Title, (ProjectTaskStatus)t.Status))]);
+            [.. found.Tasks.Select(t => new ProjectRecord.Task(t.Id, t.Title, t.DueDate, (ProjectTaskStatus)t.Status))]);
     }
 }

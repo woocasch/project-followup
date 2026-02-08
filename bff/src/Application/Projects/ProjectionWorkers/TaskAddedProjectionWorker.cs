@@ -30,6 +30,7 @@ public sealed class TaskAddedProjectionWorker(
             existing = new ProjectRecord.Task(
                 domainEvent.TaskId,
                 domainEvent.Title,
+                domainEvent.DueDate,
                 (int)ProjectTaskStatus.Created);
             currentTasks.Add(existing);
         }
@@ -38,6 +39,7 @@ public sealed class TaskAddedProjectionWorker(
             existing = existing with
             {
                 Title = domainEvent.Title,
+                DueDate = domainEvent.DueDate,
                 Status = (int)ProjectTaskStatus.Created,
             };
             currentTasks[existingIndex] = existing;

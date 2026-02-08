@@ -43,9 +43,9 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
         this.Apply(domainEvent);
     }
 
-    public void AddTask(Guid taskId, string title, string description, DateTimeOffset createdAt)
+    public void AddTask(Guid taskId, string title, string description, DateOnly? dueDate, DateTimeOffset createdAt)
     {
-        var domainEvent = new TaskAdded(this.Id, taskId, title, description, createdAt);
+        var domainEvent = new TaskAdded(this.Id, taskId, title, description, dueDate, createdAt);
         this.Apply(domainEvent);
     }
 

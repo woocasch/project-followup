@@ -22,6 +22,7 @@ export enum ProjectTaskStatus {
 export interface TaskData {
   id: string;
   title: string;
+  dueDate?: Date;
   status: ProjectTaskStatus;
 }
 

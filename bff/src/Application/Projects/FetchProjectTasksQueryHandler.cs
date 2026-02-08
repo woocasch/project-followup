@@ -17,6 +17,6 @@ public sealed class FetchProjectTasksQueryHandler(
         }
 
         return new FetchProjectTasksResult(
-            project.Value.Tasks.Select(t => new FetchProjectTasksResult.TaskData(t.Id, t.Title, t.Status)));
+            project.Value.Tasks.Select(t => new FetchProjectTasksResult.TaskData(t.Id, t.Title, t.DueDate, t.Status)));
     }
 }

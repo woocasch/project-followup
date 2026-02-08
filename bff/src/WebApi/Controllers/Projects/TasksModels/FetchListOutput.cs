@@ -8,5 +8,6 @@ public readonly record struct FetchListOutput(
     public readonly record struct TaskListItem(
         Guid Id,
         string Title,
+        DateOnly? DueDate,
         ProjectTaskStatus Status);
 }

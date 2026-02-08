@@ -26,7 +26,7 @@ export const Password = React.forwardRef<
       <label htmlFor={inputId}>{label}</label>
       <div>
         <Input id={inputId} type="password" ref={ref} {...props} />
-        {error && <ErrorDisplay>{error}</ErrorDisplay>}
+        {error && <ErrorDisplay className="error">{error}</ErrorDisplay>}
       </div>
     </>
   );

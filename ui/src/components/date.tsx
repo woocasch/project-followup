@@ -3,7 +3,7 @@ import { theme } from '@root/theme';
 import React, { useId } from 'react';
 import { FieldLabel } from './headers';
 
-export interface TextProps {
+export interface DateInputProps {
   hiddenValue?: boolean;
   placeholder?: string;
   label: string;
@@ -25,9 +25,9 @@ const ErrorDisplay = styled.div(`
     font-size: 0.9em;
 `);
 
-export const Text = React.forwardRef<
+export const DateInput = React.forwardRef<
   HTMLInputElement,
-  TextProps & React.InputHTMLAttributes<HTMLInputElement>
+  DateInputProps & React.InputHTMLAttributes<HTMLInputElement>
 >(({ hiddenValue, placeholder, label, error, ...props }, ref) => {
   const id = useId();
   return (
@@ -35,7 +35,7 @@ export const Text = React.forwardRef<
       {label && <FieldLabel id={id} text={label} />}
       <InputStyled
         id={id}
-        type="text"
+        type="date"
         ref={ref}
         placeholder={placeholder}
         {...props}

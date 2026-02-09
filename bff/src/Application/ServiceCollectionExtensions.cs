@@ -6,6 +6,7 @@ using ProjectFollowUp.BFF.Application.ActivationLinks;
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Application.Projects;
+using ProjectFollowUp.BFF.Application.Tasks;
 using ProjectFollowUp.BFF.Application.Users;
 using ProjectFollowUp.BFF.Domain;
 
@@ -20,6 +21,7 @@ public static class ServiceCollectionExtensions
             .AddUsers()
             .AddActivationLinks()
             .AddEventSourcing()
+            .AddTasks()
             .AddSingleton<IAggregateFactory, AggregateFactory>();
         return services;
     }

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.Projects;
+using ProjectFollowUp.BFF.Application.Tasks;
 using ProjectFollowUp.BFF.Domain.Project;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects.TasksModels;
 
@@ -37,9 +38,21 @@ public class TasksController(
     [HttpPost]
     public async Task<IResult> CreateTask(CreateTaskInput input, Guid projectId, CancellationToken cancellationToken)
     {
-        await Task.Yield();
         var taskId = Guid.NewGuid();
-        var result = new CreateTaskOutput(taskId);
-        return Results.Created($"/api/projects/{projectId}/tasks/{taskId}", result);
+        var dueDate = input.DueDate.HasValue ? DateOnly.FromDateTime(input.DueDate.Value.DateTime) : (DateOnly?)null;
+        var command = new CreateTaskCommand(
+            ProjectId.FromGuid(projectId),
+            taskId,
+            input.Title,
+            input.Description,
+            dueDate);
+        var result = await mediator.Send(command, cancellationToken);
+        if (result.IsSuccess)
+        {
+            return Results.InternalServerError(result.Exception);
+        }
+
+        var output = new CreateTaskOutput(taskId);
+        return Results.Created($"/api/projects/{projectId}/tasks/{taskId}", output);
     }
 }

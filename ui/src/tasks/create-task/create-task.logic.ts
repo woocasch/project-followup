@@ -6,7 +6,10 @@ const createTaskSchema = z.object({
   description: z
     .string()
     .min(20, 'Description must be at least 20 characters long'),
-  dueDate: z.coerce.date().min(endOfDay(new Date())).optional(),
+  dueDate: z.preprocess(
+    (val) => (val === '' || val == null ? undefined : val),
+    z.optional(z.coerce.date().min(endOfDay(new Date()))),
+  ),
 });
 
 export class CreateTaskLogic {

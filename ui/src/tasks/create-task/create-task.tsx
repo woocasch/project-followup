@@ -37,6 +37,7 @@ export default function CreateTask(props: CreateTaskProps) {
   const form = useForm({
     resolver: zodResolver(createTaskLogic.getFormSchema()),
   });
+
   useLayoutEffect(() => {
     if (!dialogRef.current) {
       return;
@@ -48,7 +49,7 @@ export default function CreateTask(props: CreateTaskProps) {
       form.reset({
         title: '',
         description: '',
-        dueDate: '',
+        dueDate: undefined,
       });
       dialogRef.current.showModal();
     }
@@ -65,6 +66,7 @@ export default function CreateTask(props: CreateTaskProps) {
       projectId: projectId,
       taskDetails: data,
     };
+
     const response = await createTaskService.createTask(request);
     if (!response?.taskId) {
       console.error('Failed to create task');

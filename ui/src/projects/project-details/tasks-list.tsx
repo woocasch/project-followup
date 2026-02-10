@@ -4,7 +4,7 @@ import { Button, LoadingSpinner, NamedPanel } from '@root/components';
 import { theme } from '@root/theme';
 import CreateTask from '@tasks/create-task/create-task';
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type * as model from './project-details.model';
 import projectDetailsService from './project-details.service';
 
@@ -136,12 +136,12 @@ export default function TasksList({ projectId }: TasksListProps) {
   const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
 
   function onTaskCreated() {
-    console.log('Refresh tasks list');
+    loadTasks();
   }
 
-  useEffect(() => {
-    setLoadingTasks(true);
+  const loadTasks = useCallback(() => {
     setTasks([]);
+    setLoadingTasks(true);
     const request: model.FetchProjectTasksRequest = {
       projectId: projectId,
     };
@@ -150,6 +150,10 @@ export default function TasksList({ projectId }: TasksListProps) {
       setLoadingTasks(false);
     });
   }, [projectId]);
+
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
 
   return (
     <NamedPanel title="Tasks">

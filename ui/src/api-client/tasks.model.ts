@@ -5,14 +5,14 @@ export interface NewTaskData {
 }
 
 export interface CreateTaskParameters {
-    projectId: string;
-    taskDetails: NewTaskData;
+  projectId: string;
+  taskDetails: NewTaskData;
 }
 
 export interface CreateTaskResult {
-    taskId: string;
+  taskId: string;
 }
 
 export interface TasksApi {
-    createTask(parameters: CreateTaskParameters): Promise<CreateTaskResult>;
+  createTask(parameters: CreateTaskParameters): Promise<CreateTaskResult>;
 }

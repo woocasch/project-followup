@@ -47,7 +47,7 @@ public class TasksController(
             input.Description,
             dueDate);
         var result = await mediator.Send(command, cancellationToken);
-        if (result.IsSuccess)
+        if (!result.IsSuccess)
         {
             return Results.InternalServerError(result.Exception);
         }

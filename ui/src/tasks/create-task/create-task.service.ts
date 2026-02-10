@@ -1,6 +1,6 @@
-import type * as model from './create-task.model';
 import tasksApi from '@apiClient/tasks.client';
-import * as taskApiModel from '@apiClient/tasks.model';
+import type * as taskApiModel from '@apiClient/tasks.model';
+import type * as model from './create-task.model';
 
 export class CreateTaskWebService implements model.CreateTaskService {
   async createTask(
@@ -16,10 +16,15 @@ export class CreateTaskWebService implements model.CreateTaskService {
           : undefined,
       },
     };
-    const result = await tasksApi.createTask(parameters);
-    return {
-      taskId: result.taskId,
-    };
+    try {
+      const result = await tasksApi.createTask(parameters);
+      return {
+        taskId: result.taskId,
+      };
+    } catch (error) {
+      console.error('Error creating task:', error);
+      return {};
+    }
   }
 }
 

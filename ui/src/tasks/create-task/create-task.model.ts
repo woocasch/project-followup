@@ -26,7 +26,7 @@ export interface CreateTaskRequest {
 }
 
 export interface CreateTaskResponse {
-  taskId: string;
+  taskId?: string;
 }
 
 export interface CreateTaskService {

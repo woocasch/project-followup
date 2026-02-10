@@ -13,6 +13,7 @@ import { useForm } from 'react-hook-form';
 import createTaskLogic from './create-task.logic';
 import type * as model from './create-task.model';
 import createTaskService from './create-task.service';
+import { DialogBox } from '@root/components/dialog-box';
 
 export interface CreateTaskProps {
   projectId: string;
@@ -23,11 +24,20 @@ export interface CreateTaskProps {
 
 const FormContainer = styled.div(`
     display: grid;
-    grid-template-columns: 1fr 2fr;
+    width: 30em;
+    grid-template-columns: auto 2fr;
     gap: ${theme.spaces.medium};
     &>.buttons, &>div>.error {
         grid-column: span 2;
         text-align: center;
+    }
+
+    & label {
+      text-align: right;
+    }
+    
+    & textarea {
+      min-height: 5em;
     }
 `);
 
@@ -79,7 +89,7 @@ export default function CreateTask(props: CreateTaskProps) {
   }
 
   return (
-    <dialog ref={dialogRef} onClose={onDialogClosed}>
+    <DialogBox ref={dialogRef} onClose={onDialogClosed}>
       <PageHeader>Create task</PageHeader>
       <FormContainer>
         <Text
@@ -108,6 +118,6 @@ export default function CreateTask(props: CreateTaskProps) {
           </Button>
         </div>
       </FormContainer>
-    </dialog>
+    </DialogBox>
   );
 }

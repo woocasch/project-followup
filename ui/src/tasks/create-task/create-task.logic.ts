@@ -1,4 +1,4 @@
-import { endOfDay } from 'date-fns';
+import { startOfDay } from 'date-fns';
 import { z } from 'zod';
 
 const createTaskSchema = z.object({
@@ -8,7 +8,7 @@ const createTaskSchema = z.object({
     .min(20, 'Description must be at least 20 characters long'),
   dueDate: z.preprocess(
     (val) => (val === '' || val == null ? undefined : val),
-    z.optional(z.coerce.date().min(endOfDay(new Date()))),
+    z.optional(z.coerce.date().min(startOfDay(new Date()))),
   ),
 });
 

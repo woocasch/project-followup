@@ -25,6 +25,7 @@
       "@assets/*": ["./src/assets/*"],
       "@components/*": ["./src/components/*"],
       "@projects/*": ["./src/projects/*"],
+      "@tasks/*": ["./src/tasks/*"],
       "@user-accounts/*": ["./src/user-accounts/*"],
       "@infrastructure/*": ["./src/infrastructure/*"],
       "@home/*": ["./src/home/*"],

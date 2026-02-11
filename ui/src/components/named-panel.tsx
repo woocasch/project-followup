@@ -13,7 +13,7 @@ interface NamedPanelProps {
 
 const NamedPanelStyled = styled.div(`
     isolation: isolate;
-    h2 {
+    &>h2 {
         margin-bottom: 0;
         border: solid black 1px;
         border-bottom: none;

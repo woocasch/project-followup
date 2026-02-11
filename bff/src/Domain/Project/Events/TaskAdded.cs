@@ -6,4 +6,5 @@ public readonly record struct TaskAdded(
     string Title,
     string Description,
     DateOnly? DueDate,
+    ProjectTaskStatus Status,
     DateTimeOffset CreatedAt) : IAggregateEvent, IProjectTaskEvent;

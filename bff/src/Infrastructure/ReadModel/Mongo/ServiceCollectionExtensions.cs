@@ -7,6 +7,7 @@ using MongoDB.Driver;
 
 using ProjectFollowUp.BFF.Application.ActivationLinks.ProjectionWorkers;
 using ProjectFollowUp.BFF.Application.Projects.ProjectionWorkers;
+using ProjectFollowUp.BFF.Application.Tasks.ProjectionWorkers;
 using ProjectFollowUp.BFF.Application.Users.ProjectionWorkers;
 
 public static class ServiceCollectionExtensions
@@ -34,7 +35,8 @@ public static class ServiceCollectionExtensions
         services
             .AddTransient<IUserProjectionWriter, UserProjectionWriter>()
             .AddTransient<IActivationLinkProjectionWriter, ActivationLinkProjectionWriter>()
-            .AddTransient<IProjectProjectionWriter, ProjectProjectionWriter>();
+            .AddTransient<IProjectProjectionWriter, ProjectProjectionWriter>()
+            .AddTransient<ITaskProjectionWriter, TaskProjectionWriter>();
         return services;
     }
 

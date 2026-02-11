@@ -1,7 +1,9 @@
 export { Button } from './buttons';
 export { Card, Size as CardSize } from './card';
+export { DateInput, type DateInputProps } from './date';
 export { FieldLabel, PageHeader, SectionHeader } from './headers';
 export { default as LoadingSpinner } from './loading-spinner';
+export { MultilineText, type MultilineTextProps } from './multiline-text';
 export { NamedPanel } from './named-panel';
 export { Password, type PasswordProps } from './password';
 export { SmallText } from './small-text';

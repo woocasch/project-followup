@@ -2,8 +2,9 @@ import * as apiModel from '@apiClient/projects.model';
 import styled from '@emotion/styled';
 import { Button, LoadingSpinner, NamedPanel } from '@root/components';
 import { theme } from '@root/theme';
+import CreateTask from '@tasks/create-task/create-task';
 import { format } from 'date-fns';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import type * as model from './project-details.model';
 import projectDetailsService from './project-details.service';
 
@@ -114,14 +115,14 @@ function displayTasks(tasks: model.TaskData[]) {
   );
 }
 
-function displayTasksButtons() {
+function displayTasksButtons(setIsCreateTaskOpen: (isOpen: boolean) => void) {
   return (
     <ButtonsContainer>
       <Button
         buttonType="rounded"
         variant="action"
         title="Add task"
-        onClick={() => alert('Adding new task')}
+        onClick={() => setIsCreateTaskOpen(true)}
       >
         Add Task
       </Button>
@@ -132,10 +133,15 @@ function displayTasksButtons() {
 export default function TasksList({ projectId }: TasksListProps) {
   const [loadingTasks, setLoadingTasks] = useState(false);
   const [tasks, setTasks] = useState<model.TaskData[]>([]);
+  const [isCreateTaskOpen, setIsCreateTaskOpen] = useState(false);
 
-  useEffect(() => {
-    setLoadingTasks(true);
+  function onTaskCreated() {
+    loadTasks();
+  }
+
+  const loadTasks = useCallback(() => {
     setTasks([]);
+    setLoadingTasks(true);
     const request: model.FetchProjectTasksRequest = {
       projectId: projectId,
     };
@@ -145,10 +151,20 @@ export default function TasksList({ projectId }: TasksListProps) {
     });
   }, [projectId]);
 
+  useEffect(() => {
+    loadTasks();
+  }, [loadTasks]);
+
   return (
     <NamedPanel title="Tasks">
-      {displayTasksButtons()}
+      {displayTasksButtons(setIsCreateTaskOpen)}
       {loadingTasks ? <LoadingSpinner /> : displayTasks(tasks)}
+      <CreateTask
+        projectId={projectId}
+        isOpen={isCreateTaskOpen}
+        setIsOpen={setIsCreateTaskOpen}
+        onTaskCreated={onTaskCreated}
+      />
     </NamedPanel>
   );
 }

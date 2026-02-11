@@ -59,7 +59,7 @@ public class TasksController(
             logger.LogWarning("Failed to create task for project {ProjectId}: {ErrorCode}", projectId, result.ErrorCode);
             return result.ErrorCode switch
             {
-                "ProjectNotFound" => Results.NotFound(),
+                "ProjectNotFound" => Results.Problem("Project not found.", statusCode: 404),
                 _ => Results.Problem("Could not create task.")
             };
         }

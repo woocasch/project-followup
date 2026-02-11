@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Button, PageHeader, Text } from '@root/components';
+import { Button, MultilineText, PageHeader, Text } from '@root/components';
 import { theme } from '@root/theme';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
@@ -77,15 +77,14 @@ export default function EditProject() {
       <PageHeader>Edit project</PageHeader>
       <EditProjectForm>
         <Text
-          value={title}
-          setValue={(v) => setTitle(v)}
           label="Project Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
-        <Text
-          multiline={true}
-          value={description}
-          setValue={(v) => setDescription(v)}
+        <MultilineText
           label="Project Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
         <ButtonsContainer>
           <Button variant="action" buttonType="rounded" onClick={onEditClick}>

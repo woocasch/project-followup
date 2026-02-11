@@ -46,11 +46,15 @@ export default function CreateUser() {
     <div>
       <PageHeader>New user</PageHeader>
       <CreateUserForm>
-        <Text value={email} setValue={(v) => setEmail(v)} label="Email" />
         <Text
-          value={displayName}
-          setValue={(v) => setDisplayName(v)}
+          label="Email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <Text
           label="Display Name"
+          value={displayName}
+          onChange={(e) => setDisplayName(e.target.value)}
         />
         <ButtonsContainer>
           <Button variant="action" buttonType="rounded" onClick={onCreateClick}>

@@ -53,8 +53,15 @@ public class TasksController(
             if (result.IsFatalError)
             {
                 logger.LogError(result.Exception, "Failed to create task for project {ProjectId}", projectId);
+                return Results.Problem("Could not create task.");
             }
-            return Results.Problem("Could not create task.");
+
+            logger.LogWarning("Failed to create task for project {ProjectId}: {ErrorCode}", projectId, result.ErrorCode);
+            return result.ErrorCode switch
+            {
+                "ProjectNotFound" => Results.NotFound(),
+                _ => Results.Problem("Could not create task.")
+            };
         }
 
         var output = new CreateTaskOutput(taskId);

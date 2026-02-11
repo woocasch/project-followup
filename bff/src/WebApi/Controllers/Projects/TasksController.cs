@@ -44,7 +44,7 @@ public class TasksController(
         {
             if (!DateOnly.TryParse(input.DueDate, out var parsedDate))
             {
-                return Results.BadRequest(new { error = "Invalid date format. Expected YYYY-MM-DD." });
+                return Results.BadRequest(new { error = "Invalid date format. Expected format: YYYY-MM-DD (e.g., 2025-01-31)." });
             }
             dueDate = parsedDate;
         }

@@ -13,7 +13,8 @@ const createTaskSchema = z.object({
         .regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format')
         .refine(
           (dateStr) => {
-            const date = new Date(dateStr);
+            const [year, month, day] = dateStr.split('-').map(Number);
+            const date = new Date(year, month - 1, day);
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             return date >= today;

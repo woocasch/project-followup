@@ -74,7 +74,9 @@ builder.Services.AddMailSender();
 builder.Services.Configure<KeycloakSettings>(builder.Configuration.GetSection("Keycloak"));
 var keycloakBaseAddress = builder.Configuration.GetValue("Keycloak:BaseAddress", string.Empty);
 var keycloakRealm = builder.Configuration.GetValue("Keycloak:Realm", string.Empty);
-var keycloakAuthority = $"{keycloakBaseAddress.TrimEnd('/')}/realms/{keycloakRealm}";
+var keycloakAuthority = $"{keycloakBaseAddress.TrimEnd('/')}/realms/{keycloakRealm}/";
+var validIssuer = builder.Configuration.GetValue("Keycloak:ValidIssuer", string.Empty);
+
 
 // Configure MongoDB
 builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("Mongo"));
@@ -91,6 +93,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
+            ValidIssuers = new[] { validIssuer },
             ValidateAudience = false, // Keycloak may not include audience in token
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
@@ -98,11 +101,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
         options.Events = new JwtBearerEvents
         {
-            OnAuthenticationFailed = context =>
+            OnAuthenticationFailed = async context =>
             {
                 var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<ProjectFollowUp.BFF.WebApi.WebApiProgram>>();
                 logger.LogError(context.Exception, "Authentication failed");
-                return Task.CompletedTask;
+                Console.WriteLine("TOKEN VALIDATION FAILED. Authority address was '{0}'", keycloakAuthority);
+                await Task.Yield();
             }
         };
     });

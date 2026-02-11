@@ -1,0 +1,83 @@
+services:
+  otel-collector.projectfollowup.local:
+    image: otel/opentelemetry-collector-contrib:latest
+    container_name: otel-collector.projectfollowup.local
+    hostname: otel-collector.projectfollowup.local
+    restart: unless-stopped
+    command: ["--config=/etc/otel-collector-config.yml"]
+    volumes:
+      - ./otel-collector/otel-collector-config.yml:/etc/otel-collector-config.yml
+      - /var/log:/var/log:ro
+      - otel-data:/tmp
+    networks:
+      - monitoring-network
+      - monitoring
+    profiles:
+      - services
+      - setup
+      - applications
+
+  keycloak.projectfollowup.local:
+    container_name: keycloak.projectfollowup.local
+    hostname: keycloak.projectfollowup.local
+    image: quay.io/keycloak/keycloak:26.5
+    command:
+      - start
+      - --hostname=https://localhost:5000/auth
+      - --hostname-strict=false
+      - --proxy-headers=xforwarded
+      # - --optimized
+    depends_on:
+      - keycloak.storage.projectfollowup.local
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT: false
+      KC_DB: mysql
+      KC_DB_URL_HOST: keycloak.storage.projectfollowup.local
+      KC_DB_URL_PROPERTIES : '?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true'
+      KC_DB_SCHEMA: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: 'keycloak-password'
+    restart: unless-stopped
+    networks:
+      - auth-network
+      - monitoring-network
+    profiles:
+      - services
+      - setup
+      - applications
+
+  rabbitmq.projectfollowup.local:
+    image: rabbitmq:4.2.3-management
+    container_name: rabbitmq.projectfollowup.local
+    hostname: rabbitmq.projectfollowup.local
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      RABBITMQ_DEFAULT_VHOST: /
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - eda-network
+      - monitoring-network
+    profiles:
+      - services
+      - setup
+      - applications
+
+  mailpit.projectfollowup.local:
+    image: axllent/mailpit
+    container_name: mailpit.projectfollowup.local
+    hostname: mailpit.projectfollowup.local
+    restart: unless-stopped
+    ports:
+      - "5006:8025"  # Web UI
+    networks:
+      - apps-network
+    profiles:
+      - services
+      - setup
+      - applications

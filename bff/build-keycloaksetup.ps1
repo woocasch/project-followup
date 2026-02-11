@@ -1,0 +1,1 @@
+docker build -f KeycloakSetup.Dockerfile . -t project-follow-up/keycloaksetup:local

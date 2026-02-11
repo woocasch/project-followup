@@ -39,7 +39,7 @@ public class TasksController(
     public async Task<IResult> CreateTask(CreateTaskInput input, Guid projectId, CancellationToken cancellationToken)
     {
         var taskId = Guid.NewGuid();
-        var dueDate = input.DueDate.HasValue ? DateOnly.FromDateTime(input.DueDate.Value.DateTime) : (DateOnly?)null;
+        var dueDate = !string.IsNullOrEmpty(input.DueDate) ? DateOnly.Parse(input.DueDate) : (DateOnly?)null;
         var command = new CreateTaskCommand(
             ProjectId.FromGuid(projectId),
             taskId,

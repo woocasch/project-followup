@@ -8,7 +8,18 @@ const createTaskSchema = z.object({
     .min(20, 'Description must be at least 20 characters long'),
   dueDate: z.preprocess(
     (val) => (val === '' || val == null ? undefined : val),
-    z.optional(z.coerce.date().min(endOfDay(new Date()))),
+    z.optional(
+      z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format')
+        .refine(
+          (dateStr) => {
+            const date = new Date(dateStr);
+            return date >= endOfDay(new Date());
+          },
+          { message: 'Due date must be in the future' },
+        ),
+    ),
   ),
 });
 

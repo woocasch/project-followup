@@ -11,7 +11,8 @@ using ProjectFollowUp.BFF.WebApi.Controllers.Projects.TasksModels;
 [Route("api/projects/{projectId:guid}/tasks")]
 [ApiController]
 public class TasksController(
-    IMediator mediator) : ControllerBase
+    IMediator mediator,
+    ILogger<TasksController> logger) : ControllerBase
 {
     public const string FetchRouteName = "FetchProjectTasks";
 
@@ -39,7 +40,16 @@ public class TasksController(
     public async Task<IResult> CreateTask(CreateTaskInput input, Guid projectId, CancellationToken cancellationToken)
     {
         var taskId = Guid.NewGuid();
-        var dueDate = input.DueDate.HasValue ? DateOnly.FromDateTime(input.DueDate.Value.DateTime) : (DateOnly?)null;
+        DateOnly? dueDate = null;
+        if (!string.IsNullOrEmpty(input.DueDate))
+        {
+            if (!DateOnly.TryParse(input.DueDate, out var parsedDate))
+            {
+                return Results.BadRequest(new { error = "Invalid date format. Expected format: YYYY-MM-DD (e.g., 2025-01-31)." });
+            }
+            dueDate = parsedDate;
+        }
+        
         var command = new CreateTaskCommand(
             ProjectId.FromGuid(projectId),
             taskId,
@@ -49,7 +59,18 @@ public class TasksController(
         var result = await mediator.Send(command, cancellationToken);
         if (!result.IsSuccess)
         {
-            return Results.InternalServerError(result.Exception);
+            if (result.IsFatalError)
+            {
+                logger.LogError(result.Exception, "Failed to create task for project {ProjectId}", projectId);
+                return Results.Problem("Could not create task.");
+            }
+
+            logger.LogWarning("Failed to create task for project {ProjectId}: {ErrorCode}", projectId, result.ErrorCode);
+            return result.ErrorCode switch
+            {
+                "ProjectNotFound" => Results.Problem("Project not found.", statusCode: 404),
+                _ => Results.Problem("Could not create task.")
+            };
         }
 
         var output = new CreateTaskOutput(taskId);

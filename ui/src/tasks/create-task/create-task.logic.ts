@@ -1,4 +1,3 @@
-import { startOfDay } from 'date-fns';
 import { z } from 'zod';
 
 const createTaskSchema = z.object({
@@ -8,7 +7,21 @@ const createTaskSchema = z.object({
     .min(20, 'Description must be at least 20 characters long'),
   dueDate: z.preprocess(
     (val) => (val === '' || val == null ? undefined : val),
-    z.optional(z.coerce.date().min(startOfDay(new Date()))),
+    z.optional(
+      z
+        .string()
+        .regex(/^\d{4}-\d{2}-\d{2}$/, 'Invalid date format')
+        .refine(
+          (dateStr) => {
+            const [year, month, day] = dateStr.split('-').map(Number);
+            const date = new Date(year, month - 1, day);
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return date >= today;
+          },
+          { message: 'Due date must be today or in the future' },
+        ),
+    ),
   ),
 });
 

@@ -11,7 +11,8 @@ using ProjectFollowUp.BFF.WebApi.Controllers.Projects.TasksModels;
 [Route("api/projects/{projectId:guid}/tasks")]
 [ApiController]
 public class TasksController(
-    IMediator mediator) : ControllerBase
+    IMediator mediator,
+    ILogger<TasksController> logger) : ControllerBase
 {
     public const string FetchRouteName = "FetchProjectTasks";
 
@@ -58,7 +59,18 @@ public class TasksController(
         var result = await mediator.Send(command, cancellationToken);
         if (!result.IsSuccess)
         {
-            return Results.InternalServerError(result.Exception);
+            if (result.IsFatalError)
+            {
+                logger.LogError(result.Exception, "Failed to create task for project {ProjectId}", projectId);
+                return Results.Problem("Could not create task.");
+            }
+
+            logger.LogWarning("Failed to create task for project {ProjectId}: {ErrorCode}", projectId, result.ErrorCode);
+            return result.ErrorCode switch
+            {
+                "ProjectNotFound" => Results.Problem("Project not found.", statusCode: 404),
+                _ => Results.Problem("Could not create task.")
+            };
         }
 
         var output = new CreateTaskOutput(taskId);

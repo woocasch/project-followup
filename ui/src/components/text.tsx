@@ -30,12 +30,13 @@ export const Text = React.forwardRef<
   TextProps & React.InputHTMLAttributes<HTMLInputElement>
 >(({ hiddenValue, placeholder, label, error, ...props }, ref) => {
   const id = useId();
+  const inputType = hiddenValue ? 'password' : 'text';
   return (
     <FieldWrapper>
       {label && <FieldLabel id={id} text={label} />}
       <InputStyled
         id={id}
-        type="text"
+        type={inputType}
         ref={ref}
         placeholder={placeholder}
         {...props}

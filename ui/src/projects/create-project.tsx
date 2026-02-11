@@ -1,4 +1,4 @@
-import { Button, PageHeader, Text } from '@components/index';
+import { Button, MultilineText, PageHeader, Text } from '@components/index';
 import styled from '@emotion/styled';
 import { theme } from '@root/theme';
 import { useState } from 'react';
@@ -55,15 +55,14 @@ export default function CreateProject() {
       <PageHeader>New project</PageHeader>
       <CreateProjectForm>
         <Text
-          value={title}
-          setValue={(v) => setTitle(v)}
           label="Project Title"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
         />
-        <Text
-          multiline={true}
-          value={description}
-          setValue={(v) => setDescription(v)}
+        <MultilineText
           label="Project Description"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
         />
         <ButtonsContainer>
           <Button variant="action" buttonType="rounded" onClick={onCreateClick}>

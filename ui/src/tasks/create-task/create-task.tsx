@@ -7,13 +7,13 @@ import {
   PageHeader,
   Text,
 } from '@root/components';
+import { DialogBox } from '@root/components/dialog-box';
 import { theme } from '@root/theme';
 import { useLayoutEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import createTaskLogic from './create-task.logic';
 import type * as model from './create-task.model';
 import createTaskService from './create-task.service';
-import { DialogBox } from '@root/components/dialog-box';
 
 export interface CreateTaskProps {
   projectId: string;

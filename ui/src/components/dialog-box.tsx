@@ -1,7 +1,7 @@
-import styled from "@emotion/styled";
-import { theme } from "@root/theme";
-import type { ReactNode } from "react";
-import React from "react";
+import styled from '@emotion/styled';
+import { theme } from '@root/theme';
+import type { ReactNode } from 'react';
+import React from 'react';
 
 const Dialog = styled.dialog(`
   border: none;
@@ -17,10 +17,11 @@ export interface DialogBoxProps {
 
 export const DialogBox = React.forwardRef<
   HTMLDialogElement,
-  DialogBoxProps & React.DialogHTMLAttributes<HTMLDialogElement>>(({ children, ...props }, ref) => {
-    return (
-      <Dialog ref={ref} {...props}>
-        {children}
-      </Dialog>
-    );
-  });
+  DialogBoxProps & React.DialogHTMLAttributes<HTMLDialogElement>
+>(({ children, ...props }, ref) => {
+  return (
+    <Dialog ref={ref} {...props}>
+      {children}
+    </Dialog>
+  );
+});

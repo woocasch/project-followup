@@ -1,4 +1,3 @@
-import { endOfDay } from 'date-fns';
 import { z } from 'zod';
 
 const createTaskSchema = z.object({
@@ -15,9 +14,11 @@ const createTaskSchema = z.object({
         .refine(
           (dateStr) => {
             const date = new Date(dateStr);
-            return date >= endOfDay(new Date());
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+            return date >= today;
           },
-          { message: 'Due date must be in the future' },
+          { message: 'Due date must be today or in the future' },
         ),
     ),
   ),

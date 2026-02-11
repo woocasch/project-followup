@@ -39,7 +39,16 @@ public class TasksController(
     public async Task<IResult> CreateTask(CreateTaskInput input, Guid projectId, CancellationToken cancellationToken)
     {
         var taskId = Guid.NewGuid();
-        var dueDate = !string.IsNullOrEmpty(input.DueDate) ? DateOnly.Parse(input.DueDate) : (DateOnly?)null;
+        DateOnly? dueDate = null;
+        if (!string.IsNullOrEmpty(input.DueDate))
+        {
+            if (!DateOnly.TryParse(input.DueDate, out var parsedDate))
+            {
+                return Results.BadRequest(new { error = "Invalid date format. Expected YYYY-MM-DD." });
+            }
+            dueDate = parsedDate;
+        }
+        
         var command = new CreateTaskCommand(
             ProjectId.FromGuid(projectId),
             taskId,

@@ -11,9 +11,7 @@ export class CreateTaskWebService implements model.CreateTaskService {
       taskDetails: {
         title: request.taskDetails.title,
         description: request.taskDetails.description,
-        dueDate: request.taskDetails.dueDate
-          ? new Date(request.taskDetails.dueDate)
-          : undefined,
+        dueDate: request.taskDetails.dueDate,
       },
     };
     try {

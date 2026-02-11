@@ -8,7 +8,7 @@ export interface AssignedUser {
 export interface NewTaskData {
   title: string;
   description: string;
-  dueDate?: Date;
+  dueDate?: string;
 }
 
 export interface TaskDetails {

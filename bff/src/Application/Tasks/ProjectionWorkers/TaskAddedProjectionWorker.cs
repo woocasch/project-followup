@@ -15,14 +15,16 @@ public sealed class TaskAddedProjectionWorker(
         var existing = await projectionWriter.Get(domainEvent.TaskId, cancellationToken);
         if (existing is not null)
         {
-            existing = existing.Value with
+            var updated = existing.Value with
             {
+                ProjectId = domainEvent.ProjectId,
                 Title = domainEvent.Title,
                 Description = domainEvent.Description,
                 DueDate = domainEvent.DueDate,
+                Status = domainEvent.Status,
                 CreatedAt = domainEvent.CreatedAt
             };
-            await projectionWriter.Update(existing.Value, cancellationToken);
+            await projectionWriter.Update(updated, cancellationToken);
             return;
         }
 

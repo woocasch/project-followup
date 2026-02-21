@@ -74,7 +74,9 @@ builder.Services.AddMailSender();
 builder.Services.Configure<KeycloakSettings>(builder.Configuration.GetSection("Keycloak"));
 var keycloakBaseAddress = builder.Configuration.GetValue("Keycloak:BaseAddress", string.Empty);
 var keycloakRealm = builder.Configuration.GetValue("Keycloak:Realm", string.Empty);
-var keycloakAuthority = $"{keycloakBaseAddress.TrimEnd('/')}/realms/{keycloakRealm}";
+var keycloakMetadataAddress = $"{keycloakBaseAddress.TrimEnd('/')}/realms/{keycloakRealm}/.well-known/openid-configuration";
+var validIssuer = builder.Configuration.GetValue("Keycloak:ValidIssuer", string.Empty);
+
 
 // Configure MongoDB
 builder.Services.Configure<MongoSettings>(builder.Configuration.GetSection("Mongo"));
@@ -85,24 +87,25 @@ BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.GuidRepresenta
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
-        options.Authority = keycloakAuthority;
-        options.Audience = builder.Configuration.GetValue("Keycloak:ClientId", string.Empty);
+        options.Authority = validIssuer;
         options.RequireHttpsMetadata = false; // Set to true in production
+        options.MetadataAddress = keycloakMetadataAddress;
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuer = true,
             ValidateAudience = false, // Keycloak may not include audience in token
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
+            ValidIssuer = validIssuer,
             ClockSkew = TimeSpan.FromMinutes(5)
         };
         options.Events = new JwtBearerEvents
         {
-            OnAuthenticationFailed = context =>
+            OnAuthenticationFailed = async context =>
             {
                 var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<ProjectFollowUp.BFF.WebApi.WebApiProgram>>();
                 logger.LogError(context.Exception, "Authentication failed");
-                return Task.CompletedTask;
+                await Task.Yield();
             }
         };
     });
@@ -168,8 +171,6 @@ if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
-
-app.UseHttpsRedirection();
 
 app.UseCors(options =>
     options

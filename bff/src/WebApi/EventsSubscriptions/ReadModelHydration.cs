@@ -37,10 +37,9 @@ public sealed class ReadModelHydration(
                 this.Settings.ReadModelHydration.SubscriptionName,
                 cancellationToken: cancellationToken);
         }
-        catch(PersistentSubscriptionNotFoundException ex)
+        catch(PersistentSubscriptionNotFoundException)
         {
             subscriptionExists = false;
-            Console.WriteLine(ex);
         }
         catch(Exception ex)
         {

@@ -1,0 +1,26 @@
+name: project-follow-up-local
+
+networks:
+  writemodel-network:
+    driver: bridge
+  readmodel-network:
+    driver: bridge
+  eda-network:
+    driver: bridge
+  auth-network:
+    driver: bridge
+  apps-network:
+    driver: bridge
+  monitoring-network:
+    driver: bridge
+  monitoring:
+    external: true
+
+volumes:
+  keycloak-data:
+  otel-data:
+  kurrent-data:
+  kurrent-logs:
+  rabbitmq_data:
+  mongo-configdb:
+  mongo-volume:

@@ -1,0 +1,1 @@
+docker build -f Api.Dockerfile . -t project-follow-up/bff:local

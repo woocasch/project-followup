@@ -1,0 +1,72 @@
+services:
+  keycloak.storage.projectfollowup.local:
+    container_name: keycloak.storage.projectfollowup.local
+    hostname: keycloak.storage.projectfollowup.local
+    image: mysql:8.0
+    restart: unless-stopped
+    profiles:
+      - storage
+      - services
+      - setup
+      - applications
+    networks:
+      - auth-network
+      - monitoring-network
+    environment:
+      - MYSQL_ROOT_PASSWORD=secret-password
+      - MYSQL_DATABASE=keycloak
+      - MYSQL_USER=keycloak
+      - MYSQL_PASSWORD=keycloak-password
+    volumes:
+      - type: volume
+        source: keycloak-data
+        target: /var/lib/mysql
+
+  kurrent.projectfollowup.local:
+    image: docker.kurrent.io/kurrent-latest/kurrentdb:latest
+    container_name: kurrent.projectfollowup.local
+    hostname: kurrent.projectfollowup.local
+    restart: unless-stopped
+    profiles:
+      - storage
+      - services
+      - setup
+      - applications
+    networks:
+      - writemodel-network
+      - monitoring-network
+    command:
+      - --insecure
+      - --run-projections=All
+    environment:
+      - KURRENT_CLUSTER_SIZE=1
+      - KURRENT_EXT_TCP_PORT=1113
+      - KURRENT_EXT_HTTP_PORT=2113
+      - KURRENT_ENABLE_ATOM_PUB_OVER_HTTP=true
+      - EVENTSTORE_EnableAtomPubOverHttp=true
+    ports:
+      - "5001:2113"  # HTTP API
+    volumes:
+      - kurrent-data:/var/lib/kurrentdb
+      - kurrent-logs:/var/log/kurrentdb
+
+  mongo.projectfollowup.local:
+    container_name: mongo.projectfollowup.local
+    hostname: mongo.projectfollowup.local
+    image: mongo:8.2.4
+    restart: unless-stopped
+    profiles:
+      - storage
+      - services
+      - setup
+      - applications
+    networks:
+      - readmodel-network
+      - monitoring-network
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password
+    volumes:
+      - mongo-configdb:/data/configdb
+      - mongo-volume:/data/db
+

@@ -1,7 +1,7 @@
 {
-    "bffRoot": "/",
+    "bffRoot": "https://localhost:5000",
     "keycloak": {
-        "url": "/auth",
+        "url": "https://localhost:5000/auth",
         "realm": "project-follow-up",
         "clientId": "frontend"
     }

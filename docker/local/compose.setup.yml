@@ -1,0 +1,22 @@
+services:
+  keycloaksetup.projectfollowup.local:
+    image: project-follow-up/keycloaksetup:local
+    container_name: keycloaksetup.projectfollowup.local
+    hostname: keycloaksetup.projectfollowup.local
+    restart: no
+    environment:
+      - SetupSettings__keycloakBaseUrl=http://keycloak.projectfollowup.local:8080
+      - SetupSettings__masterAdminUserName=admin
+      - SetupSettings__masterAdminPassword=admin
+      - SetupSettings__projectFollowUpRealm__uiClient__redirectUrls__0=https://localhost:5000/*
+      - SetupSettings__projectFollowUpRealm__uiClient__webOrigins__0=https://localhost:5000
+      - SetupSettings__projectFollowUpRealm__adminUser__username=projectfollowup
+      - SetupSettings__projectFollowUpRealm__adminUser__password=projectfollowup
+      - SetupSettings__projectFollowUpRealm__adminUser__email=projectfollowup@localhost
+    depends_on:
+      - keycloak.projectfollowup.local
+    networks:
+      - auth-network
+      - monitoring-network
+    profiles:
+      - setup

@@ -1,0 +1,71 @@
+services:
+  bff.projectfollowup.local:
+    image: project-follow-up/bff:local
+    container_name: bff.projectfollowup.local
+    hostname: bff.projectfollowup.local
+    restart: unless-stopped
+    depends_on:
+      - kurrent.projectfollowup.local
+      - mongo.projectfollowup.local
+      - keycloak.projectfollowup.local
+      - rabbitmq.projectfollowup.local
+      - mailpit.projectfollowup.local
+    environment:
+      - Keycloak__baseAddress=http://keycloak.projectfollowup.local:8080
+      - Keycloak__clientSecret=3kyXOUuBUAjn8oUV8AKjCj23lRmemg1I
+      - Keycloak__validIssuer=https://localhost:5000/auth/realms/project-follow-up
+      - OpenTelemetry__OtlpEndpoint=http://otel-collector.projectfollowup.local:4317
+      - OpenTelemetry__Environment=LocalDocker
+      - Kurrent__ConnectionString=esdb://kurrent.projectfollowup.local:2113?tls=false
+      - EventBus__connectionString=amqp://api-bff:api-bff@rabbitmq.projectfollowup.local:5672/projectfollowup
+      - MailSettings__host=mailpit.projectfollowup.local
+      - MailSettings__port=1025
+      - MailSettings__username=mailuser
+      - MailSettings__password=mailpassword
+      - Mongo__ConnectionString=mongodb://root:password@mongo.projectfollowup.local:27017
+    networks:
+      - readmodel-network
+      - writemodel-network
+      - eda-network
+      - auth-network
+      - apps-network
+      - monitoring-network
+    profiles:
+      - applications
+
+  ui.projectfollowup.local:
+    image: project-follow-up/ui:local
+    container_name: ui.projectfollowup.local
+    hostname: ui.projectfollowup.local
+    restart: unless-stopped
+    volumes:
+      - ./ui/configuration.json:/usr/share/nginx/html/configuration.json
+    depends_on:
+      - bff.projectfollowup.local
+    networks:
+      - apps-network
+      - monitoring-network
+    profiles:
+      - applications
+
+  nginx.projectfollowup.local:
+    image: nginx:latest
+    container_name: nginx.projectfollowup.local
+    hostname: nginx.projectfollowup.local
+    restart: unless-stopped
+    ports:
+      - "5000:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/projectfollowup.local.pem:/etc/nginx/certs/projectfollowup.local.pem
+      - ./nginx/projectfollowup.local-key.pem:/etc/nginx/certs/projectfollowup.local-key.pem
+    depends_on:
+      - ui.projectfollowup.local
+      - bff.projectfollowup.local
+      - keycloak.projectfollowup.local
+    networks:
+      - apps-network
+      - monitoring-network
+      - auth-network
+    profiles:
+      - applications

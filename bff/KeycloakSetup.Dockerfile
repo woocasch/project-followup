@@ -4,12 +4,15 @@ WORKDIR /src
 
 # Copy solution and central package file first to leverage Docker cache for restore
 COPY ["ProjectFollowUp.slnx", "./"]
+COPY ["build-api.ps1", "./"]
+COPY ["build-keycloaksetup.ps1", "./"]
 COPY ["Directory.Packages.props", "./"]
 
 # Copy project files to allow restore to be cached when project files don't change
 COPY ["src/Application/Application.csproj", "src/Application/"]
 COPY ["src/Domain/Domain.csproj", "src/Domain/"]
 COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
+COPY ["src/KeycloakSetup/KeycloakSetup.csproj", "src/KeycloakSetup/"]
 COPY ["src/WebApi/WebApi.csproj", "src/WebApi/"]
 COPY ["tests/Domain.UnitTests/Domain.UnitTests.csproj", "tests/Domain.UnitTests/"]
 COPY ["tests/WebApi.IntegrationTests/WebApi.IntegrationTests.csproj", "tests/WebApi.IntegrationTests/"]
@@ -22,7 +25,7 @@ COPY . .
 # Publish the WebApi project
 FROM build AS publish
 WORKDIR /src
-RUN dotnet publish "./src/WebApi/WebApi.csproj" -c $BUILD_CONFIGURATION -o /app/publish --no-restore
+RUN dotnet publish "./src/KeycloakSetup/KeycloakSetup.csproj" -c $BUILD_CONFIGURATION -o /app/publish --no-restore
 
 # Final image: use a slimmer runtime base image
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
@@ -33,4 +36,4 @@ EXPOSE 8080
 
 # Copy the published output and set entrypoint
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "ProjectFollowUp.BFF.WebApi.dll"]
+ENTRYPOINT ["dotnet", "KeycloakSetup.dll"]

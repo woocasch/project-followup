@@ -3,6 +3,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
+
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Domain.ActivationLink;
@@ -11,21 +13,34 @@ using ProjectFollowUp.BFF.Domain.User;
 public sealed class GetActivationLinkDataQueryHandler(
     IEventStreamsRepository eventsRepository,
     IReadModel readModel,
-    IAggregateFactory aggregateFactory) : QueryHandlerBase<GetActivationLinkDataQuery, GetActivationLinkDataResult>
+    IAggregateFactory aggregateFactory,
+    ILogger<GetActivationLinkDataQueryHandler> logger) : QueryHandlerBase<GetActivationLinkDataQuery, GetActivationLinkDataResult>
 {
     protected override async Task<GetActivationLinkDataResult?> HandleQuery(
         GetActivationLinkDataQuery query,
         CancellationToken cancellationToken)
     {
+#pragma warning disable CA1873 // Avoid potentially expensive logging
+        logger.Started(
+            query.GetLinkIdentifier());
+#pragma warning restore CA1873 // Avoid potentially expensive logging
         var activationLink = await this.GetActivationLink(query, cancellationToken);
         if (activationLink is null)
         {
+            logger.ActivationLinkNotFound(
+                query.GetLinkIdentifier());
             return null;
         }
 
+#pragma warning disable CA1873 // Avoid potentially expensive logging
+        logger.ActivationLinkRetrieved(
+            query.GetLinkIdentifier());
+#pragma warning restore CA1873 // Avoid potentially expensive logging
         var user = await this.GetUser(activationLink.UserId, cancellationToken);
         if (user is null)
         {
+            logger.UserNotFound(
+                activationLink.Id.Value);
             return null;
         }
 
@@ -34,6 +49,8 @@ public sealed class GetActivationLinkDataQueryHandler(
             user.Email.Value,
             user.DisplayName,
             activationLink.IsUsed);
+        logger.Completed(
+            activationLink.Id.Value);
         return result;
     }
 

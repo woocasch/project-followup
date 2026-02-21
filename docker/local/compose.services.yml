@@ -26,6 +26,11 @@ services:
       - --hostname=https://localhost:5000/auth
       - --hostname-strict=false
       - --proxy-headers=xforwarded
+      - --telemetry-endpoint=http://otel-collector.projectfollowup.local:4317
+      - --telemetry-service-name=project-follow-up-keycloak
+      - --features=opentelemetry-logs
+      - --telemetry-logs-enabled=true
+      - --telemetry-logs-level=all
       # - --optimized
     depends_on:
       - keycloak.storage.projectfollowup.local

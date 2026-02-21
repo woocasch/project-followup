@@ -15,14 +15,17 @@ using RabbitMQ.Client;
 
 public sealed class CreateActivationLinkConsumer(
     IChannel channel,
-    IMediator mediator) : ConsumerBase<UserRegistered>(channel), IConsumer<CreateActivationLinkConsumer>
+    IMediator mediator,
+    ILogger<CreateActivationLinkConsumer> logger) : ConsumerBase<UserRegistered>(channel, logger), IConsumer<CreateActivationLinkConsumer>
 {
     public static CreateActivationLinkConsumer Create(IServiceProvider serviceProvider, IChannel channel)
     {
         var mediator = serviceProvider.GetRequiredService<IMediator>();
+        var logger = serviceProvider.GetRequiredService<ILogger<CreateActivationLinkConsumer>>();
         return new CreateActivationLinkConsumer(
             channel,
-            mediator);
+            mediator,
+            logger);
     }
 
     public async override Task Handle(UserRegistered context, CancellationToken cancellationToken)

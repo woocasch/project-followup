@@ -3,6 +3,7 @@
 using System.Threading.Tasks;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 using MimeKit;
 
@@ -16,16 +17,19 @@ using RabbitMQ.Client;
 public sealed class SendActivationMailConsumer(
     IMailSender mailSender,
     IChannel channel,
-    IMediator mediator) : ConsumerBase<ActivationLinkGenerated>(channel), IConsumer<SendActivationMailConsumer>
+    IMediator mediator,
+    ILogger<SendActivationMailConsumer> logger) : ConsumerBase<ActivationLinkGenerated>(channel, logger), IConsumer<SendActivationMailConsumer>
 {
     public static SendActivationMailConsumer Create(IServiceProvider serviceProvider, IChannel channel)
     {
         var mediator = serviceProvider.GetRequiredService<IMediator>();
         var mailSender = serviceProvider.GetRequiredService<IMailSender>();
+        var logger = serviceProvider.GetRequiredService<ILogger<SendActivationMailConsumer>>();
         return new SendActivationMailConsumer(
             mailSender,
             channel,
-            mediator);
+            mediator,
+            logger);
     }
 
     public async override Task Handle(ActivationLinkGenerated context, CancellationToken cancellationToken)

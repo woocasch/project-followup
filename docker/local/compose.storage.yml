@@ -45,8 +45,7 @@ services:
       - KURRENT_ENABLE_ATOM_PUB_OVER_HTTP=true
       - EVENTSTORE_EnableAtomPubOverHttp=true
     ports:
-      - "5002:2113"  # HTTP API
-      - "5003:1113"  # TCP interface
+      - "5001:2113"  # HTTP API
     volumes:
       - kurrent-data:/var/lib/kurrentdb
       - kurrent-logs:/var/log/kurrentdb

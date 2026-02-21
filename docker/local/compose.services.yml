@@ -64,6 +64,8 @@ services:
       RABBITMQ_DEFAULT_USER: admin
       RABBITMQ_DEFAULT_PASS: admin
       RABBITMQ_DEFAULT_VHOST: /
+    ports:
+      - "5002:15672"
     volumes:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
@@ -79,8 +81,15 @@ services:
     container_name: mailpit.projectfollowup.local
     hostname: mailpit.projectfollowup.local
     restart: unless-stopped
+    environment:
+      - MP_SMTP_AUTH_FILE=/passwords.txt
+      - MP_SMTP_REQUIRE_STARTTLS=true
+      - MP_SMTP_TLS_CERT=sans:localhost
+      - MP_SMTP_TLS_KEY=sans:localhost
+    volumes:
+      - ./mailpit/passwords.txt:/passwords.txt
     ports:
-      - "5006:8025"  # Web UI
+      - "5003:8025"  # Web UI
     networks:
       - apps-network
     profiles:

@@ -7,7 +7,8 @@ using ProjectFollowUp.BFF.Dictionaries.Logging;
 public static partial class GetActivationLinkDataQueryLogs
 {
     [LoggerMessage(
-        EventId = ActivationLinks.GetActivationLinkDataQuery_Started,
+        EventId = ActivationLinks.Application.GetActivationLinkDataQuery_Started,
+        EventName = nameof(ActivationLinks.Application.GetActivationLinkDataQuery_Started),
         Level = LogLevel.Trace,
         Message = "Started processing GetActivationLinkDataQuery for link: '{LinkIdentifier}'.")]
     public static partial void Started(
@@ -15,7 +16,8 @@ public static partial class GetActivationLinkDataQueryLogs
         object linkIdentifier);
 
     [LoggerMessage(
-        EventId = ActivationLinks.GetActivationLinkDataQuery_ActivationLinkNotFound,
+        EventId = ActivationLinks.Application.GetActivationLinkDataQuery_ActivationLinkNotFound,
+        EventName = nameof(ActivationLinks.Application.GetActivationLinkDataQuery_ActivationLinkNotFound),
         Level = LogLevel.Warning,
         Message = "Activation link not found for link: '{LinkIdentifier}'.")]
     public static partial void ActivationLinkNotFound(
@@ -23,7 +25,8 @@ public static partial class GetActivationLinkDataQueryLogs
         object linkIdentifier);
 
     [LoggerMessage(
-        EventId = ActivationLinks.GetActivationLinkDataQuery_ActivationLinkRetrieved,
+        EventId = ActivationLinks.Application.GetActivationLinkDataQuery_ActivationLinkRetrieved,
+        EventName = nameof(ActivationLinks.Application.GetActivationLinkDataQuery_ActivationLinkRetrieved),
         Level = LogLevel.Debug,
         Message = "Activation link retrieved for link: '{LinkIdentifier}'.")] 
     public static partial void ActivationLinkRetrieved(
@@ -31,7 +34,8 @@ public static partial class GetActivationLinkDataQueryLogs
         object linkIdentifier);
 
     [LoggerMessage(
-        EventId = ActivationLinks.GetActivationLinkDataQuery_UserNotFound,
+        EventId = ActivationLinks.Application.GetActivationLinkDataQuery_UserNotFound,
+        EventName = nameof(ActivationLinks.Application.GetActivationLinkDataQuery_UserNotFound),
         Level = LogLevel.Warning,
         Message = "User not found for activation link id: '{LinkId}'.")]
     public static partial void UserNotFound(
@@ -39,7 +43,8 @@ public static partial class GetActivationLinkDataQueryLogs
         Guid linkId);
 
     [LoggerMessage(
-        EventId = ActivationLinks.GetActivationLinkDataQuery_Completed,
+        EventId = ActivationLinks.Application.GetActivationLinkDataQuery_Completed,
+        EventName = nameof(ActivationLinks.Application.GetActivationLinkDataQuery_Completed),
         Level = LogLevel.Trace,
         Message = "Completed processing GetActivationLinkDataQuery for id: '{LinkId}'.")]
     public static partial void Completed(

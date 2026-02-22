@@ -7,8 +7,8 @@ using ProjectFollowUp.BFF.Dictionaries.Logging;
 public static partial class CreateActivationLinkCommandLogs
 {
     [LoggerMessage(
-        EventId = ActivationLinks.CreateActivationLinkCommand_Started,
-        EventName = nameof(ActivationLinks.CreateActivationLinkCommand_Started),
+        EventId = ActivationLinks.Application.CreateActivationLinkCommand_Started,
+        EventName = nameof(ActivationLinks.Application.CreateActivationLinkCommand_Started),
         Level = LogLevel.Trace,
         Message = "Start creating activation link for user with id {UserId}.")]
     public static partial void Started(
@@ -16,7 +16,7 @@ public static partial class CreateActivationLinkCommandLogs
         Guid userId);
 
     [LoggerMessage(
-        EventId = ActivationLinks.CreateActivationLinkCommand_AggregateCreated,
+        EventId = ActivationLinks.Application.CreateActivationLinkCommand_AggregateCreated,
         EventName = nameof(AggregateCreated),
         Level = LogLevel.Trace,
         Message = "Aggregate created for user with id {UserId} and link code {LinkId}.")]
@@ -26,8 +26,8 @@ public static partial class CreateActivationLinkCommandLogs
         Guid linkId);
 
     [LoggerMessage(
-        EventId = ActivationLinks.CreateActivationLinkCommand_StreamStored,
-        EventName = nameof(ActivationLinks.CreateActivationLinkCommand_StreamStored),
+        EventId = ActivationLinks.Application.CreateActivationLinkCommand_StreamStored,
+        EventName = nameof(ActivationLinks.Application.CreateActivationLinkCommand_StreamStored),
         Level = LogLevel.Trace,
         Message = "Event stream stored for user with id {UserId} and link code {LinkId}.")]
     public static partial void StreamStored(
@@ -36,8 +36,8 @@ public static partial class CreateActivationLinkCommandLogs
         Guid linkId);
 
     [LoggerMessage(
-        EventId = ActivationLinks.CreateActivationLinkCommand_LinkGeneratedEventPublished,
-        EventName = nameof(ActivationLinks.CreateActivationLinkCommand_LinkGeneratedEventPublished),
+        EventId = ActivationLinks.Application.CreateActivationLinkCommand_LinkGeneratedEventPublished,
+        EventName = nameof(ActivationLinks.Application.CreateActivationLinkCommand_LinkGeneratedEventPublished),
         Level = LogLevel.Debug,
         Message = "Link generated event published for user with id {UserId} and link code {LinkId}.")]
     public static partial void LinkGeneratedEventPublished(
@@ -46,8 +46,8 @@ public static partial class CreateActivationLinkCommandLogs
         Guid linkId);
 
     [LoggerMessage(
-        EventId = ActivationLinks.CreateActivateionLinkCommand_Completed,
-        EventName = nameof(ActivationLinks.CreateActivateionLinkCommand_Completed),
+        EventId = ActivationLinks.Application.CreateActivateionLinkCommand_Completed,
+        EventName = nameof(ActivationLinks.Application.CreateActivateionLinkCommand_Completed),
         Level = LogLevel.Trace,
         Message = "Completed creating activation link for user with id {UserId}.")]
     public static partial void Completed(

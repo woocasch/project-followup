@@ -12,13 +12,11 @@ public sealed class CommandResult
 
     public Exception? Exception { get; }
 
-    public bool IsFatalError => this.Exception is not null;
-
     public bool IsSuccess => string.IsNullOrEmpty(this.ErrorCode);
 
-    public static CommandResult Success() => new CommandResult(string.Empty, null);
+    public static CommandResult Success() => new(string.Empty, null);
 
-    public static CommandResult Failure(string errorCode) => new CommandResult(errorCode, null);
+    public static CommandResult Failure(string errorCode) => new(errorCode, null);
 
-    public static CommandResult FatalError(Exception exception) => new CommandResult("FatalError", exception);
+    public static CommandResult Failure(string errorCode, Exception exception) => new(errorCode, exception);
 }

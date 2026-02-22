@@ -1,26 +1,46 @@
 ﻿namespace ProjectFollowUp.BFF.Application.Cqrs;
 
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
-public sealed class HandlerFactory : IHandlerFactory
+public sealed class HandlerFactory(
+    IServiceProvider serviceProvider,
+    ILogger<HandlerFactory> logger) : IHandlerFactory
 {
-    private readonly IServiceProvider serviceProvider;
-
-    public HandlerFactory(IServiceProvider serviceProvider)
-    {
-        this.serviceProvider = serviceProvider;
-    }
-
     public ICommandHandler? CreateCommandHandler(ICommand command)
     {
+        logger.CreateCommandHandlerStarted(command.GetType());
         var commandHandlerName = NamingConventions.CommandHandlerName(command);
-        return this.serviceProvider.GetKeyedService<ICommandHandler>(commandHandlerName);
+        logger.QueryHandlerNameFound(command.GetType(), commandHandlerName);
+        var result = serviceProvider.GetKeyedService<ICommandHandler>(commandHandlerName);
+        if (result is null)
+        {
+            logger.CommandHandlerNotFound(command.GetType(), commandHandlerName);
+        }
+        else
+        {
+            logger.CommandHandlerFound(command.GetType(), commandHandlerName);
+        }
+
+        return result;
     }
 
     public IQueryHandler<TResult>? CreateQueryHandler<TResult>(IQuery<TResult> query)
         where TResult : notnull
     {
+        logger.CreateQueryHandlerStarted(query.GetType());
         var queryHandlerName = NamingConventions.QueryHandlerName(query);
-        return this.serviceProvider.GetKeyedService<IQueryHandler<TResult>>(queryHandlerName);
+        logger.QueryHandlerNameFound(query.GetType(), queryHandlerName);
+        var result = serviceProvider.GetKeyedService<IQueryHandler<TResult>>(queryHandlerName);
+        if (result is null)
+        {
+            logger.QueryHandlerNotFound(query.GetType(), queryHandlerName);
+        }
+        else
+        {
+            logger.QueryHandlerFound(query.GetType(), queryHandlerName);
+        }
+
+        return result;
     }
 }

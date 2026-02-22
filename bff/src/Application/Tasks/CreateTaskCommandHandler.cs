@@ -3,13 +3,17 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
+
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Domain.Project;
 
 public sealed class CreateTaskCommandHandler(
     IEventStreamsRepository eventsRepository,
-    IAggregateFactory aggregateFactory) : CommandHandlerBase<CreateTaskCommand>
+    IAggregateFactory aggregateFactory,
+    ILogger<CreateTaskCommandHandler> logger)
+    : CommandHandlerBase<CreateTaskCommand>(logger)
 {
     protected override async Task<CommandResult> HandleCommand(CreateTaskCommand command, CancellationToken cancellationToken)
     {

@@ -46,7 +46,7 @@ internal static partial class GetActivationLinkDataQueryLogs
         Level = LogLevel.Trace,
         Message = "Completed processing GetActivationLinkDataQuery for id: '{LinkId}'.")]
     public static partial void Completed(
-        this ILogger logger,
+        this ILogger<GetActivationLinkDataQueryHandler> logger,
         Guid linkId);
 
     internal static object GetLinkIdentifier(

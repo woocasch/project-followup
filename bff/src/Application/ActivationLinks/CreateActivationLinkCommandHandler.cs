@@ -15,7 +15,8 @@ using ProjectFollowUp.BFF.Domain.User;
 public sealed class CreateActivationLinkCommandHandler(
     IEventStreamsRepository eventsRepository,
     IEventPublisher eventPublisher,
-    ILogger<CreateActivationLinkCommandHandler> logger) : CommandHandlerBase<CreateActivationLinkCommand>
+    ILogger<CreateActivationLinkCommandHandler> logger)
+    : CommandHandlerBase<CreateActivationLinkCommand>(logger)
 {
     protected override async Task<CommandResult> HandleCommand(
         CreateActivationLinkCommand command,

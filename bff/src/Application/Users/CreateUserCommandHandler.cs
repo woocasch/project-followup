@@ -3,6 +3,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
+
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.EventsBus;
 using ProjectFollowUp.BFF.Application.EventSourcing;
@@ -13,7 +15,9 @@ using ProjectFollowUp.BFF.Domain.User.DomainEvents;
 public sealed class CreateUserCommandHandler(
     IIdentityProvider identityProvider,
     IEventStreamsRepository eventsRepository,
-    IEventPublisher eventPublisher) : CommandHandlerBase<CreateUserCommand>
+    IEventPublisher eventPublisher,
+    ILogger<CreateUserCommandHandler> logger)
+    : CommandHandlerBase<CreateUserCommand>(logger)
 {
     protected override async Task<CommandResult> HandleCommand(
         CreateUserCommand command,

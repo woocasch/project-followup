@@ -59,7 +59,7 @@ public class TasksController(
         var result = await mediator.Send(command, cancellationToken);
         if (!result.IsSuccess)
         {
-            if (result.IsFatalError)
+            if (!result.IsSuccess)
             {
                 logger.LogError(result.Exception, "Failed to create task for project {ProjectId}", projectId);
                 return Results.Problem("Could not create task.");

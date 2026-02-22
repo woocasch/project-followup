@@ -2,13 +2,11 @@
 
 using Microsoft.Extensions.Logging;
 
-using ProjectFollowUp.BFF.Dictionaries.Logging;
-
-public static partial class LinkCreatedProjectionWorkerLogs
+internal static partial class LinkCreatedProjectionWorkerLogs
 {
     [LoggerMessage(
-        EventId = ActivationLinks.Application.LinkCreatedProjectionWorker_Started,
-        EventName = nameof(ActivationLinks.Application.LinkCreatedProjectionWorker_Started),
+        EventId = EventIds.Started,
+        EventName = nameof(EventIds.Started),
         Level = LogLevel.Trace,
         Message = "Read model projection for link '{LinkId}' started.")]
     public static partial void Started(
@@ -16,8 +14,8 @@ public static partial class LinkCreatedProjectionWorkerLogs
         Guid linkId);
 
     [LoggerMessage(
-        EventId = ActivationLinks.Application.LinkCreatedProjectionWorker_UpdatingExistingLink,
-        EventName = nameof(ActivationLinks.Application.LinkCreatedProjectionWorker_UpdatingExistingLink),
+        EventId = EventIds.UpdatingExistingLink,
+        EventName = nameof(EventIds.UpdatingExistingLink),
         Level = LogLevel.Debug,
         Message = "Updating existing activation link with id '{LinkId}'.")]
     public static partial void UpdatingExistingLink(
@@ -25,8 +23,8 @@ public static partial class LinkCreatedProjectionWorkerLogs
         Guid linkId);
 
     [LoggerMessage(
-        EventId = ActivationLinks.Application.LinkCreatedProjectionWorker_CreatingNewLink,
-        EventName = nameof(ActivationLinks.Application.LinkCreatedProjectionWorker_CreatingNewLink),
+        EventId = EventIds.CreatingNewLink,
+        EventName = nameof(EventIds.CreatingNewLink),
         Level = LogLevel.Debug,
         Message = "Creating new activation link with id '{LinkId}'.")]
     public static partial void CreatingNewLink(
@@ -34,11 +32,22 @@ public static partial class LinkCreatedProjectionWorkerLogs
         Guid linkId);
 
     [LoggerMessage(
-        EventId = ActivationLinks.Application.LinkCreatedProjectionWorker_Completed,
-        EventName = nameof(ActivationLinks.Application.LinkCreatedProjectionWorker_Completed),
+        EventId = EventIds.Completed,
+        EventName = nameof(EventIds.Completed),
         Level = LogLevel.Trace,
         Message = "Read model projection for link '{LinkId}' completed.")]
     public static partial void Completed(
         this ILogger<LinkCreatedProjectionWorker> logger,
         Guid linkId);
+
+    private static class EventIds
+    {
+        public const int Started = 1;
+
+        public const int UpdatingExistingLink = 2;
+
+        public const int CreatingNewLink = 3;
+
+        public const int Completed = 4;
+    }
 }

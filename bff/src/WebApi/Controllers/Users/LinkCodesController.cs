@@ -23,14 +23,15 @@ public class LinkCodesController(
 
         var query = GetActivationLinkDataQuery.ByLinkCode(linkCode);
         var result = await mediator.Fetch(query, cancellationToken);
-        if (result is null)
+        if (!result.LinkFound)
         {
             return NotFound();
         }
 
+        var link = result.Link!;
         return Ok(new GetByLinkCodeOutput(
-            result.EmailAddress,
-            result.DisplayName,
-            result.IsUsed));
+            link.EmailAddress,
+            link.DisplayName,
+            link.IsUsed));
     }
 }

@@ -3,26 +3,30 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
+
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Domain.Project;
 
 public sealed class GetProjectQueryHandler(
-    IReadModel readModel) : QueryHandlerBase<GetProjectQuery, GetProjectResult>
+    IReadModel readModel,
+    ILogger<GetProjectQueryHandler> logger)
+    : QueryHandlerBase<GetProjectQuery, GetProjectResult>(logger)
 {
-    protected override async Task<GetProjectResult?> HandleQuery(
+    protected override async Task<GetProjectResult> HandleQuery(
         GetProjectQuery query,
         CancellationToken cancellationToken)
     {
         var project = await readModel.Get(query.ProjectId, cancellationToken);
         if (project is null)
         {
-            return null;
+            return GetProjectResult.NotFound();
         }
 
-        var result = new GetProjectResult(
+        var result = new GetProjectResult.ProjectData(
             project.Value.Id,
             project.Value.Title,
             project.Value.Description);
-        return result;
+        return GetProjectResult.Success(result);
     }
 }

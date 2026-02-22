@@ -3,12 +3,16 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
+
 using ProjectFollowUp.BFF.Application.Cqrs;
 
 public sealed class FetchProjectsQueryHandler(
-    IReadModel readModel) : QueryHandlerBase<FetchProjectsQuery, FetchProjectsResult>
+    IReadModel readModel,
+    ILogger<FetchProjectsQueryHandler> logger)
+    : QueryHandlerBase<FetchProjectsQuery, FetchProjectsResult>(logger)
 {
-    protected override async Task<FetchProjectsResult?> HandleQuery(FetchProjectsQuery query, CancellationToken cancellationToken)
+    protected override async Task<FetchProjectsResult> HandleQuery(FetchProjectsQuery query, CancellationToken cancellationToken)
     {
         var projects = await readModel.Fetch(cancellationToken);
         return new FetchProjectsResult(

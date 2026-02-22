@@ -14,44 +14,38 @@ public sealed class GetActivationLinkDataQueryHandler(
     IEventStreamsRepository eventsRepository,
     IReadModel readModel,
     IAggregateFactory aggregateFactory,
-    ILogger<GetActivationLinkDataQueryHandler> logger) : QueryHandlerBase<GetActivationLinkDataQuery, GetActivationLinkDataResult>
+    ILogger<GetActivationLinkDataQueryHandler> logger)
+    : QueryHandlerBase<GetActivationLinkDataQuery, GetActivationLinkDataResult>(logger)
 {
-    protected override async Task<GetActivationLinkDataResult?> HandleQuery(
+    protected override async Task<GetActivationLinkDataResult> HandleQuery(
         GetActivationLinkDataQuery query,
         CancellationToken cancellationToken)
     {
-#pragma warning disable CA1873 // Avoid potentially expensive logging
-        logger.Started(
-            query.GetLinkIdentifier());
-#pragma warning restore CA1873 // Avoid potentially expensive logging
+        logger.Started(query);
         var activationLink = await this.GetActivationLink(query, cancellationToken);
         if (activationLink is null)
         {
-            logger.ActivationLinkNotFound(
-                query.GetLinkIdentifier());
-            return null;
+            logger.ActivationLinkNotFound(query);
+            return GetActivationLinkDataResult.NotFound();
         }
 
-#pragma warning disable CA1873 // Avoid potentially expensive logging
-        logger.ActivationLinkRetrieved(
-            query.GetLinkIdentifier());
-#pragma warning restore CA1873 // Avoid potentially expensive logging
+        logger.ActivationLinkRetrieved(query);
         var user = await this.GetUser(activationLink.UserId, cancellationToken);
         if (user is null)
         {
             logger.UserNotFound(
                 activationLink.Id.Value);
-            return null;
+            return GetActivationLinkDataResult.NotFound();
         }
 
-        var result = new GetActivationLinkDataResult(
+        var result = new GetActivationLinkDataResult.LinkData(
             activationLink.LinkCode,
             user.Email.Value,
             user.DisplayName,
             activationLink.IsUsed);
         logger.Completed(
             activationLink.Id.Value);
-        return result;
+        return GetActivationLinkDataResult.Found(result);
     }
 
     private async Task<ActivationLinkAggregateRoot?> GetActivationLink(

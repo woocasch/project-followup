@@ -2,34 +2,30 @@
 
 using Microsoft.Extensions.Logging;
 
+using ProjectFollowUp.BFF.Domain.ActivationLink;
+
 internal static partial class GetActivationLinkDataQueryLogs
 {
-    [LoggerMessage(
-        EventId = EventIds.Started,
-        EventName = nameof(EventIds.Started),
-        Level = LogLevel.Trace,
-        Message = "Started processing GetActivationLinkDataQuery for link: '{LinkIdentifier}'.")]
-    public static partial void Started(
+    public static void Started(
         this ILogger<GetActivationLinkDataQueryHandler> logger,
-        object linkIdentifier);
+        GetActivationLinkDataQuery query)
+    {
+        logger.LogOperation(query, (log, identifier) => log.Started(identifier));
+    }
 
-    [LoggerMessage(
-        EventId = EventIds.ActivationLinkNotFound,
-        EventName = nameof(EventIds.ActivationLinkNotFound),
-        Level = LogLevel.Warning,
-        Message = "Activation link not found for link: '{LinkIdentifier}'.")]
-    public static partial void ActivationLinkNotFound(
+    public static void ActivationLinkNotFound(
         this ILogger<GetActivationLinkDataQueryHandler> logger,
-        object linkIdentifier);
+        GetActivationLinkDataQuery query)
+    {
+        logger.LogOperation(query, (log, identifier) => log.ActivationLinkNotFound(identifier));
+    }
 
-    [LoggerMessage(
-        EventId = EventIds.ActivationLinkRetrieved,
-        EventName = nameof(EventIds.ActivationLinkRetrieved),
-        Level = LogLevel.Debug,
-        Message = "Activation link retrieved for link: '{LinkIdentifier}'.")] 
-    public static partial void ActivationLinkRetrieved(
+    public static void ActivationLinkRetrieved(
         this ILogger<GetActivationLinkDataQueryHandler> logger,
-        object linkIdentifier);
+        GetActivationLinkDataQuery query)
+    {
+        logger.LogOperation(query, (log, identifier) => log.ActivationLinkRetrieved(identifier));
+    }
 
     [LoggerMessage(
         EventId = EventIds.UserNotFound,
@@ -49,15 +45,50 @@ internal static partial class GetActivationLinkDataQueryLogs
         this ILogger<GetActivationLinkDataQueryHandler> logger,
         Guid linkId);
 
-    internal static object GetLinkIdentifier(
-        this GetActivationLinkDataQuery query)
+    [LoggerMessage(
+        EventId = EventIds.Started,
+        EventName = nameof(EventIds.Started),
+        Level = LogLevel.Trace,
+        Message = "Started processing GetActivationLinkDataQuery for link: '{LinkIdentifier}'.")]
+    private static partial void Started(
+        this ILogger<GetActivationLinkDataQueryHandler> logger,
+        object linkIdentifier);
+
+    [LoggerMessage(
+        EventId = EventIds.ActivationLinkNotFound,
+        EventName = nameof(EventIds.ActivationLinkNotFound),
+        Level = LogLevel.Warning,
+        Message = "Activation link not found for link: '{LinkIdentifier}'.")]
+    private static partial void ActivationLinkNotFound(
+        this ILogger<GetActivationLinkDataQueryHandler> logger,
+        object linkIdentifier);
+
+    [LoggerMessage(
+        EventId = EventIds.ActivationLinkRetrieved,
+        EventName = nameof(EventIds.ActivationLinkRetrieved),
+        Level = LogLevel.Debug,
+        Message = "Activation link retrieved for link: '{LinkIdentifier}'.")]
+    private static partial void ActivationLinkRetrieved(
+        this ILogger<GetActivationLinkDataQueryHandler> logger,
+        object linkIdentifier);
+
+    private static void LogOperation(
+        this ILogger<GetActivationLinkDataQueryHandler> logger,
+        GetActivationLinkDataQuery query,
+        Action<ILogger<GetActivationLinkDataQueryHandler>, object> logAction)
     {
-        return query.Mode switch
+        switch (query.Mode)
         {
-            GetActivationLinkDataQuery.SearchMode.ByLinkCode => query.LinkCode,
-            GetActivationLinkDataQuery.SearchMode.ByLinkId => query.LinkId.Value,
-            _ => "unknown"
-        };
+            case GetActivationLinkDataQuery.SearchMode.ByLinkCode:
+                logAction(logger, query.LinkCode);
+                break;
+            case GetActivationLinkDataQuery.SearchMode.ByLinkId:
+                logAction(logger, query.LinkId.Value);
+                break;
+            default:
+                logger.LogWarning("Unknown search mode {SearchMode}", query.Mode);
+                break;
+        }
     }
 
     private static class EventIds

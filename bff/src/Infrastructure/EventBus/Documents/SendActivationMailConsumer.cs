@@ -36,15 +36,16 @@ public sealed class SendActivationMailConsumer(
     {
         var query = GetActivationLinkDataQuery.ByLinkId(context.ActivationLinkId);
         var result = await mediator.Fetch(query, cancellationToken);
-        if (result is null)
+        if (!result.LinkFound)
         {
             return;
         }
 
+        var linkCode = result.Link!;
         await SendEmail(
-            result.LinkCode,
-            result.EmailAddress,
-            result.DisplayName);
+            linkCode.LinkCode,
+            linkCode.EmailAddress,
+            linkCode.DisplayName);
     }
 
     private async Task SendEmail(string linkCode, string emailAddress, string displayName)

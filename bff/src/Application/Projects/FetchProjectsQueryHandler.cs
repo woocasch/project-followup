@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
+using ProjectFollowUp.BFF.Application.Projects.ProjectionWorkers;
 
 public sealed class FetchProjectsQueryHandler(
     IReadModel readModel,
@@ -14,7 +15,9 @@ public sealed class FetchProjectsQueryHandler(
 {
     protected override async Task<FetchProjectsResult> HandleQuery(FetchProjectsQuery query, CancellationToken cancellationToken)
     {
+        logger.Started(query.UserId);
         var projects = await readModel.Fetch(cancellationToken);
+        logger.Completed(query.UserId);
         return new FetchProjectsResult(
             projects
             .Select(p => new FetchProjectsResult.Project(

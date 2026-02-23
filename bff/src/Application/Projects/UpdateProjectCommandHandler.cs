@@ -17,12 +17,16 @@ public sealed class UpdateProjectCommandHandler(
 {
     protected override async Task<CommandResult> HandleCommand(UpdateProjectCommand command, CancellationToken cancellationToken)
     {
+        logger.Started(command.ProjectId.Value);
         var existingProjectEvents = await eventsRepository.ReadStreamAsync<ProjectAggregateRoot>(
             command.ProjectId.ToGuid(),
             cancellationToken);
         var project = aggregateFactory.Create(existingProjectEvents, ProjectAggregateRoot.Rehydrate);
+        logger.AggregateRehydrated(command.ProjectId.Value);
         project.ChangeDetails(command.Title, command.Description, command.ChangedAt);
+        logger.ProjectUpdated(command.ProjectId.Value);
         await eventsRepository.StoreStreamAsync(project, cancellationToken);
+        logger.Completed(command.ProjectId.Value);
         return CommandResult.Success();
     }
 }

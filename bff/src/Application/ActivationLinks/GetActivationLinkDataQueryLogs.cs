@@ -2,8 +2,6 @@
 
 using Microsoft.Extensions.Logging;
 
-using ProjectFollowUp.BFF.Domain.ActivationLink;
-
 internal static partial class GetActivationLinkDataQueryLogs
 {
     public static void Started(

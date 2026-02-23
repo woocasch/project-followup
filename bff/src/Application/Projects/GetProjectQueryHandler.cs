@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
-using ProjectFollowUp.BFF.Domain.Project;
 
 public sealed class GetProjectQueryHandler(
     IReadModel readModel,
@@ -17,9 +16,11 @@ public sealed class GetProjectQueryHandler(
         GetProjectQuery query,
         CancellationToken cancellationToken)
     {
+        logger.Started(query.ProjectId.Value, query.UserId);
         var project = await readModel.Get(query.ProjectId, cancellationToken);
         if (project is null)
         {
+            logger.ProjectNotFound(query.ProjectId.Value);
             return GetProjectResult.NotFound();
         }
 
@@ -27,6 +28,7 @@ public sealed class GetProjectQueryHandler(
             project.Value.Id,
             project.Value.Title,
             project.Value.Description);
+        logger.Completed(query.ProjectId.Value);
         return GetProjectResult.Success(result);
     }
 }

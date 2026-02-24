@@ -27,6 +27,12 @@ services:
       - --hostname=http://localhost:4002
       - --hostname-strict=false
       - --proxy-headers=xforwarded
+      - --telemetry-endpoint=http://otel-collector.projectfollowup.dev:4317
+      - --telemetry-service-name=project-follow-up-keycloak
+      - --features=opentelemetry-logs
+      - --telemetry-logs-enabled=true
+      - --telemetry-logs-level=all
+      - --telemetry-resource-attributes=deployment_environment=dev
       # - --optimized
     ports:
       - "4002:8080"

@@ -39,19 +39,19 @@ processors:
 
 exporters:
   # Tempo exporter for traces
-  otlp/tempo:
-    endpoint: http://tempo.monitoring.local:4317
+  otlphttp:
+    endpoint: http://grafana.monitoring.local:4318
     tls:
       insecure: true
 
-  # Prometheus exporter for metrics
-  prometheus:
-    endpoint: "0.0.0.0:8889"
-    # Prometheus will scrape metrics from this endpoint
+  # # Prometheus exporter for metrics
+  # prometheus:
+  #   endpoint: "0.0.0.0:8889"
+  #   # Prometheus will scrape metrics from this endpoint
 
-  # Loki exporter for logs
-  otlphttp:
-    endpoint: http://loki.monitoring.local:3100/otlp
+  # # Loki exporter for logs
+  # otlp:
+  #   endpoint: http://grafana.monitoring.local:4317
 
   # Debug exporter for troubleshooting
   debug:
@@ -62,12 +62,12 @@ service:
     traces:
       receivers: [otlp]
       processors: [resource, batch]
-      exporters: [otlp/tempo, debug]
+      exporters: [otlphttp, debug]
     
     metrics:
       receivers: [otlp]
       processors: [resource, batch]
-      exporters: [prometheus, debug]
+      exporters: [otlphttp, debug]
     
     logs:
       receivers: [otlp]

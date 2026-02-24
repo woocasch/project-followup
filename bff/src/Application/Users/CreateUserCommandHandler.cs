@@ -23,21 +23,26 @@ public sealed class CreateUserCommandHandler(
         CreateUserCommand command,
         CancellationToken cancellationToken)
     {
+        logger.Started(command.Id.Value);
         var credentialsId = await this.CreateUserCredentials(
             command,
             cancellationToken);
         if (!credentialsId.HasValue)
         {
+            logger.CredentialsCreationFailed(command.Id.Value);
             return CommandResult.Failure("CreateUserCredentialsFailed");
         }
 
+        logger.CreatingUserProfile(command.Id.Value);
         var userId = await this.CreateUserProfile(command, credentialsId.Value, cancellationToken);
+        logger.PublishingUserRegisteredEvent(command.Id.Value);
         await eventPublisher.Publish(
             new UserRegistered
             {
                 UserId = userId
             },
             cancellationToken);
+        logger.Completed(command.Id.Value);
         return CommandResult.Success();
     }
 

@@ -34,18 +34,23 @@ public sealed class SendActivationMailConsumer(
 
     public async override Task Handle(ActivationLinkGenerated context, CancellationToken cancellationToken)
     {
+        logger.Started(context.ActivationLinkId.Value);
         var query = GetActivationLinkDataQuery.ByLinkId(context.ActivationLinkId);
+        logger.RetrievingLinkInformation(context.ActivationLinkId.Value);
         var result = await mediator.Fetch(query, cancellationToken);
         if (!result.LinkFound)
         {
+            logger.LinkNotFound(context.ActivationLinkId.Value);
             return;
         }
 
         var linkCode = result.Link!;
+        logger.SendingEmail(context.ActivationLinkId.Value);
         await SendEmail(
             linkCode.LinkCode,
             linkCode.EmailAddress,
             linkCode.DisplayName);
+        logger.Completed(context.ActivationLinkId.Value);
     }
 
     private async Task SendEmail(string linkCode, string emailAddress, string displayName)

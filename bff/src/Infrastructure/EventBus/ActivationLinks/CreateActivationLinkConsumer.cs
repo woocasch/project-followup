@@ -30,10 +30,13 @@ public sealed class CreateActivationLinkConsumer(
 
     public async override Task Handle(UserRegistered context, CancellationToken cancellationToken)
     {
+        logger.Started(context.UserId.Value);
         var linkCode = RandomNumberGenerator.GetString("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789", 16);
+        logger.SendingCommand(context.UserId.Value);
         var command = new CreateActivationLinkCommand(
             context.UserId,
             linkCode);
         await mediator.Send(command, CancellationToken.None);
+        logger.Completed(context.UserId.Value);
     }
 }

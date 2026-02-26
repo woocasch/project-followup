@@ -1,8 +1,8 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo;
 
 using System;
-using System.Threading;
-using System.Threading.Tasks;
+
+using Microsoft.Extensions.Logging;
 
 using MongoDB.Driver;
 
@@ -12,7 +12,10 @@ using ProjectFollowUp.BFF.Domain.Project;
 using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo.TaskProjection;
 
 public sealed class TaskProjectionWriter(
-    ICollectionProvider collectionProvider) : ProjectionWriterBase<TaskRecord, TaskDto, Guid>, ITaskProjectionWriter
+    ICollectionProvider collectionProvider,
+    ILogger<TaskProjectionWriter> logger)
+    : ProjectionWriterBase<TaskRecord, TaskDto, Guid>(logger),
+    ITaskProjectionWriter
 {
     protected override FilterDefinition<TaskDto> ApplyFilterById(FilterDefinitionBuilder<TaskDto> filterBuilder, Guid id)
     {

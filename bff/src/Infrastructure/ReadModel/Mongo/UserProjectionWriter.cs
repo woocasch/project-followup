@@ -1,5 +1,7 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo;
 
+using Microsoft.Extensions.Logging;
+
 using MongoDB.Driver;
 
 using ProjectFollowUp.BFF.Application.Users.ProjectionWorkers;
@@ -8,7 +10,10 @@ using ProjectFollowUp.BFF.Domain.User;
 using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo.UserProjection;
 
 public sealed class UserProjectionWriter(
-    ICollectionProvider collectionProvider) : ProjectionWriterBase<UserRecord, UserDto, UserId>, IUserProjectionWriter
+    ICollectionProvider collectionProvider,
+    ILogger<UserProjectionWriter> logger)
+    : ProjectionWriterBase<UserRecord, UserDto, UserId>(logger),
+    IUserProjectionWriter
 {
     protected override FilterDefinition<UserDto> ApplyFilterById(FilterDefinitionBuilder<UserDto> filterBuilder, UserId id)
     {

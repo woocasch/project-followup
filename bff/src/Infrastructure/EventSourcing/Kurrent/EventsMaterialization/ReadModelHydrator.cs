@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 using KurrentDB.Client;
 
-using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Domain;
@@ -15,18 +15,21 @@ using ProjectFollowUp.BFF.Infrastructure.Serialization.Json;
 
 public sealed class ReadModelHydrator(
     KurrentDBPersistentSubscriptionsClient client,
-    IProjectionWorkerFactory projectionWorkerFactory) : IReadModelHydrator
+    IProjectionWorkerFactory projectionWorkerFactory,
+    ILogger<ReadModelHydrator> logger) : IReadModelHydrator
 {
     public async Task Subscribe(CancellationToken cancellationToken)
     {
+        logger.SubscribeStarted();
         await using var subscription = client.SubscribeToAll(
             "read-model-hydrator-subscription",
             cancellationToken: cancellationToken);
+        logger.SubscribeSubscriptionCreated();
         try
         {
             await foreach (var message in subscription.Messages)
             {
-                Console.WriteLine($"Received message '{message.GetType()}'.");
+                logger.SubscribeMessageReceived(message.GetType());
                 Task action = message switch
                 {
                     PersistentSubscriptionMessage.SubscriptionConfirmation e => this.HandleSubscriptionConfirmation(subscription, e),
@@ -34,33 +37,34 @@ public sealed class ReadModelHydrator(
                     _ => this.HandleUnknownEvent(subscription, message),
                 };
 
+                logger.SubscribeExecutingHandler(message.GetType()); ;
                 await action;
             }
         }
         catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
-            // Graceful shutdown.
+            logger.SubscribeApplicationShutdown();
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            // Add some logging here. Some big crash happened.
+            logger.SubscribeFatalError(ex);
             throw;
         }
     }
 
     private async Task HandleSubscriptionConfirmation(
-        KurrentDBPersistentSubscriptionsClient.PersistentSubscriptionResult subscription,
+        KurrentDBPersistentSubscriptionsClient.PersistentSubscriptionResult _,
         PersistentSubscriptionMessage.SubscriptionConfirmation confirmation)
     {
-        Console.WriteLine($"Handling subscription confirmation ('{confirmation}') on subscription {subscription.SubscriptionId}.");
+        logger.ExecutingSubscriptionConfirmationHandler(confirmation.GetType());
         await Task.Yield();
     }
 
     private async Task HandleUnknownEvent(
-        KurrentDBPersistentSubscriptionsClient.PersistentSubscriptionResult subscription,
+        KurrentDBPersistentSubscriptionsClient.PersistentSubscriptionResult _,
         PersistentSubscriptionMessage message)
     {
-        Console.WriteLine($"Handling message '{message}' on subscription {subscription.SubscriptionId}.");
+        logger.ExecutingUnknownEventHandler(message.GetType());
         await Task.Yield();
     }
 
@@ -68,60 +72,66 @@ public sealed class ReadModelHydrator(
         KurrentDBPersistentSubscriptionsClient.PersistentSubscriptionResult subscription,
         PersistentSubscriptionMessage.Event subscriptionEvent)
     {
+        logger.HandleEventStarted(subscriptionEvent.ResolvedEvent.OriginalStreamId);
         var resolvedEvent = subscriptionEvent.ResolvedEvent;
         try
         {
+            logger.HandleEventReadingMetadata(subscriptionEvent.ResolvedEvent.OriginalStreamId);
             var rawMetadata = GetMetadata(resolvedEvent);
             if (string.IsNullOrWhiteSpace(rawMetadata?.EventTypeName))
             {
-                Console.WriteLine("ACKing: " + resolvedEvent.Event.EventType);
+                logger.HandleEventNoMetadataFound(subscriptionEvent.ResolvedEvent.OriginalStreamId);
                 await subscription.Ack([resolvedEvent]);
                 return;
             }
 
             var metadata = rawMetadata.Value;
-            Console.WriteLine("Handling event of type: " + metadata.EventTypeName);
+            logger.HandleEventDeserializingEvent(subscriptionEvent.ResolvedEvent.OriginalStreamId, metadata.EventTypeName);
             var aggregateEvent = await GetEvent(resolvedEvent, metadata.EventTypeName);
             if (aggregateEvent is null)
             {
-                Console.WriteLine("Failed to deserialize event of type: " + metadata.EventTypeName);
+                logger.HandleEventNotDeserializableEvent(subscriptionEvent.ResolvedEvent.OriginalStreamId, metadata.EventTypeName);
                 await subscription.Nack(PersistentSubscriptionNakEventAction.Unknown, "Failed to deserialize event", [resolvedEvent]);
                 return;
             }
 
-            Console.WriteLine($"Handling event {aggregateEvent}");
+            logger.HandleEventSendingToProjectionWorkers(subscriptionEvent.ResolvedEvent.OriginalStreamId, metadata.EventTypeName);
 
-            await this.FeedProjections(aggregateEvent, CancellationToken.None);
+            await this.FeedProjections(resolvedEvent.OriginalStreamId, aggregateEvent, CancellationToken.None);
 
             await subscription.Ack([resolvedEvent]);
+            logger.HandleEventCompleted(subscriptionEvent.ResolvedEvent.OriginalStreamId);
         }
         catch (Exception ex)
         {
-            Console.WriteLine("NACKing failed: " + resolvedEvent.Event.EventType + " due to " + ex);
+            logger.HandleEventException(subscriptionEvent.ResolvedEvent.OriginalStreamId, ex);
             await subscription.Nack(
                 PersistentSubscriptionNakEventAction.Park,
                 "Error handling event",
                 [resolvedEvent]);
-            // Add some logging here.
         }
     }
 
-    private async Task FeedProjections(IAggregateEvent aggregateEvent, CancellationToken cancellationToken)
+    private async Task FeedProjections(string streamId, IAggregateEvent aggregateEvent, CancellationToken cancellationToken)
     {
-        var workers = projectionWorkerFactory.Create(aggregateEvent.GetType());
+        logger.FeedProjectionsStarted(streamId, aggregateEvent.GetType());
+        var workers = projectionWorkerFactory.Create(aggregateEvent.GetType())
+            .ToList();
+        logger.FeedProjectionsWorkersRetrieved(streamId, aggregateEvent.GetType(), workers.Count);
         var work = workers.Select(workers => workers.Materialize(aggregateEvent, cancellationToken))
             .ToList();
         await Task.WhenAll(work);
+        logger.FeedProjectionsCompleted(streamId);
     }
 
-    private static async Task<IAggregateEvent?> GetEvent(
+    private async Task<IAggregateEvent?> GetEvent(
         ResolvedEvent resolvedEvent,
         string eventTypeName)
     {
         var eventType = Type.GetType(eventTypeName);
         if (eventType is null)
         {
-            Console.WriteLine("Unknown event type: " + eventTypeName);
+            logger.GetEventNullEventType(eventTypeName);
             return null;
         }
 
@@ -132,11 +142,12 @@ public sealed class ReadModelHydrator(
             JsonSerializerOptionsFactory.GetOptions()) as IAggregateEvent;
     }
 
-    private static EventMetadata? GetMetadata(ResolvedEvent resolvedEvent)
+    private EventMetadata? GetMetadata(ResolvedEvent resolvedEvent)
     {
         var metadataString = Encoding.UTF8.GetString(resolvedEvent.Event.Metadata.ToArray());
         if (string.IsNullOrWhiteSpace(metadataString))
         {
+            logger.GetMetadataNullMetadata(resolvedEvent.OriginalStreamId);
             return null;
         }
 

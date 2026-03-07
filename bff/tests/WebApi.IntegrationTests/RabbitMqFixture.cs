@@ -20,7 +20,12 @@ public sealed class RabbitMqFixture : IAsyncLifetime
             .WithPortBinding(5672, true)
             .WithUsername("admin")
             .WithPassword("admin")
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilInternalTcpPortIsAvailable(5672))
+            .WithWaitStrategy(Wait.ForUnixContainer()
+                .UntilInternalTcpPortIsAvailable(5672)
+                .UntilHttpRequestIsSucceeded(r => r
+                    .ForPort(15672)
+                    .ForPath("/api/overview")
+                    .WithBasicAuthentication("admin", "admin")))
             .Build();
     }
 

@@ -12,16 +12,21 @@ using ProjectFollowUp.BFF.Infrastructure.EventSourcing.Kurrent.EventsMaterializa
 
 public sealed class ReadModelHydration(
     IServiceScopeFactory serviceScopeFactory,
-    IOptions<KurrentSettings> kurrentSettingsOptions) : BackgroundService
+    IOptions<KurrentSettings> kurrentSettingsOptions,
+    ILogger<ReadModelHydration> logger)
+    : BackgroundService
 {
     private KurrentSettings Settings => kurrentSettingsOptions.Value;
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        logger.Starting();
         using var scope = serviceScopeFactory.CreateScope();
         var serviceProvider = scope.ServiceProvider;
         await this.Configure(serviceProvider, stoppingToken);
+        logger.ConfigurationCompleted();
         await this.StartHydration(serviceProvider, stoppingToken);
+        logger.ExitingSubscription();
     }
 
     private async Task Configure(
@@ -29,10 +34,12 @@ public sealed class ReadModelHydration(
         CancellationToken cancellationToken)
     {
         var client = serviceProvider.GetRequiredService<KurrentDBPersistentSubscriptionsClient>();
+        logger.ClientAquired();
         var subscriptionExists = true;
         PersistentSubscriptionInfo? info = null;
         try
         {
+            logger.CheckingSubscriptionExists();
             info = await client.GetInfoToAllAsync(
                 this.Settings.ReadModelHydration.SubscriptionName,
                 cancellationToken: cancellationToken);
@@ -41,13 +48,15 @@ public sealed class ReadModelHydration(
         {
             subscriptionExists = false;
         }
-        catch(Exception ex)
+        catch (Exception ex)
         {
-            Console.WriteLine(ex);
+            // No log needed. This is required, as there's no clean way of checking if the subscription exists,
+            // other than trying to get it and catching the exception if it doesn't.
         }
 
         if (!subscriptionExists)
         {
+            logger.CreatingSubscription();
             await client.CreateToAllAsync(
                 this.Settings.ReadModelHydration.SubscriptionName,
                 this.CreateSubscriptionSettings(),
@@ -59,6 +68,7 @@ public sealed class ReadModelHydration(
                 || info.Settings.CheckPointLowerBound != this.Settings.ReadModelHydration.CheckpointLowerBound
                 || info.Settings.CheckPointUpperBound != this.Settings.ReadModelHydration.CheckpointUpperBound)
             {
+                logger.UpdatingSubscription();
                 await client.UpdateToAllAsync(
                     this.Settings.ReadModelHydration.SubscriptionName,
                     this.CreateSubscriptionSettings(),
@@ -87,6 +97,7 @@ public sealed class ReadModelHydration(
     private async Task<IReadModelHydrator> StartHydration(IServiceProvider serviceProvider, CancellationToken stoppingToken)
     {
         var hydrator = serviceProvider.GetRequiredService<IReadModelHydrator>();
+        logger.StartingHydrator();
         await hydrator.Subscribe(stoppingToken);
         return hydrator;
     }

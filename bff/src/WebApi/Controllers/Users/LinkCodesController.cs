@@ -10,7 +10,8 @@ using ProjectFollowUp.BFF.WebApi.Controllers.Users.LinkCodesModels;
 [Route("api/users/linkCodes")]
 [ApiController]
 public class LinkCodesController(
-    IMediator mediator) : ControllerBase
+    IMediator mediator,
+    ILogger<LinkCodesController> logger) : ControllerBase
 {
     [AllowAnonymous]
     [HttpGet("{linkCode}")]

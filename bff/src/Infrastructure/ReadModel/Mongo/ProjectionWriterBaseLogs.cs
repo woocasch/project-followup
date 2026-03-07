@@ -8,7 +8,7 @@ internal static partial class ProjectionWriterBaseLogs
         EventId = EventIds.GetStarted,
         EventName = nameof(EventIds.GetStarted),
         Level = LogLevel.Trace, 
-        Message = "Getting projection with started.")]
+        Message = "Starting projection retrieval.")]
     public static partial void GetStarted(
         this ILogger<IProjectionWriterBase> logger);
 

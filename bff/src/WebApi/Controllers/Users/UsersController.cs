@@ -19,21 +19,21 @@ public sealed class UsersController(
         CreateInput payload,
         CancellationToken cancellationToken)
     {
-        logger.CreateStarted(payload.Email);
         var userId = Guid.NewGuid();
+        logger.CreateStarted(userId);
         var command = new CreateUserCommand(
             UserId.FromGuid(userId),
             payload.DisplayName,
             payload.Email);
         var result = await mediator.Send(command, cancellationToken);
-        logger.CreateCommandExecuted(payload.Email);
+        logger.CreateCommandExecuted(userId);
         if (!result.IsSuccess)
         {
-            logger.CreateCommandFailed(payload.Email, result.ErrorCode, result.Exception);
+            logger.CreateCommandFailed(userId, result.ErrorCode, result.Exception);
             return Results.Problem("Could not create user.");
         }
 
-        logger.CreateCompleted(payload.Email);
+        logger.CreateCompleted(userId);
         return Results.Created();
     }
 }

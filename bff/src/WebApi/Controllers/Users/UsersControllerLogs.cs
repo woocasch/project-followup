@@ -6,28 +6,28 @@ internal static partial class UsersControllerLogs
         EventId = EventIds.CreateStarted,
         EventName = nameof(EventIds.CreateStarted),
         Level = LogLevel.Trace,
-        Message = "Started creating user '{EmailAddress}'.")]
+        Message = "Started creating user '{UserId}'.")]
     public static partial void CreateStarted(
         this ILogger<UsersController> logger,
-        string emailAddress);
+        Guid userId);
 
     [LoggerMessage(
         EventId = EventIds.CreateCommandExecuted,
         EventName = nameof(EventIds.CreateCommandExecuted),
         Level = LogLevel.Debug,
-        Message = "Create user command executed for '{EmailAddress}'.")]
+        Message = "Create user command executed for '{UserId}'.")]
     public static partial void CreateCommandExecuted(
         this ILogger<UsersController> logger,
-        string emailAddress);
+        Guid userId);
 
     [LoggerMessage(
         EventId = EventIds.CreateCommandFailed,
         EventName = nameof(EventIds.CreateCommandFailed),
         Level = LogLevel.Error,
-        Message = "Create user command failed for '{EmailAddress}' with error code '{ErrorCode}'.")]
+        Message = "Create user command failed for '{UserId}' with error code '{ErrorCode}'.")]
     public static partial void CreateCommandFailed(
         this ILogger<UsersController> logger,
-        string emailAddress,
+        Guid userId,
         string errorCode,
         Exception? ex);
 
@@ -35,10 +35,10 @@ internal static partial class UsersControllerLogs
         EventId = EventIds.CreateCompleted,
         EventName = nameof(EventIds.CreateCompleted),
         Level = LogLevel.Trace,
-        Message = "Completed creating user '{EmailAddress}'.")]
+        Message = "Completed creating user '{UserId}'.")]
     public static partial void CreateCompleted(
         this ILogger<UsersController> logger,
-        string emailAddress);
+        Guid userId);
 
     private static class EventIds
     {

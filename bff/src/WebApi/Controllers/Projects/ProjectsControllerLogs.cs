@@ -1,7 +1,5 @@
 ﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 
-using Microsoft.AspNetCore.Server.Kestrel.Transport.NamedPipes;
-
 internal static partial class ProjectsControllerLogs
 {
     [LoggerMessage(

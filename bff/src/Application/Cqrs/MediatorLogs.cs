@@ -8,7 +8,7 @@ internal static partial class MediatorLogs
         EventId = EventIds.SendStarted,
         EventName = nameof(EventIds.SendStarted),
         Level = LogLevel.Trace,
-        Message = "Started processing command '{CommandType}').")]
+        Message = "Started processing command '{CommandType}'.")]
     public static partial void SendStarted(
         this ILogger<Mediator> logger,
         Type commandType);

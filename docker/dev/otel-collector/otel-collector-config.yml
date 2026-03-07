@@ -1,5 +1,5 @@
 # OTEL Collector configuration for Grafana Stack integration
-# Sends traces to Tempo, metrics to Prometheus, and logs to Loki
+# Sends traces, metrics, and logs via OTLP HTTP to grafana.monitoring.local
 # Grafana can be used to visualize all data types
 
 receivers:
@@ -38,20 +38,11 @@ processors:
           - set(attributes["message"], body)
 
 exporters:
-  # Tempo exporter for traces
+  # OTLP HTTP exporter for traces, metrics, and logs
   otlphttp:
     endpoint: http://grafana.monitoring.local:4318
     tls:
       insecure: true
-
-  # # Prometheus exporter for metrics
-  # prometheus:
-  #   endpoint: "0.0.0.0:8889"
-  #   # Prometheus will scrape metrics from this endpoint
-
-  # # Loki exporter for logs
-  # otlp:
-  #   endpoint: http://grafana.monitoring.local:4317
 
   # Debug exporter for troubleshooting
   debug:

@@ -117,11 +117,11 @@ public sealed class RabbitMqClient(
         return response.IsSuccessStatusCode;
     }
 
-    public Task<bool> UserExists(string userName, CancellationToken cancellationToken)
+    public async Task<bool> UserExists(string userName, CancellationToken cancellationToken)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, $"api/users/{Uri.EscapeDataString(userName)}");
-        var response = httpClient.SendAsync(request, cancellationToken).GetAwaiter().GetResult();
-        return Task.FromResult(response.IsSuccessStatusCode);
+        var response = await httpClient.SendAsync(request, cancellationToken);
+        return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> VirtualHostExists(string vhost, CancellationToken cancellationToken)

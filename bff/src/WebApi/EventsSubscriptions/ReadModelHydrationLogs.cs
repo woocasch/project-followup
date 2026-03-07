@@ -27,11 +27,11 @@ internal static partial class ReadModelHydrationLogs
         this ILogger<ReadModelHydration> logger);
 
     [LoggerMessage(
-        EventId = EventIds.ClientAquired,
-        EventName = nameof(EventIds.ClientAquired),
+        EventId = EventIds.ClientAcquired,
+        EventName = nameof(EventIds.ClientAcquired),
         Level = LogLevel.Debug,
-        Message = "Persistent subscription client aquired.")]
-    public static partial void ClientAquired(
+        Message = "Persistent subscription client acquired.")]
+    public static partial void ClientAcquired(
         this ILogger<ReadModelHydration> logger);
 
     [LoggerMessage(
@@ -75,7 +75,7 @@ internal static partial class ReadModelHydrationLogs
 
         public const int ExitingSubscription = 3;
 
-        public const int ClientAquired = 4;
+        public const int ClientAcquired = 4;
 
         public const int CheckingSubscriptionExists = 5;
 

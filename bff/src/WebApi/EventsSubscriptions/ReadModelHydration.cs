@@ -34,7 +34,7 @@ public sealed class ReadModelHydration(
         CancellationToken cancellationToken)
     {
         var client = serviceProvider.GetRequiredService<KurrentDBPersistentSubscriptionsClient>();
-        logger.ClientAquired();
+        logger.ClientAcquired();
         var subscriptionExists = true;
         PersistentSubscriptionInfo? info = null;
         try

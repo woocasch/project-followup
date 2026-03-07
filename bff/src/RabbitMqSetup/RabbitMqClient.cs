@@ -67,7 +67,6 @@ public sealed class RabbitMqClient(
             Content = JsonContent.Create(new
             {
                 password,
-                tags = "administrator",
             }),
         };
         var response = await httpClient.SendAsync(request, cancellationToken);

@@ -48,11 +48,6 @@ public sealed class ReadModelHydration(
         {
             subscriptionExists = false;
         }
-        catch (Exception ex)
-        {
-            // No log needed. This is required, as there's no clean way of checking if the subscription exists,
-            // other than trying to get it and catching the exception if it doesn't.
-        }
 
         if (!subscriptionExists)
         {

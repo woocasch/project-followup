@@ -17,6 +17,7 @@ public class LinkCodesController(
     [HttpGet("{linkCode}")]
     public async Task<IActionResult> GetByLinkCode(string linkCode, CancellationToken cancellationToken)
     {
+        logger.GetByLinkCodeStarted(linkCode);
         if (string.IsNullOrEmpty(linkCode))
         {
             return NotFound();
@@ -24,12 +25,15 @@ public class LinkCodesController(
 
         var query = GetActivationLinkDataQuery.ByLinkCode(linkCode);
         var result = await mediator.Fetch(query, cancellationToken);
+        logger.GetByLinkCodeDataRetrieved(linkCode);
         if (!result.LinkFound)
         {
+            logger.GetByLinkCodeLinkCodeNotFound(linkCode);
             return NotFound();
         }
 
         var link = result.Link!;
+        logger.GetByLinkCodeCompleted(linkCode);
         return Ok(new GetByLinkCodeOutput(
             link.EmailAddress,
             link.DisplayName,

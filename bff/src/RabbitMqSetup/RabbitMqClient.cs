@@ -11,7 +11,14 @@ public sealed class RabbitMqClient(
             HttpMethod.Get,
             $"api/bindings/{Uri.EscapeDataString(vhost)}/{NodeTypeToUrlPart(sourceType)}/{Uri.EscapeDataString(sourceName)}/{NodeTypeToUrlPart(targetType)}/{Uri.EscapeDataString(targetName)}");
         var response = await httpClient.SendAsync(request, cancellationToken);
-        return response.IsSuccessStatusCode;
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return false;
+        }
+
+        var bindings = await response.Content.ReadFromJsonAsync<System.Text.Json.JsonElement[]>(cancellationToken);
+        return bindings is { Length: > 0 };
     }
 
     public async Task<bool> CreateBinding(string vhost, string sourceName, IRabbitMqClient.BindingNode sourceType, string targetName, IRabbitMqClient.BindingNode targetType, CancellationToken cancellationToken)

@@ -16,9 +16,7 @@ public sealed class SmtpMailSender(
 
     public async Task SendEmailAsync(MimeMessage message, CancellationToken cancellationToken)
     {
-#pragma warning disable CA1873 // Avoid potentially expensive logging
-        logger.SendEmailStarted(message.To.ToString());
-#pragma warning restore CA1873 // Avoid potentially expensive logging
+        logger.SendEmailStarted();
         using var client = new MailKit.Net.Smtp.SmtpClient();
         client.ServerCertificateValidationCallback = (s, c, h, e) => true;
         await client.ConnectAsync(

@@ -37,7 +37,7 @@ public sealed class ReadModelHydrator(
                     _ => this.HandleUnknownEvent(subscription, message),
                 };
 
-                logger.SubscribeExecutingHandler(message.GetType()); ;
+                logger.SubscribeExecutingHandler(message.GetType());
                 await action;
             }
         }

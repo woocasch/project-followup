@@ -3,23 +3,30 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
+
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Domain.Project;
-using ProjectFollowUp.BFF.Domain.Project.Events;
 
 public sealed class UpdateProjectCommandHandler(
     IEventStreamsRepository eventsRepository,
-    IAggregateFactory aggregateFactory) : CommandHandlerBase<UpdateProjectCommand>
+    IAggregateFactory aggregateFactory,
+    ILogger<UpdateProjectCommandHandler> logger)
+    : CommandHandlerBase<UpdateProjectCommand>(logger)
 {
     protected override async Task<CommandResult> HandleCommand(UpdateProjectCommand command, CancellationToken cancellationToken)
     {
+        logger.Started(command.ProjectId.Value);
         var existingProjectEvents = await eventsRepository.ReadStreamAsync<ProjectAggregateRoot>(
             command.ProjectId.ToGuid(),
             cancellationToken);
         var project = aggregateFactory.Create(existingProjectEvents, ProjectAggregateRoot.Rehydrate);
+        logger.AggregateRehydrated(command.ProjectId.Value);
         project.ChangeDetails(command.Title, command.Description, command.ChangedAt);
+        logger.ProjectUpdated(command.ProjectId.Value);
         await eventsRepository.StoreStreamAsync(project, cancellationToken);
+        logger.Completed(command.ProjectId.Value);
         return CommandResult.Success();
     }
 }

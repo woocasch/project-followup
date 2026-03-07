@@ -3,6 +3,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
+
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.EventSourcing;
 using ProjectFollowUp.BFF.Domain.ActivationLink;
@@ -11,30 +13,39 @@ using ProjectFollowUp.BFF.Domain.User;
 public sealed class GetActivationLinkDataQueryHandler(
     IEventStreamsRepository eventsRepository,
     IReadModel readModel,
-    IAggregateFactory aggregateFactory) : QueryHandlerBase<GetActivationLinkDataQuery, GetActivationLinkDataResult>
+    IAggregateFactory aggregateFactory,
+    ILogger<GetActivationLinkDataQueryHandler> logger)
+    : QueryHandlerBase<GetActivationLinkDataQuery, GetActivationLinkDataResult>(logger)
 {
-    protected override async Task<GetActivationLinkDataResult?> HandleQuery(
+    protected override async Task<GetActivationLinkDataResult> HandleQuery(
         GetActivationLinkDataQuery query,
         CancellationToken cancellationToken)
     {
+        logger.Started(query);
         var activationLink = await this.GetActivationLink(query, cancellationToken);
         if (activationLink is null)
         {
-            return null;
+            logger.ActivationLinkNotFound(query);
+            return GetActivationLinkDataResult.NotFound();
         }
 
+        logger.ActivationLinkRetrieved(query);
         var user = await this.GetUser(activationLink.UserId, cancellationToken);
         if (user is null)
         {
-            return null;
+            logger.UserNotFound(
+                activationLink.Id.Value);
+            return GetActivationLinkDataResult.NotFound();
         }
 
-        var result = new GetActivationLinkDataResult(
+        var result = new GetActivationLinkDataResult.LinkData(
             activationLink.LinkCode,
             user.Email.Value,
             user.DisplayName,
             activationLink.IsUsed);
-        return result;
+        logger.Completed(
+            activationLink.Id.Value);
+        return GetActivationLinkDataResult.Found(result);
     }
 
     private async Task<ActivationLinkAggregateRoot?> GetActivationLink(

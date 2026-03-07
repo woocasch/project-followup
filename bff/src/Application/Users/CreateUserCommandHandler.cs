@@ -3,6 +3,8 @@
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
+
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.EventsBus;
 using ProjectFollowUp.BFF.Application.EventSourcing;
@@ -13,27 +15,34 @@ using ProjectFollowUp.BFF.Domain.User.DomainEvents;
 public sealed class CreateUserCommandHandler(
     IIdentityProvider identityProvider,
     IEventStreamsRepository eventsRepository,
-    IEventPublisher eventPublisher) : CommandHandlerBase<CreateUserCommand>
+    IEventPublisher eventPublisher,
+    ILogger<CreateUserCommandHandler> logger)
+    : CommandHandlerBase<CreateUserCommand>(logger)
 {
     protected override async Task<CommandResult> HandleCommand(
         CreateUserCommand command,
         CancellationToken cancellationToken)
     {
+        logger.Started(command.Id.Value);
         var credentialsId = await this.CreateUserCredentials(
             command,
             cancellationToken);
         if (!credentialsId.HasValue)
         {
+            logger.CredentialsCreationFailed(command.Id.Value);
             return CommandResult.Failure("CreateUserCredentialsFailed");
         }
 
+        logger.CreatingUserProfile(command.Id.Value);
         var userId = await this.CreateUserProfile(command, credentialsId.Value, cancellationToken);
+        logger.PublishingUserRegisteredEvent(command.Id.Value);
         await eventPublisher.Publish(
             new UserRegistered
             {
                 UserId = userId
             },
             cancellationToken);
+        logger.Completed(command.Id.Value);
         return CommandResult.Success();
     }
 

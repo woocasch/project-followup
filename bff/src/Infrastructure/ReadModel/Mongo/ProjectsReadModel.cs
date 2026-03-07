@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.Extensions.Logging;
+
 using MongoDB.Driver;
 
 using ProjectFollowUp.BFF.Application.Projects;
@@ -13,11 +15,14 @@ using ProjectFollowUp.BFF.Domain.User;
 using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo.ProjectProjection;
 
 public sealed class ProjectsReadModel(
-    ICollectionProvider collectionProvider) : IReadModel
+    ICollectionProvider collectionProvider,
+    ILogger<ProjectsReadModel> logger) : IReadModel
 {
     public async Task<IEnumerable<ProjectListItem>> Fetch(CancellationToken cancellationToken)
     {
+        logger.FetchStarted();
         var collection = collectionProvider.Projects;
+        logger.FetchCallingStorage();
         var itemsMatched = await collection.FindAsync(
             Builders<ProjectDto>.Filter.Empty,
             cancellationToken: cancellationToken)
@@ -26,6 +31,7 @@ public sealed class ProjectsReadModel(
             .ToListAsync(cancellationToken)
             .ConfigureAwait(false);
         var results = new List<ProjectListItem>(items.Count);
+        logger.FetchMappingResults();
         foreach (var item in items)
         {
             results.Add(new ProjectListItem
@@ -35,17 +41,21 @@ public sealed class ProjectsReadModel(
                 Description = item.Description,
             });
         }
+
+        logger.FetchCompleted();
         return results;
     }
 
     public async Task<ProjectRecord?> Get(ProjectId id, CancellationToken cancellationToken)
     {
+        logger.GetStarted();
         var collection = collectionProvider.Projects;
         var filter = Builders<ProjectDto>.Filter.Eq(p => p.Id, id.ToGuid());
         var searchOptions = new FindOptions<ProjectDto>()
         {
             Limit = 1,
         };
+        logger.GetCallingStorage();
         var itemsMatched = await collection.FindAsync(filter, searchOptions, cancellationToken)
             .ConfigureAwait(false);
         var items = await itemsMatched
@@ -53,10 +63,12 @@ public sealed class ProjectsReadModel(
             .ConfigureAwait(false);
         if (items.Count == 0)
         {
+            logger.GetNoItemsFound();
             return null;
         }
 
         var found = items[0];
+        logger.GetCompleted();
         return new(
             ProjectId.FromGuid(found.Id),
             found.Title,

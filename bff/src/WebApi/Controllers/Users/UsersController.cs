@@ -11,7 +11,8 @@ using ProjectFollowUp.BFF.WebApi.Controllers.Users.UsersModels;
 [Route("api/[controller]")]
 [ApiController]
 public sealed class UsersController(
-    IMediator mediator) : ControllerBase
+    IMediator mediator,
+    ILogger<UsersController> logger) : ControllerBase
 {
     [HttpPost]
     public async Task<IResult> Create(
@@ -19,16 +20,20 @@ public sealed class UsersController(
         CancellationToken cancellationToken)
     {
         var userId = Guid.NewGuid();
+        logger.CreateStarted(userId);
         var command = new CreateUserCommand(
             UserId.FromGuid(userId),
             payload.DisplayName,
             payload.Email);
         var result = await mediator.Send(command, cancellationToken);
+        logger.CreateCommandExecuted(userId);
         if (!result.IsSuccess)
         {
+            logger.CreateCommandFailed(userId, result.ErrorCode, result.Exception);
             return Results.Problem("Could not create user.");
         }
 
+        logger.CreateCompleted(userId);
         return Results.Created();
     }
 }

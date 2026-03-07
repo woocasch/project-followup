@@ -1,5 +1,7 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo;
 
+using Microsoft.Extensions.Logging;
+
 using MongoDB.Driver;
 
 using ProjectFollowUp.BFF.Application.ActivationLinks.ProjectionWorkers;
@@ -9,7 +11,10 @@ using ProjectFollowUp.BFF.Domain.User;
 using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo.ActivationLinkProjection;
 
 public sealed class ActivationLinkProjectionWriter(
-    ICollectionProvider collectionProvider) : ProjectionWriterBase<ActivationLinkRecord, ActivationLinkDto, ActivationLinkId>, IActivationLinkProjectionWriter
+    ICollectionProvider collectionProvider,
+    ILogger<ActivationLinkProjectionWriter> logger)
+    : ProjectionWriterBase<ActivationLinkRecord, ActivationLinkDto, ActivationLinkId>(logger),
+    IActivationLinkProjectionWriter
 {
     protected override FilterDefinition<ActivationLinkDto> ApplyFilterById(FilterDefinitionBuilder<ActivationLinkDto> filterBuilder, ActivationLinkId id)
     {

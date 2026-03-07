@@ -21,8 +21,10 @@ public class TasksController(
        Guid projectId,
        CancellationToken cancellationToken)
     {
+        logger.FetchListStarted(projectId);
         var query = new FetchProjectTasksQuery(ProjectId.FromGuid(projectId));
         var result = await mediator.Fetch(query, cancellationToken);
+        logger.FetchListQueryExecuted(projectId);
 
         var tasks = result.Tasks.Select(t => new FetchListOutput.TaskListItem
         {
@@ -32,6 +34,7 @@ public class TasksController(
             Status = t.Status
         });
         var output = new FetchListOutput([.. tasks]);
+        logger.FetchListResultMapped(projectId, output.Tasks.Length);
 
         return Results.Ok(output);
     }
@@ -39,6 +42,7 @@ public class TasksController(
     [HttpPost]
     public async Task<IResult> CreateTask(CreateTaskInput input, Guid projectId, CancellationToken cancellationToken)
     {
+        logger.CreateTaskStarted(projectId, input.Title);
         var taskId = Guid.NewGuid();
         DateOnly? dueDate = null;
         if (!string.IsNullOrEmpty(input.DueDate))
@@ -49,7 +53,8 @@ public class TasksController(
             }
             dueDate = parsedDate;
         }
-        
+
+        logger.CreateTaskInputProcessed(projectId, input.Title);
         var command = new CreateTaskCommand(
             ProjectId.FromGuid(projectId),
             taskId,
@@ -59,13 +64,7 @@ public class TasksController(
         var result = await mediator.Send(command, cancellationToken);
         if (!result.IsSuccess)
         {
-            if (result.IsFatalError)
-            {
-                logger.LogError(result.Exception, "Failed to create task for project {ProjectId}", projectId);
-                return Results.Problem("Could not create task.");
-            }
-
-            logger.LogWarning("Failed to create task for project {ProjectId}: {ErrorCode}", projectId, result.ErrorCode);
+            logger.CreateTaskCommandFailed(projectId, input.Title, result.ErrorCode, result.Exception);
             return result.ErrorCode switch
             {
                 "ProjectNotFound" => Results.Problem("Project not found.", statusCode: 404),
@@ -73,7 +72,9 @@ public class TasksController(
             };
         }
 
+        logger.CreateTaskCommandSucceeded(projectId, input.Title);
         var output = new CreateTaskOutput(taskId);
+        logger.CreateCommandCompleted(projectId, input.Title);
         return Results.Created($"/api/projects/{projectId}/tasks/{taskId}", output);
     }
 }

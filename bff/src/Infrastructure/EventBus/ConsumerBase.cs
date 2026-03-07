@@ -10,9 +10,14 @@ using ProjectFollowUp.BFF.Infrastructure.Serialization.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
+public interface IConsumerBase
+{
+}
+
 public abstract class ConsumerBase<TEvent>(
     IChannel channel,
-    ILogger<ConsumerBase<TEvent>> logger) : AsyncEventingBasicConsumer(channel)
+    ILogger<ConsumerBase<TEvent>> logger)
+    : AsyncEventingBasicConsumer(channel), IConsumerBase
     where TEvent : struct
 {
     public async Task BindToQueue(string queueName, CancellationToken cancellationToken)
@@ -34,16 +39,19 @@ public abstract class ConsumerBase<TEvent>(
 
     private async Task OnReceivedAsync(object model, BasicDeliverEventArgs ea)
     {
+        logger.MessageReceived();
         var bodyBytes = ea.Body.ToArray();
         var bodyString = Encoding.UTF8.GetString(bodyBytes);
         var @event = JsonSerializer.Deserialize<TEvent>(bodyString, JsonSerializerOptionsFactory.GetOptions());
+        logger.MessageDeserialized(typeof(TEvent));
         try
         {
             await this.Handle(@event, ea.CancellationToken);
+            logger.MessageHandled(typeof(TEvent));
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error handling event of type {EventType}", typeof(TEvent).FullName);
+            logger.MessageHandlingError(typeof(TEvent), ex);
             throw;
         }
     }

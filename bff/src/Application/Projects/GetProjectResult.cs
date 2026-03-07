@@ -2,11 +2,27 @@
 
 using ProjectFollowUp.BFF.Domain.Project;
 
-public sealed class GetProjectResult(ProjectId projectId, string title, string description)
+public sealed class GetProjectResult
 {
-    public ProjectId ProjectId { get; } = projectId;
+    private GetProjectResult(ProjectData? project)
+    {
+        this.Project = project;
+    }
 
-    public string Title { get; } = title;
+    public ProjectData? Project { get; }
 
-    public string Description { get; } = description;
+    public bool ProjectExists => this.Project is not null;
+
+    public static GetProjectResult NotFound() => new GetProjectResult(null);
+
+    public static GetProjectResult Success(ProjectData project) => new GetProjectResult(project);
+
+    public sealed class ProjectData(ProjectId projectId, string title, string description)
+    {
+        public ProjectId ProjectId { get; } = projectId;
+
+        public string Title { get; } = title;
+
+        public string Description { get; } = description;
+    }
 }

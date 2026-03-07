@@ -4,5 +4,5 @@
 public interface IQueryHandler<TResult>
     where TResult : notnull
 {
-    Task<TResult?> Handle(IQuery<TResult> query, CancellationToken cancellationToken);
+    Task<TResult> Handle(IQuery<TResult> query, CancellationToken cancellationToken);
 }

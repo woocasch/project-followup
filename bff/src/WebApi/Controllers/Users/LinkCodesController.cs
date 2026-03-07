@@ -10,12 +10,14 @@ using ProjectFollowUp.BFF.WebApi.Controllers.Users.LinkCodesModels;
 [Route("api/users/linkCodes")]
 [ApiController]
 public class LinkCodesController(
-    IMediator mediator) : ControllerBase
+    IMediator mediator,
+    ILogger<LinkCodesController> logger) : ControllerBase
 {
     [AllowAnonymous]
     [HttpGet("{linkCode}")]
     public async Task<IActionResult> GetByLinkCode(string linkCode, CancellationToken cancellationToken)
     {
+        logger.GetByLinkCodeStarted(linkCode);
         if (string.IsNullOrEmpty(linkCode))
         {
             return NotFound();
@@ -23,14 +25,18 @@ public class LinkCodesController(
 
         var query = GetActivationLinkDataQuery.ByLinkCode(linkCode);
         var result = await mediator.Fetch(query, cancellationToken);
-        if (result is null)
+        logger.GetByLinkCodeDataRetrieved(linkCode);
+        if (!result.LinkFound)
         {
+            logger.GetByLinkCodeLinkCodeNotFound(linkCode);
             return NotFound();
         }
 
+        var link = result.Link!;
+        logger.GetByLinkCodeCompleted(linkCode);
         return Ok(new GetByLinkCodeOutput(
-            result.EmailAddress,
-            result.DisplayName,
-            result.IsUsed));
+            link.EmailAddress,
+            link.DisplayName,
+            link.IsUsed));
     }
 }

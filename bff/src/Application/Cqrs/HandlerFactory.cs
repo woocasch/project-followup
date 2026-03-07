@@ -11,7 +11,7 @@ public sealed class HandlerFactory(
     {
         logger.CreateCommandHandlerStarted(command.GetType());
         var commandHandlerName = NamingConventions.CommandHandlerName(command);
-        logger.QueryHandlerNameFound(command.GetType(), commandHandlerName);
+        logger.CommandHandlerNameFound(command.GetType(), commandHandlerName);
         var result = serviceProvider.GetKeyedService<ICommandHandler>(commandHandlerName);
         if (result is null)
         {

@@ -67,15 +67,15 @@ jobs:
       working-directory: ui
       
     - name: Run tests
-      run: npm run test -- --run --coverage
+      run: npm run test
       working-directory: ui
       
-    - name: Upload Test Coverage
-      uses: actions/upload-artifact@v4
-      if: always()
-      with:
-        name: ui-coverage
-        path: ui/coverage/
+    # - name: Upload Test Coverage
+    #   uses: actions/upload-artifact@v4
+    #   if: always()
+    #   with:
+    #     name: ui-coverage
+    #     path: ui/coverage/
 
   validation-summary:
     name: Validation Summary

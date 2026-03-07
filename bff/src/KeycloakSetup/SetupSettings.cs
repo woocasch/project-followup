@@ -1,6 +1,6 @@
 ﻿namespace ProjectFollowUp.BFF.KeycloakSetup;
 
-public class SetupSettings
+public sealed class SetupSettings
 {
     public required string KeycloakBaseUrl { get; init; }
 
@@ -12,7 +12,7 @@ public class SetupSettings
 
     public required ProjectFollowUpRealmSettings ProjectFollowUpRealm { get; init; }
 
-    public class ProjectFollowUpRealmSettings
+    public sealed class ProjectFollowUpRealmSettings
     {
         public required string RealmId { get; init; }
 
@@ -24,7 +24,7 @@ public class SetupSettings
 
         public required AdminDetails AdminUser { get; init; }
 
-        public class ClientSettings
+        public sealed class ClientSettings
         {
             public required string ClientId { get; init; }
 
@@ -35,7 +35,7 @@ public class SetupSettings
             public required string[] WebOrigins { get; init; }
         }
 
-        public class AdminDetails 
+        public sealed class AdminDetails 
         {
             public required string Username { get; init; }
 

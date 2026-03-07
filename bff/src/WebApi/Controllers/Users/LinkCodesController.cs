@@ -9,7 +9,7 @@ using ProjectFollowUp.BFF.WebApi.Controllers.Users.LinkCodesModels;
 
 [Route("api/users/linkCodes")]
 [ApiController]
-public class LinkCodesController(
+public sealed class LinkCodesController(
     IMediator mediator,
     ILogger<LinkCodesController> logger) : ControllerBase
 {

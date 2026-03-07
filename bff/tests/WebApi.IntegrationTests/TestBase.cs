@@ -25,6 +25,11 @@ public abstract class TestBase
             AllowAutoRedirect = true,
         });
         clientInstance.Timeout = TimeSpan.FromSeconds(30);
+
+        // Add default test user authentication
+        var defaultUserId = Guid.Parse("00000000-0000-0000-0000-000000000001");
+        clientInstance.WithTestUser(defaultUserId, "test.user@example.com");
+
         return clientInstance;
     }
 }

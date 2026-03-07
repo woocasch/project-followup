@@ -4,7 +4,7 @@ using System;
 
 using ProjectFollowUp.BFF.Domain.User;
 
-public class EmailAddressTests
+public sealed class EmailAddressTests
 {
     private string emailAddress = null!;
 

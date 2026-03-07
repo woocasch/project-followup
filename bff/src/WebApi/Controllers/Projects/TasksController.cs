@@ -10,7 +10,7 @@ using ProjectFollowUp.BFF.WebApi.Controllers.Projects.TasksModels;
 
 [Route("api/projects/{projectId:guid}/tasks")]
 [ApiController]
-public class TasksController(
+public sealed class TasksController(
     IMediator mediator,
     ILogger<TasksController> logger) : ControllerBase
 {

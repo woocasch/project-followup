@@ -9,7 +9,7 @@ using ProjectFollowUp.BFF.WebApi.Controllers.Projects.UsersModels;
 
 [Route("api/projects/{projectId:guid}/users")]
 [ApiController]
-public class UsersController(
+public sealed class UsersController(
     IMediator mediator,
     ILogger<UsersController> logger) : ControllerBase
 {

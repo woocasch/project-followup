@@ -11,6 +11,6 @@ internal static partial class KurrentHealthCheckLogs
 
     private static class EventIds
     {
-        public const int KurrentHealthCheckFailed = 1001;
+        public const int KurrentHealthCheckFailed = 1;
     }
 }

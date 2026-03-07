@@ -8,7 +8,7 @@ internal static partial class FetchProjectUsersQueryLogs
         EventId = EventIds.Started,
         EventName = nameof(EventIds.Started),
         Level = LogLevel.Trace,
-        Message = "Startin retrieval of projet users for project '{ProjectId}'")]
+        Message = "Starting retrieval of project users for project '{ProjectId}'")]
     public static partial void Started(
         this ILogger<FetchProjectUsersQueryHandler> logger,
         Guid projectId);
@@ -26,7 +26,7 @@ internal static partial class FetchProjectUsersQueryLogs
         EventId = EventIds.Completed,
         EventName = nameof(EventIds.Completed),
         Level = LogLevel.Trace,
-        Message = "Completed retrieval of projet users for project '{ProjectId}'")]
+        Message = "Completed retrieval of project users for project '{ProjectId}'")]
     public static partial void Completed(
         this ILogger<FetchProjectUsersQueryHandler> logger,
         Guid projectId);

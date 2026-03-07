@@ -6,8 +6,6 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Google.Protobuf.Compiler;
-
 using KurrentDB.Client;
 
 using Microsoft.Extensions.Logging;

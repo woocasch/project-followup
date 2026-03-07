@@ -11,6 +11,6 @@ internal static partial class MongoHealthCheckLogs
 
     private static class EventIds
     {
-        public const int MongoHealthCheckFailed = 1002;
+        public const int MongoHealthCheckFailed = 1;
     }
 }

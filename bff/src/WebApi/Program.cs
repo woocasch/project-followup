@@ -119,6 +119,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 
 builder.Services.AddAuthorization();
 
+// Configure CORS policies
+const string AllowAnyOriginPolicy = "AllowAnyOrigin";
+const string AllowSpecificOriginsPolicy = "AllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(AllowAnyOriginPolicy, policy =>
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .SetIsOriginAllowed(_ => true)
+            .AllowCredentials());
+
+    options.AddPolicy(AllowSpecificOriginsPolicy, policy =>
+        policy
+            .WithOrigins(securitySettings.Cors.AllowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
+
 // Configure OpenTelemetry
 var serviceName = builder.Configuration.GetValue("OpenTelemetry:ServiceName", "UNKNOWN"); ;
 var serviceVersion = builder.Configuration.GetValue("OpenTelemetry:ServiceVersion", "X.X.X");
@@ -192,21 +212,11 @@ if (app.Environment.IsDevelopment())
 // Configure CORS based on settings
 if (securitySettings.Cors.AllowAnyOrigin)
 {
-    app.UseCors(options =>
-        options
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .SetIsOriginAllowed(_ => true)
-            .AllowCredentials());
+    app.UseCors(AllowAnyOriginPolicy);
 }
 else if (securitySettings.Cors.AllowedOrigins.Length > 0)
 {
-    app.UseCors(options =>
-        options
-            .WithOrigins(securitySettings.Cors.AllowedOrigins)
-            .AllowAnyHeader()
-            .AllowAnyMethod()
-            .AllowCredentials());
+    app.UseCors(AllowSpecificOriginsPolicy);
 }
 
 app.UseAuthentication();

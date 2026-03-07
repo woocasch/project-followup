@@ -18,7 +18,14 @@ public sealed class RabbitMqClient(
     {
         var request = new HttpRequestMessage(
             HttpMethod.Post,
-            $"api/bindings/{Uri.EscapeDataString(vhost)}/{NodeTypeToUrlPart(sourceType)}/{Uri.EscapeDataString(sourceName)}/{NodeTypeToUrlPart(targetType)}/{Uri.EscapeDataString(targetName)}");
+            $"api/bindings/{Uri.EscapeDataString(vhost)}/{NodeTypeToUrlPart(sourceType)}/{Uri.EscapeDataString(sourceName)}/{NodeTypeToUrlPart(targetType)}/{Uri.EscapeDataString(targetName)}")
+        {
+            Content = JsonContent.Create(new
+            {
+                routing_key = string.Empty,
+                arguments = new { },
+            }),
+        };
         var response = await httpClient.SendAsync(request, cancellationToken);
         return response.IsSuccessStatusCode;
     }
@@ -60,7 +67,6 @@ public sealed class RabbitMqClient(
             Content = JsonContent.Create(new
             {
                 password,
-                tags = "administrator",
             }),
         };
         var response = await httpClient.SendAsync(request, cancellationToken);

@@ -18,7 +18,7 @@ public sealed class CreateExchanges(
 
     public async Task Execute(CancellationToken cancellationToken)
     {
-        reporter.Info("Creating users...");
+        reporter.Info("Creating exchanges...");
         foreach (var exchange in exchanges)
         {
             if (await rabbitMqClient.ExchangeExists(exchange.VHost, exchange.Name, cancellationToken))

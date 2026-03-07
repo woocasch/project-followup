@@ -11,6 +11,6 @@ internal static partial class RabbitMqHealthCheckLogs
 
     private static class EventIds
     {
-        public const int RabbitMqHealthCheckFailed = 1001;
+        public const int RabbitMqHealthCheckFailed = 1;
     }
 }

@@ -1,5 +1,7 @@
 ﻿namespace ProjectFollowUp.BFF.WebApi.IntegrationTests;
 
+using DotNet.Testcontainers.Builders;
+
 using Testcontainers.KurrentDb;
 
 public sealed class KurrentDbFixture : IAsyncLifetime
@@ -12,6 +14,7 @@ public sealed class KurrentDbFixture : IAsyncLifetime
     {
         this.container = new KurrentDbBuilder("docker.kurrent.io/kurrent-latest/kurrentdb:latest")
         .WithCleanUp(true)
+        .WithWaitStrategy(Wait.ForUnixContainer().UntilInternalTcpPortIsAvailable(2113))
         .Build();
     }
 

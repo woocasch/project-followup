@@ -6,14 +6,14 @@ public sealed class QueueMappings
 
     public required List<Queue> Queues { get; init; }
 
-    public class Exchange
+    public sealed class Exchange
     {
         public required string EventType { get; init; }
 
         public required string ExchangeName { get; init; }
     }
 
-    public class Queue
+    public sealed class Queue
     {
         public required string HandlerType { get; init; }
 

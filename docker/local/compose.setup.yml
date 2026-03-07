@@ -20,3 +20,20 @@ services:
       - monitoring-network
     profiles:
       - setup
+
+  rabbitmqsetup.projectfollowup.local:
+    image: project-follow-up/rabbitmqsetup:local
+    container_name: rabbitmqsetup.projectfollowup.local
+    hostname: rabbitmqsetup.projectfollowup.local
+    restart: no
+    environment:
+      - SetupSettings__RabbitMqRestUrl=http://rabbitmq.projectfollowup.local:15672
+      - SetupSettings__RabbitMqRestUsername=admin
+      - SetupSettings__RabbitMqRestPassword=admin
+    depends_on:
+      - rabbitmq.projectfollowup.local
+    networks:
+      - auth-network
+      - monitoring-network
+    profiles:
+      - setup

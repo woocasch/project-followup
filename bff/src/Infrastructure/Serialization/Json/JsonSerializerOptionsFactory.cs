@@ -1,6 +1,7 @@
 ﻿namespace ProjectFollowUp.BFF.Infrastructure.Serialization.Json;
 
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 public static class JsonSerializerOptionsFactory
 {
@@ -20,6 +21,7 @@ public static class JsonSerializerOptionsFactory
                 new User.UserIdConverter(),
                 new ActivationLink.ActivationLinkIdConverter(),
                 new Project.ProjectIdConverter(),
+                new JsonStringEnumConverter(),
             },
         };
     }

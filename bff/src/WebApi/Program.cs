@@ -27,9 +27,16 @@ using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects.ProjectsModels;
 using ProjectFollowUp.BFF.WebApi.EventsSubscriptions;
+using ProjectFollowUp.BFF.WebApi.HealthChecks;
+using ProjectFollowUp.BFF.WebApi.Middleware;
+using ProjectFollowUp.BFF.WebApi.Security;
 using ProjectFollowUp.BFF.WebApi.Validation;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure Security Settings
+builder.Services.Configure<SecuritySettings>(builder.Configuration.GetSection("Security"));
+var securitySettings = builder.Configuration.GetSection("Security").Get<SecuritySettings>() ?? new SecuritySettings();
 
 // Add services to the container.
 
@@ -88,7 +95,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
         options.Authority = validIssuer;
-        options.RequireHttpsMetadata = false; // Set to true in production
+        options.RequireHttpsMetadata = securitySettings.RequireHttpsMetadata;
         options.MetadataAddress = keycloakMetadataAddress;
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -111,6 +118,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     });
 
 builder.Services.AddAuthorization();
+
+// Configure CORS policies
+const string AllowAnyOriginPolicy = "AllowAnyOrigin";
+const string AllowSpecificOriginsPolicy = "AllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(AllowAnyOriginPolicy, policy =>
+        policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .SetIsOriginAllowed(_ => true)
+            .AllowCredentials());
+
+    options.AddPolicy(AllowSpecificOriginsPolicy, policy =>
+        policy
+            .WithOrigins(securitySettings.Cors.AllowedOrigins)
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials());
+});
 
 // Configure OpenTelemetry
 var serviceName = builder.Configuration.GetValue("OpenTelemetry:ServiceName", "UNKNOWN"); ;
@@ -164,7 +191,17 @@ builder.Services.AddHttpClient("Keycloak", client =>
     client.BaseAddress = new Uri(keycloakBaseAddress);
 });
 
+// Configure Health Checks
+builder.Services
+    .AddHealthChecks()
+    .AddCheck<KurrentHealthCheck>("kurrent")
+    .AddCheck<MongoHealthCheck>("mongodb")
+    .AddCheck<RabbitMqHealthCheck>("rabbitmq");
+
 var app = builder.Build();
+
+// Configure global exception handling
+app.UseMiddleware<GlobalExceptionMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -172,15 +209,22 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseCors(options =>
-    options
-        .AllowAnyHeader()
-        .AllowAnyMethod()
-        .SetIsOriginAllowed(_ => true)
-        .AllowCredentials());
+// Configure CORS based on settings
+if (securitySettings.Cors.AllowAnyOrigin)
+{
+    app.UseCors(AllowAnyOriginPolicy);
+}
+else if (securitySettings.Cors.AllowedOrigins.Length > 0)
+{
+    app.UseCors(AllowSpecificOriginsPolicy);
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+// Map health check endpoints
+app.MapHealthChecks("/health");
+app.MapHealthChecks("/health/ready");
 
 app.MapControllers();
 

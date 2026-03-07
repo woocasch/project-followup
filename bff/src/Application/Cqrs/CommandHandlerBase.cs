@@ -32,7 +32,7 @@ public abstract class CommandHandlerBase<TCommand>(
         catch (Exception ex)
         {
             logger.ExceptionOccurred(typedCommand.GetType(), ex);
-            return CommandResult.Failure("ExceptionOccured", ex);
+            return CommandResult.Failure("ExceptionOccurred", ex);
         }
     }
 

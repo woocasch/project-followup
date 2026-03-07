@@ -18,7 +18,7 @@ public sealed class CreateBindings(
 
     public async Task Execute(CancellationToken cancellationToken)
     {
-        reporter.Info("Creating users...");
+        reporter.Info("Creating bindings...");
         foreach (var binding in bindings)
         {
             if (await rabbitMqClient.BindingExists(

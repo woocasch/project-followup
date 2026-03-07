@@ -8,10 +8,9 @@ internal static partial class SmtpMailSenderLogs
         EventId = EventIds.SendEmailStarted,
         EventName = nameof(EventIds.SendEmailStarted),
         Level = LogLevel.Trace,
-        Message = "Starting to send email to {Recipient}.")]
+        Message = "Starting to send email.")]
     public static partial void SendEmailStarted(
-        this ILogger<SmtpMailSender> logger,
-        string recipient);
+        this ILogger<SmtpMailSender> logger);
 
     [LoggerMessage(
         EventId = EventIds.SendEmailConnected,

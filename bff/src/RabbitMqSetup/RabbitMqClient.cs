@@ -10,7 +10,7 @@ public sealed class RabbitMqClient(
         var request = new HttpRequestMessage(
             HttpMethod.Get,
             $"api/bindings/{Uri.EscapeDataString(vhost)}/{NodeTypeToUrlPart(sourceType)}/{Uri.EscapeDataString(sourceName)}/{NodeTypeToUrlPart(targetType)}/{Uri.EscapeDataString(targetName)}");
-        var response = await httpClient.SendAsync(request, cancellationToken);
+        var response = await this.ExecuteRequest(request, cancellationToken);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -33,7 +33,7 @@ public sealed class RabbitMqClient(
                 arguments = new { },
             }),
         };
-        var response = await httpClient.SendAsync(request, cancellationToken);
+        var response = await this.ExecuteRequest(request, cancellationToken);
         return response.IsSuccessStatusCode;
     }
 
@@ -48,7 +48,7 @@ public sealed class RabbitMqClient(
                 autodelete,
             }),
         };
-        var response = await httpClient.SendAsync(request, cancellationToken);
+        var response = await this.ExecuteRequest(request, cancellationToken);
         return response.IsSuccessStatusCode;
     }
 
@@ -63,7 +63,7 @@ public sealed class RabbitMqClient(
                 autodelete,
             }),
         };
-        var response = await httpClient.SendAsync(request, cancellationToken);
+        var response = await this.ExecuteRequest(request, cancellationToken);
         return response.IsSuccessStatusCode;
     }
 
@@ -74,44 +74,38 @@ public sealed class RabbitMqClient(
             Content = JsonContent.Create(new
             {
                 password,
+                tags = Array.Empty<string>(),
             }),
         };
-        var response = await httpClient.SendAsync(request, cancellationToken);
+        var response = await this.ExecuteRequest(request, cancellationToken);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> CreateVirtualHost(string vhost, CancellationToken cancellationToken)
     {
         var request = new HttpRequestMessage(HttpMethod.Put, $"api/vhosts/{Uri.EscapeDataString(vhost)}");
-        var response = await httpClient.SendAsync(request, cancellationToken);
-        if (!response.IsSuccessStatusCode)
-        {
-            var responseContent = await response.Content.ReadAsStringAsync(cancellationToken: cancellationToken);
-            Console.WriteLine($"Response code: {response.StatusCode}");
-            Console.WriteLine($"Response content: {responseContent}");
-        }
-
+        var response = await this.ExecuteRequest(request, cancellationToken);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> ExchangeExists(string vHost, string name, CancellationToken cancellationToken)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, $"api/exchanges/{Uri.EscapeDataString(vHost)}/{Uri.EscapeDataString(name)}");
-        var response = await httpClient.SendAsync(request, cancellationToken);
+        var response = await this.ExecuteRequest(request, cancellationToken);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> PermissionsAreSet(string userName, string vhost, CancellationToken cancellationToken)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, $"api/permissions/{Uri.EscapeDataString(vhost)}/{Uri.EscapeDataString(userName)}");
-        var response = await httpClient.SendAsync(request, cancellationToken);
+        var response = await this.ExecuteRequest(request, cancellationToken);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> QueueExists(string vHost, string name, CancellationToken cancellationToken)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, $"api/queues/{Uri.EscapeDataString(vHost)}/{Uri.EscapeDataString(name)}");
-        var response = await httpClient.SendAsync(request, cancellationToken);
+        var response = await this.ExecuteRequest(request, cancellationToken);
         return response.IsSuccessStatusCode;
     }
 
@@ -126,22 +120,35 @@ public sealed class RabbitMqClient(
                 read = readPermission,
             }),
         };
-        var response = await httpClient.SendAsync(request, cancellationToken);
+        var response = await this.ExecuteRequest(request, cancellationToken);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> UserExists(string userName, CancellationToken cancellationToken)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, $"api/users/{Uri.EscapeDataString(userName)}");
-        var response = await httpClient.SendAsync(request, cancellationToken);
+        var response = await this.ExecuteRequest(request, cancellationToken);
         return response.IsSuccessStatusCode;
     }
 
     public async Task<bool> VirtualHostExists(string vhost, CancellationToken cancellationToken)
     {
         var request = new HttpRequestMessage(HttpMethod.Get, $"api/vhosts/{Uri.EscapeDataString(vhost)}");
-        var response = await httpClient.SendAsync(request, cancellationToken);
+        var response = await this.ExecuteRequest(request, cancellationToken);
         return response.IsSuccessStatusCode;
+    }
+
+    private async Task<HttpResponseMessage> ExecuteRequest(HttpRequestMessage request, CancellationToken cancellationToken)
+    {
+        var response = await httpClient.SendAsync(request, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            var responseContent = await response.Content.ReadAsStringAsync(cancellationToken: cancellationToken);
+            Console.WriteLine($"Response code: {response.StatusCode}");
+            Console.WriteLine($"Response content: {responseContent}");
+        }
+
+        return response;
     }
 
     private static string NodeTypeToUrlPart(IRabbitMqClient.BindingNode nodeType) => nodeType switch

@@ -26,7 +26,7 @@ COPY . .
 # Publish the WebApi project
 FROM build AS publish
 WORKDIR /src
-RUN dotnet publish "./src/KeycloakSetup/KeycloakSetup.csproj" -c $BUILD_CONFIGURATION -o /app/publish --no-restore
+RUN dotnet publish "./src/RabbitMqSetup/RabbitMqSetup.csproj" -c $BUILD_CONFIGURATION -o /app/publish --no-restore
 
 # Final image: use a slimmer runtime base image
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
@@ -37,4 +37,4 @@ EXPOSE 8080
 
 # Copy the published output and set entrypoint
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "KeycloakSetup.dll"]
+ENTRYPOINT ["dotnet", "RabbitMqSetup.dll"]

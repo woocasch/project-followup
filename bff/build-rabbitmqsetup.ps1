@@ -1,0 +1,1 @@
+docker build -f RabbitMQSetup.Dockerfile . -t project-follow-up/rabbitmqsetup:local

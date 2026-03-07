@@ -71,6 +71,13 @@ public sealed class RabbitMqClient(
     {
         var request = new HttpRequestMessage(HttpMethod.Put, $"api/vhosts/{Uri.EscapeDataString(vhost)}");
         var response = await httpClient.SendAsync(request, cancellationToken);
+        if (!response.IsSuccessStatusCode)
+        {
+            var responseContent = await response.Content.ReadAsStringAsync(cancellationToken: cancellationToken);
+            Console.WriteLine($"Response code: {response.StatusCode}");
+            Console.WriteLine($"Response content: {responseContent}");
+        }
+
         return response.IsSuccessStatusCode;
     }
 

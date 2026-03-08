@@ -2,6 +2,7 @@
 
 using System.Security.Claims;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -78,6 +79,7 @@ public sealed class ProjectsController(
     }
 
     [HttpPost]
+    [Authorize(Roles = "manage-projects")]
     public async Task<IResult> Create(
         CreateInput payload,
         CancellationToken cancellationToken)

@@ -6,7 +6,7 @@ using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects.ProjectsModels;
 
 public sealed class UpdateProjectTests(WebApiFactory webApiFactory)
-    : TestBase(webApiFactory, "manage-projects")
+    : TestBase(webApiFactory, "create-project", "update-project")
 {
     private Guid projectId;
 

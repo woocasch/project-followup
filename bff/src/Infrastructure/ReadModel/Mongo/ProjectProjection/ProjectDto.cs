@@ -13,6 +13,8 @@ public sealed class ProjectDto
 
     public string Description { get; set; } = default!;
 
+    public Guid CreatedBy { get; set; }
+
     public DateTimeOffset CreatedAt { get; set; }
 
     public Collection<AssignedUserDto> AssignedUsers { get; set; } = [];
@@ -24,6 +26,8 @@ public sealed class ProjectDto
         public Guid Id { get; set; }
 
         public string DisplayName { get; set; } = default!;
+
+        public string Role { get; set; } = default!;
     }
 
     public sealed class TaskDto

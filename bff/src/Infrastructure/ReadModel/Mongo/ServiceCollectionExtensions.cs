@@ -45,7 +45,8 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddTransient<Application.ActivationLinks.IReadModel, ActivationLinksReadModel>()
-            .AddTransient<Application.Projects.IReadModel, ProjectsReadModel>();
+            .AddTransient<Application.Projects.IReadModel, ProjectsReadModel>()
+            .AddTransient<Application.Users.IReadModel, UsersReadModel>();
         return services;
     }
 }

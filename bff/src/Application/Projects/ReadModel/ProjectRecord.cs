@@ -9,13 +9,15 @@ public readonly record struct ProjectRecord(
     ProjectId Id,
     string Title,
     string Description,
+    UserId CreatedBy,
     DateTimeOffset CreatedAt,
     Collection<ProjectRecord.AssignedUser> AssignedUsers,
     Collection<ProjectRecord.Task> Tasks)
 {
     public readonly record struct AssignedUser(
         UserId Id,
-        string DisplayName);
+        string DisplayName,
+        string Role);
 
     public readonly record struct Task(
         Guid Id,

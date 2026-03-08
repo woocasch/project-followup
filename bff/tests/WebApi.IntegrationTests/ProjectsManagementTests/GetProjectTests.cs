@@ -15,7 +15,7 @@ public sealed class GetProjectTests : TestBase
     private GetOutput getProjectOutput = null!;
 
     public GetProjectTests(WebApiFactory webApiFactory)
-        : base(webApiFactory, "manage-projects")
+        : base(webApiFactory, "create-project")
     {
     }
 

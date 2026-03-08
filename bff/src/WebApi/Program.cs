@@ -1,4 +1,5 @@
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -113,6 +114,26 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<ProjectFollowUp.BFF.WebApi.WebApiProgram>>();
                 logger.LogError(context.Exception, "Authentication failed");
                 await Task.Yield();
+            },
+            OnTokenValidated = context =>
+            {
+                var identity = (ClaimsIdentity)context.Principal!.Identity!;
+
+                var realmAccess = context.Principal.FindFirst("realm_access")?.Value;
+
+                if (realmAccess != null)
+                {
+                    var json = JsonDocument.Parse(realmAccess);
+                    if (json.RootElement.TryGetProperty("roles", out var roles))
+                    {
+                        foreach (var role in roles.EnumerateArray())
+                        {
+                            identity.AddClaim(new Claim(ClaimTypes.Role, role.GetString()!));
+                        }
+                    }
+                }
+
+                return Task.CompletedTask;
             }
         };
     });

@@ -2,6 +2,7 @@
 
 using ProjectFollowUp.BFF.Domain.Project;
 using ProjectFollowUp.BFF.Domain.Project.Events;
+using ProjectFollowUp.BFF.Domain.User;
 
 public sealed class ProjectCreatedTests
 {
@@ -13,12 +14,14 @@ public sealed class ProjectCreatedTests
     public void WhenInstanceIsSerializedThenSerializedInstanceIsAsExpected()
     {
         var projectIdValue = Guid.Parse("e3e77038-be0a-4080-b851-daa7c52db072");
+        var userIdValue = Guid.Parse("f1f2f3f4-f5f6-4789-8abc-def123456789");
         var testInstance = new ProjectCreated(
             ProjectId.FromGuid(projectIdValue),
             "PROJECT_TITLE",
             "PROJECT_DESCRIPTION",
+            UserId.FromGuid(userIdValue),
             new DateTimeOffset(2025, 4, 5, 6, 7, 8, TimeSpan.Zero));
-        var expectedSerializedValue = """{"projectId":"e3e77038-be0a-4080-b851-daa7c52db072","title":"PROJECT_TITLE","description":"PROJECT_DESCRIPTION","createdAt":"2025-04-05T06:07:08+00:00"}""";
+        var expectedSerializedValue = """{"projectId":"e3e77038-be0a-4080-b851-daa7c52db072","title":"PROJECT_TITLE","description":"PROJECT_DESCRIPTION","createdBy":"f1f2f3f4-f5f6-4789-8abc-def123456789","createdAt":"2025-04-05T06:07:08+00:00"}""";
         this.Given(t => t.InstanceIsSetTo(testInstance))
             .When(t => t.InstanceIsSerialized())
             .Then(t => t.SerializedInstanceIs(expectedSerializedValue))
@@ -28,11 +31,12 @@ public sealed class ProjectCreatedTests
     [Fact]
     public void WhenInstanceIsDeserializedThenInstanceIsAsExpected()
     {
-        var serializedValue = """{"projectId":"0a4afa70-8683-4276-8173-4f456c673e83","title":"DIFFERENT_PROJECT_TITLE","description":"DIFFERENT_PROJECT_DESCRIPTION","createdAt":"2026-07-08T09:10:11+00:00"}""";
+        var serializedValue = """{"projectId":"0a4afa70-8683-4276-8173-4f456c673e83","title":"DIFFERENT_PROJECT_TITLE","description":"DIFFERENT_PROJECT_DESCRIPTION","createdBy":"9fdc6394-a7d6-48e6-bd93-9d8877216ed4","createdAt":"2026-07-08T09:10:11+00:00"}""";
         var expectedInstance = new ProjectCreated(
             ProjectId.FromGuid(Guid.Parse("0a4afa70-8683-4276-8173-4f456c673e83")),
             "DIFFERENT_PROJECT_TITLE",
             "DIFFERENT_PROJECT_DESCRIPTION",
+            UserId.FromGuid(Guid.Parse("9fdc6394-a7d6-48e6-bd93-9d8877216ed4")),
             new DateTimeOffset(2026, 7, 8, 9, 10, 11, TimeSpan.Zero));
         this.Given(t => t.SerializedInstanceIsSetTo(serializedValue))
             .When(t => t.InstanceIsDeserialized())

@@ -54,52 +54,52 @@ services:
       retries: 3
       start_period: 10s
 
-  # keycloak.projectfollowup.dev:
-  #   container_name: keycloak.projectfollowup.dev
-  #   hostname: keycloak.projectfollowup.dev
-  #   image: quay.io/keycloak/keycloak:26.5
-  #   command:
-  #     - start
-  #     - --hostname=http://localhost:4002
-  #     - --hostname-strict=false
-  #     - --proxy-headers=xforwarded
-  #     - --telemetry-endpoint=http://otel-collector.projectfollowup.dev:4317
-  #     - --telemetry-service-name=project-follow-up-keycloak
-  #     - --features=opentelemetry-logs
-  #     - --telemetry-logs-enabled=true
-  #     - --telemetry-logs-level=all
-  #     - --telemetry-resource-attributes=deployment_environment=dev
-  #     - --health-enabled=true
-  #     # - --optimized
-  #   ports:
-  #     - "4002:8080"
-  #   depends_on:
-  #     keycloak.storage.projectfollowup.dev:
-  #       condition: service_healthy
-  #     otel-collector.projectfollowup.dev:
-  #       condition: service_healthy
-  #   environment:
-  #     KEYCLOAK_ADMIN: admin
-  #     KEYCLOAK_ADMIN_PASSWORD: admin
-  #     KC_HTTP_ENABLED: true
-  #     KC_HOSTNAME_STRICT: false
-  #     KC_DB: mysql
-  #     KC_DB_URL_HOST: keycloak.storage.projectfollowup.dev
-  #     KC_DB_URL_PROPERTIES : '?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true'
-  #     KC_DB_SCHEMA: keycloak
-  #     KC_DB_USERNAME: keycloak
-  #     KC_DB_PASSWORD: 'keycloak-password'
-  #   restart: always
-  #   networks:
-  #     - keycloak-network
-  #     - nginx-network
-  #     - monitoring
-  #   healthcheck:
-  #     test: ["CMD-SHELL", "curl -f http://localhost:8080/health/ready || exit 1"]
-  #     timeout: 10s
-  #     retries: 10
-  #     interval: 30s
-  #     start_period: 60s
+  keycloak.projectfollowup.dev:
+    container_name: keycloak.projectfollowup.dev
+    hostname: keycloak.projectfollowup.dev
+    image: quay.io/keycloak/keycloak:26.5
+    command:
+      - start
+      - --hostname=http://localhost:4002
+      - --hostname-strict=false
+      - --proxy-headers=xforwarded
+      - --telemetry-endpoint=http://otel-collector.projectfollowup.dev:4317
+      - --telemetry-service-name=project-follow-up-keycloak
+      - --features=opentelemetry-logs
+      - --telemetry-logs-enabled=true
+      - --telemetry-logs-level=all
+      - --telemetry-resource-attributes=deployment_environment=dev
+      - --health-enabled=true
+      # - --optimized
+    ports:
+      - "4002:8080"
+    depends_on:
+      keycloak.storage.projectfollowup.dev:
+        condition: service_healthy
+      otel-collector.projectfollowup.dev:
+        condition: service_healthy
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT: false
+      KC_DB: mysql
+      KC_DB_URL_HOST: keycloak.storage.projectfollowup.dev
+      KC_DB_URL_PROPERTIES : '?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true'
+      KC_DB_SCHEMA: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: 'keycloak-password'
+    restart: always
+    networks:
+      - keycloak-network
+      - nginx-network
+      - monitoring
+    healthcheck:
+      test: ["CMD-SHELL", "{ printf 'HEAD /health/ready HTTP/1.0\r\n\r\n' >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000"]
+      timeout: 10s
+      retries: 10
+      interval: 30s
+      start_period: 60s
 
   # kurrent.projectfollowup.dev:
   #   image: docker.kurrent.io/kurrent-latest/kurrentdb:26.0.0

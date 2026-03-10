@@ -2,6 +2,11 @@
 # Sends traces, metrics, and logs via OTLP HTTP to grafana.monitoring.local
 # Grafana can be used to visualize all data types
 
+extensions:
+  health_check:
+    # Bind to specific interface and port
+    endpoint: 0.0.0.0:13133
+
 receivers:
   otlp:
     protocols:
@@ -65,4 +70,4 @@ service:
       processors: [resource, transform/logs, batch]
       exporters: [otlphttp, debug]
 
-  extensions: []
+  extensions: [health_check]

@@ -46,6 +46,7 @@ services:
     #   - "8889:8889"   # Prometheus exporter metrics
     networks:
       - nginx-network
+      - keycloak-network
       - monitoring
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:13133/health"]
@@ -57,7 +58,10 @@ services:
   keycloak.projectfollowup.dev:
     container_name: keycloak.projectfollowup.dev
     hostname: keycloak.projectfollowup.dev
-    image: quay.io/keycloak/keycloak:26.5
+    image: project-follow-up/keycloak:local
+    build:
+      context: ./keycloak
+      dockerfile: Dockerfile
     command:
       - start
       - --hostname=http://localhost:4002
@@ -65,25 +69,23 @@ services:
       - --proxy-headers=xforwarded
       - --telemetry-endpoint=http://otel-collector.projectfollowup.dev:4317
       - --telemetry-service-name=project-follow-up-keycloak
-      - --features=opentelemetry-logs
-      - --telemetry-logs-enabled=true
       - --telemetry-logs-level=all
       - --telemetry-resource-attributes=deployment_environment=dev
-      - --health-enabled=true
-      # - --optimized
+      - --optimized
     ports:
       - "4002:8080"
     depends_on:
       keycloak.storage.projectfollowup.dev:
         condition: service_healthy
+        restart: true
       otel-collector.projectfollowup.dev:
         condition: service_healthy
+        restart: true
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HTTP_ENABLED: true
       KC_HOSTNAME_STRICT: false
-      KC_DB: mysql
       KC_DB_URL_HOST: keycloak.storage.projectfollowup.dev
       KC_DB_URL_PROPERTIES : '?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true'
       KC_DB_SCHEMA: keycloak
@@ -93,13 +95,12 @@ services:
     networks:
       - keycloak-network
       - nginx-network
-      - monitoring
     healthcheck:
-      test: ["CMD-SHELL", "{ printf 'HEAD /health/ready HTTP/1.0\r\n\r\n' >&0; grep 'HTTP/1.0 200'; } 0<>/dev/tcp/localhost/9000"]
+      test: ["CMD", "curl", "-fsS", "http://localhost:9000/health/ready"]
       timeout: 10s
       retries: 10
       interval: 30s
-      start_period: 60s
+      start_period: 300s
 
   kurrent.projectfollowup.dev:
     image: docker.kurrent.io/kurrent-latest/kurrentdb:26.0.0

@@ -70,7 +70,7 @@ services:
       - --telemetry-endpoint=http://otel-collector.projectfollowup.dev:4317
       - --telemetry-service-name=project-follow-up-keycloak
       - --telemetry-logs-level=all
-      - --telemetry-resource-attributes=deployment_environment=dev
+      - --telemetry-resource-attributes=deployment_environment=project-followup-dev
       - --optimized
     ports:
       - "4002:8080"

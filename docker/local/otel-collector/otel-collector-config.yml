@@ -1,6 +1,11 @@
 # OTEL Collector configuration for Grafana Stack integration
-# Sends traces to Tempo, metrics to Prometheus, and logs to Loki
+# Sends traces, metrics, and logs via OTLP HTTP to grafana.monitoring.local
 # Grafana can be used to visualize all data types
+
+extensions:
+  health_check:
+    # Bind to specific interface and port
+    endpoint: 0.0.0.0:13133
 
 receivers:
   otlp:
@@ -25,7 +30,7 @@ processors:
         from_attribute: service_version
         action: upsert
       - key: deployment.environment
-        from_attribute: deployment_environment
+        value: project-followup-local
         action: upsert
 
   # Transform logs to be compatible with Loki
@@ -38,20 +43,11 @@ processors:
           - set(attributes["message"], body)
 
 exporters:
-  # Tempo exporter for traces
-  otlp/tempo:
-    endpoint: http://tempo.monitoring.local:4317
+  # OTLP HTTP exporter for traces, metrics, and logs
+  otlphttp:
+    endpoint: http://grafana.monitoring.local:4318
     tls:
       insecure: true
-
-  # Prometheus exporter for metrics
-  prometheus:
-    endpoint: "0.0.0.0:8889"
-    # Prometheus will scrape metrics from this endpoint
-
-  # Loki exporter for logs
-  otlphttp:
-    endpoint: http://loki.monitoring.local:3100/otlp
 
   # Debug exporter for troubleshooting
   debug:
@@ -62,16 +58,16 @@ service:
     traces:
       receivers: [otlp]
       processors: [resource, batch]
-      exporters: [otlp/tempo, debug]
+      exporters: [otlphttp, debug]
     
     metrics:
       receivers: [otlp]
       processors: [resource, batch]
-      exporters: [prometheus, debug]
+      exporters: [otlphttp, debug]
     
     logs:
       receivers: [otlp]
       processors: [resource, transform/logs, batch]
       exporters: [otlphttp, debug]
 
-  extensions: []
+  extensions: [health_check]

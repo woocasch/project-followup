@@ -30,7 +30,7 @@ processors:
         from_attribute: service_version
         action: upsert
       - key: deployment.environment
-        from_attribute: deployment_environment
+        value: project-followup-dev
         action: upsert
 
   # Transform logs to be compatible with Loki

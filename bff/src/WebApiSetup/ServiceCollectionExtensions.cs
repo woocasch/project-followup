@@ -4,7 +4,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
-using ProjectFollowUp.BFF.KeycloakSetup.Operations;
 using ProjectFollowUp.BFF.WebApiSetup.Operations;
 
 public static class ServiceCollectionExtensions

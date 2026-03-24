@@ -2,7 +2,6 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-using ProjectFollowUp.BFF.KeycloakSetup;
 using ProjectFollowUp.BFF.WebApiSetup;
 
 var builder = Host.CreateApplicationBuilder();

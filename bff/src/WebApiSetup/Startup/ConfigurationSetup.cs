@@ -19,8 +19,8 @@ public static class ConfigurationSetup
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        // Configure Event Subscriptions
         services.Configure<EventBusSettings>(configuration.GetSection("EventBus"));
+        services.Configure<MongoSettings>(configuration.GetSection("Mongo"));
         return services;
     }
 

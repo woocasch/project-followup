@@ -1,19 +1,18 @@
-﻿namespace ProjectFollowUp.BFF.KeycloakSetup;
+﻿namespace ProjectFollowUp.BFF.WebApiSetup;
 
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 using ProjectFollowUp.BFF.KeycloakSetup.Operations;
+using ProjectFollowUp.BFF.WebApiSetup.Operations;
 
 public static class ServiceCollectionExtensions
 {
     public static IServiceCollection AddOperationsImplementations(this IServiceCollection services)
     {
-        services.AddTransient<IOperation, CreateRealm>();
-        services.AddTransient<IOperation, CreateCustomRoles>();
-        services.AddTransient<IOperation, CreateAdminUser>();
-        services.AddTransient<IOperation, CreateUIClient>();
-        services.AddTransient<IOperation, CreateBffClient>();
+        services.AddTransient<IOperation, WaitForOtherSetups>();
+        services.AddTransient<IOperation, SetupAdminUser>();
         return services;
     }
 
@@ -24,15 +23,16 @@ public static class ServiceCollectionExtensions
         return services;
     }
 
-    public static IServiceCollection AddKeycloakClient(this IServiceCollection services)
+    public static IServiceCollection AddKeycloakClient(
+        this IServiceCollection services,
+        IConfiguration configuration)
     {
         services.AddScoped(sp =>
         {
+            var keycloakBaseAddress = configuration.GetValue("Keycloak:BaseAddress", string.Empty);
             var settings = sp.GetRequiredService<IOptions<SetupSettings>>().Value;
-            var keycloakServerUrl = settings.KeycloakBaseUrl;
-
             var keycloakClient = new Keycloak.Net.KeycloakClient(
-                keycloakServerUrl,
+                keycloakBaseAddress,
                 settings.MasterAdminUsername,
                 settings.MasterAdminPassword,
                 new(authenticationRealm: settings.MasterRealm));

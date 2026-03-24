@@ -4,8 +4,6 @@ WORKDIR /src
 
 # Copy solution and central package file first to leverage Docker cache for restore
 COPY ["ProjectFollowUp.slnx", "./"]
-COPY ["build-api.ps1", "./"]
-COPY ["build-keycloaksetup.ps1", "./"]
 COPY ["Directory.Packages.props", "./"]
 
 # Copy project files to allow restore to be cached when project files don't change
@@ -27,7 +25,7 @@ COPY . .
 # Publish the WebApi project
 FROM build AS publish
 WORKDIR /src
-RUN dotnet publish "./src/RabbitMqSetup/RabbitMqSetup.csproj" -c $BUILD_CONFIGURATION -o /app/publish --no-restore
+RUN dotnet publish "./src/WebApiSetup/WebApiSetup.csproj" -c $BUILD_CONFIGURATION -o /app/publish --no-restore
 
 # Final image: use a slimmer runtime base image
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS final
@@ -38,4 +36,4 @@ EXPOSE 8080
 
 # Copy the published output and set entrypoint
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "RabbitMqSetup.dll"]
+ENTRYPOINT ["dotnet", "WebApiSetup.dll"]

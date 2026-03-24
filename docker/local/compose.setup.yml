@@ -37,3 +37,22 @@ services:
       - monitoring-network
     profiles:
       - setup
+
+  webapisetup.projectfollowup.local:
+    image: project-follow-up/webapisetup:local
+    container_name: webapisetup.projectfollowup.local
+    hostname: webapisetup.projectfollowup.local
+    restart: no
+    environment:
+      - Keycloak__baseAddress=http://keycloak.projectfollowup.local:8080
+      - Keycloak__clientSecret=6znFAwHjTmR2MGG1vFbLaGGMsb5VhXdn
+      - Keycloak__validIssuer=https://localhost:5000/auth/realms/project-follow-up
+      - Kurrent__ConnectionString=esdb://kurrent.projectfollowup.local:2113?tls=false
+    depends_on:
+      - kurrent.projectfollowup.local
+      - keycloak.projectfollowup.local
+    networks:
+      - auth-network
+      - monitoring-network
+    profiles:
+      - setup

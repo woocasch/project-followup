@@ -1,0 +1,1 @@
+docker build -f WebApiSetup.Dockerfile . -t project-follow-up/webapisetup:local

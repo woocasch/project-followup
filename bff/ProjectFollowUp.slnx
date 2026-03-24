@@ -15,6 +15,7 @@
     <Project Path="src/KeycloakSetup/KeycloakSetup.csproj" Id="8843fcf4-1927-45a4-82a1-a3e3a1d0f719" />
     <Project Path="src/RabbitMqSetup/RabbitMqSetup.csproj" Id="e5d808c1-d6cf-4ad4-964a-c76338c6cbfb" />
     <Project Path="src/WebApi/WebApi.csproj" Id="22ef88db-5bca-4562-aa27-599826c9a7ef" />
+    <Project Path="src/WebApiSetup/WebApiSetup.csproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Domain.UnitTests/Domain.UnitTests.csproj" />

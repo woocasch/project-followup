@@ -24,6 +24,10 @@ public sealed class KeycloakIdentityProvider(
             Email = request.Email,
             FirstName = request.DisplayName,
             Enabled = true,
+            Attributes = new Dictionary<string, IEnumerable<string>>
+            {
+                ["projectfollowup-userid"] = [request.UserId.Value.ToString()]
+            }
         };
         var created = await client.CreateUserAsync(options.Value.Realm, user, cancellationToken);
         if (!created)

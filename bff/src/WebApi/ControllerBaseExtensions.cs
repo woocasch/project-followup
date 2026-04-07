@@ -9,7 +9,7 @@ public static class ControllerBaseExtensions
     public static Guid? GetUserId(
         this ControllerBase controller)
     {
-        var userIdClaim = controller.User.FindFirst(ClaimTypes.NameIdentifier) ?? controller.User.FindFirst("sub");
+        var userIdClaim = controller.User.FindFirst("projectfollowup-userid");
         if (userIdClaim is null || !Guid.TryParse(userIdClaim.Value, out var userId))
         {
             return null;

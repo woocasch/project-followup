@@ -15,7 +15,7 @@ public sealed class CreateAdminUser(
 {
     private readonly SetupSettings setupSettings = setupSettingsOptions.Value;
 
-    public int Order => 5;
+    public int Order => 6;
 
     public string Description => "Creating application's admin user";
 

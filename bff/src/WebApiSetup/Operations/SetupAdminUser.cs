@@ -31,17 +31,18 @@ public sealed class SetupAdminUser(
     {
         reporter.Info("Creating admin user information");
         var user = await this.GetUser(
-            "projectfollowup",
+            Settings.AdminUser.Username,
             cancellationToken);
         var aggregate = CreateAggregate(user);
         await eventsRepository.StoreStreamAsync(
             aggregate,
             cancellationToken);
+        await this.SetUserIdInKeycloak(Settings.ApplicationRealm, user.Email, aggregate.AggregateId, cancellationToken);
     }
 
     public async Task<bool> IsNeeded(CancellationToken cancellationToken)
     {
-        var user = await readModel.GetByEmail("admin@projectfollowup", cancellationToken);
+        var user = await readModel.GetByEmail(Settings.AdminUser.Email, cancellationToken);
         return user is null;
     }
 
@@ -77,5 +78,34 @@ public sealed class SetupAdminUser(
 
         var user = users.First();
         return user;
+    }
+
+    private async Task SetUserIdInKeycloak(string realmId, string email, Guid userId, CancellationToken cancellationToken)
+    {
+        var users = (await keycloakClient.GetUsersAsync(
+            realmId,
+            email: email,
+            cancellationToken: cancellationToken)).ToList();
+        if (users.Count == 0)
+        {
+            throw new InvalidOperationException($"User with email '{email}' not found.");
+        }
+        var user = users.First();
+        var updatedUser = new User
+        {
+            Id = user.Id,
+            Email = user.Email,
+            FirstName = user.FirstName,
+            LastName = user.LastName,
+            Attributes = new Dictionary<string, IEnumerable<string>>
+            {
+                { "projectfollowup-userid", [userId.ToString()] }
+            }
+        };
+        await keycloakClient.UpdateUserAsync(
+            realmId,
+            user.Id,
+            updatedUser,
+            cancellationToken);
     }
 }

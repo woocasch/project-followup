@@ -12,7 +12,7 @@ public sealed class CreateBffClient(
 {
     private readonly SetupSettings setupSettings = setupSettingsOptions.Value;
 
-    public int Order => 4;
+    public int Order => 5;
 
     public string Description => "Creating a client for WebAPI BFF in realm";
 

@@ -91,16 +91,20 @@ public sealed class SetupAdminUser(
             throw new InvalidOperationException($"User with email '{email}' not found.");
         }
         var user = users.First();
+        var mergedAttributes = new Dictionary<string, IEnumerable<string>>(
+            user.Attributes ?? new Dictionary<string, IEnumerable<string>>())
+        {
+            ["projectfollowup-userid"] = [userId.ToString()]
+        };
         var updatedUser = new User
         {
             Id = user.Id,
+            UserName = user.UserName,
             Email = user.Email,
             FirstName = user.FirstName,
             LastName = user.LastName,
-            Attributes = new Dictionary<string, IEnumerable<string>>
-            {
-                { "projectfollowup-userid", [userId.ToString()] }
-            }
+            Enabled = user.Enabled,
+            Attributes = mergedAttributes
         };
         await keycloakClient.UpdateUserAsync(
             realmId,

@@ -12,7 +12,8 @@ services:
       - SetupSettings__projectFollowUpRealm__uiClient__webOrigins__0=https://localhost:5000
       - SetupSettings__projectFollowUpRealm__adminUser__username=projectfollowup
       - SetupSettings__projectFollowUpRealm__adminUser__password=projectfollowup
-      - SetupSettings__projectFollowUpRealm__adminUser__password=admin@projectfollowup.local
+      - SetupSettings__projectFollowUpRealm__adminUser__email=admin@projectfollowup.local
+    depends_on:
       - keycloak.projectfollowup.local
     networks:
       - auth-network

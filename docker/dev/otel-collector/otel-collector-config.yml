@@ -2,6 +2,11 @@
 # Sends traces, metrics, and logs via OTLP HTTP to grafana.monitoring.local
 # Grafana can be used to visualize all data types
 
+extensions:
+  health_check:
+    # Bind to specific interface and port
+    endpoint: 0.0.0.0:13133
+
 receivers:
   otlp:
     protocols:
@@ -25,7 +30,7 @@ processors:
         from_attribute: service_version
         action: upsert
       - key: deployment.environment
-        from_attribute: deployment_environment
+        value: project-followup-dev
         action: upsert
 
   # Transform logs to be compatible with Loki
@@ -65,4 +70,4 @@ service:
       processors: [resource, transform/logs, batch]
       exporters: [otlphttp, debug]
 
-  extensions: []
+  extensions: [health_check]

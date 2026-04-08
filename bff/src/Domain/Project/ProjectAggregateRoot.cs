@@ -3,10 +3,13 @@
 using System.Collections.ObjectModel;
 
 using ProjectFollowUp.BFF.Domain.Project.Events;
+using ProjectFollowUp.BFF.Domain.User;
 
 public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
 {
     private readonly Collection<TaskData> tasks = [];
+
+    private readonly Collection<ProjectUser> users = [];
 
     private ProjectAggregateRoot()
     {
@@ -20,12 +23,21 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
 
     public DateTimeOffset CreatedAt { get; private set; }
 
+    public UserId CreatedBy { get; private set; }
+
     public IReadOnlyCollection<TaskData> Tasks => this.tasks;
 
-    public static ProjectAggregateRoot Create(ProjectId projectId, string title, string description, DateTimeOffset createdAt)
+    public IReadOnlyCollection<ProjectUser> Users => this.users;
+
+    public static ProjectAggregateRoot Create(
+        ProjectId projectId,
+        string title,
+        string description,
+        UserId createdBy,
+        DateTimeOffset createdAt)
     {
         var project = new ProjectAggregateRoot();
-        var domainEvent = new ProjectCreated(projectId, title, description, createdAt);
+        var domainEvent = new ProjectCreated(projectId, title, description, createdBy, createdAt);
         project.Apply(domainEvent);
         return project;
     }
@@ -99,7 +111,9 @@ public sealed class ProjectAggregateRoot : AggregateRootBase<ProjectId>
         this.Id = projectCreated.ProjectId;
         this.Title = projectCreated.Title;
         this.Description = projectCreated.Description;
+        this.CreatedBy = projectCreated.CreatedBy;
         this.CreatedAt = projectCreated.CreatedAt;
+        this.users.Add(new ProjectUser(projectCreated.CreatedBy, ProjectUser.RoleInProject.Owner));
     }
 
     private void When(ProjectDetailsChanged projectDetailsChanged)

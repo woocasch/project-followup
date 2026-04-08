@@ -15,7 +15,7 @@ public sealed class CreateAdminUser(
 {
     private readonly SetupSettings setupSettings = setupSettingsOptions.Value;
 
-    public int Order => 5;
+    public int Order => 6;
 
     public string Description => "Creating application's admin user";
 
@@ -37,7 +37,9 @@ public sealed class CreateAdminUser(
         string[] adminRoleNames = [
             "create-user",
             "search-user",
-            ];
+            "create-project",
+            "update-project",
+        ];
         var adminRoles = await keycloakClient.FindRealmRoles(
             setupSettings.ProjectFollowUpRealm.RealmId,
             adminRoleNames,

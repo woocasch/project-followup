@@ -10,13 +10,13 @@ using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo.UserProjection;
 public sealed class CollectionProvider(
     IDatabaseProvider databaseProvider) : ICollectionProvider
 {
-    private const string UsersCollectionName = "Users";
+    public const string UsersCollectionName = "Users";
 
-    private const string ActivationLinksCollectionName = "ActivationLinks";
+    public const string ActivationLinksCollectionName = "ActivationLinks";
 
-    private const string ProjectsCollectionName = "Projects";
+    public const string ProjectsCollectionName = "Projects";
 
-    private const string TasksCollectionName = "Tasks";
+    public const string TasksCollectionName = "Tasks";
 
     public IMongoCollection<UserDto> Users => this.GetCollection<UserDto>(UsersCollectionName);
 

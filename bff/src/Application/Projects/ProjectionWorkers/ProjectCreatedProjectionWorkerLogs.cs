@@ -50,6 +50,16 @@ internal static partial class ProjectCreatedProjectionWorkerLogs
         this ILogger<ProjectCreatedProjectionWorker> logger,
         Guid projectId);
 
+    [LoggerMessage(
+        EventId = EventIds.CreatorNotFoundInReadModel,
+        EventName = nameof(EventIds.CreatorNotFoundInReadModel),
+        Level = LogLevel.Warning,
+        Message = "Creator with id '{CreatorId}' not found in read model while processing project creation for project id '{ProjectId}'.")]
+    public static partial void CreatorNotFoundInReadModel(
+        this ILogger<ProjectCreatedProjectionWorker> logger,
+        Guid creatorId,
+        Guid projectId);
+
     private static class EventIds
     {
         public const int Started = 1;
@@ -61,5 +71,7 @@ internal static partial class ProjectCreatedProjectionWorkerLogs
         public const int ProjectNotExists = 4;
 
         public const int ProjectInserted = 5;
+
+        public const int CreatorNotFoundInReadModel = 6;
     }
 }

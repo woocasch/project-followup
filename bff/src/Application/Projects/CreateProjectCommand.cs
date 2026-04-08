@@ -2,12 +2,13 @@
 
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Domain.Project;
+using ProjectFollowUp.BFF.Domain.User;
 
 public sealed class CreateProjectCommand(
     ProjectId projectId,
     string title,
     string description,
-    Guid userId,
+    UserId userId,
     DateTimeOffset createdAt) : ICommand
 {
     public ProjectId ProjectId { get; } = projectId;
@@ -16,7 +17,7 @@ public sealed class CreateProjectCommand(
 
     public string Description { get; } = description;
 
-    public Guid UserId { get; } = userId;
+    public UserId UserId { get; } = userId;
 
     public DateTimeOffset CreatedAt { get; } = createdAt;
 }

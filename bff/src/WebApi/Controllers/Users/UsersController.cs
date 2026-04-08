@@ -1,5 +1,6 @@
 ﻿namespace ProjectFollowUp.BFF.WebApi.Controllers.Users;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -15,6 +16,7 @@ public sealed class UsersController(
     ILogger<UsersController> logger) : ControllerBase
 {
     [HttpPost]
+    [Authorize(Roles = Roles.UserManagement.CreateUser)]
     public async Task<IResult> Create(
         CreateInput payload,
         CancellationToken cancellationToken)

@@ -41,6 +41,7 @@ public sealed class ProjectProjectionWriter(
             ProjectId.FromGuid(dto.Id),
             dto.Title,
             dto.Description,
+            UserId.FromGuid(dto.CreatedBy),
             dto.CreatedAt,
             [.. dto.AssignedUsers.Select(MapToRecord)],
             [.. dto.Tasks.Select(MapToRecord)]);
@@ -53,6 +54,7 @@ public sealed class ProjectProjectionWriter(
             Id = record.Id.ToGuid(),
             Title = record.Title,
             Description = record.Description,
+            CreatedBy = record.CreatedBy.ToGuid(),
             CreatedAt = record.CreatedAt,
             AssignedUsers = [.. record.AssignedUsers.Select(MapFromRecord)],
             Tasks = [.. record.Tasks.Select(MapFromRecord)],
@@ -65,6 +67,7 @@ public sealed class ProjectProjectionWriter(
         {
             Id = record.Id.ToGuid(),
             DisplayName = record.DisplayName,
+            Role = record.Role,
         };
     }
 
@@ -83,7 +86,8 @@ public sealed class ProjectProjectionWriter(
     {
         return new ProjectRecord.AssignedUser(
             UserId.FromGuid(dto.Id),
-            dto.DisplayName);
+            dto.DisplayName,
+            dto.Role);
     }
 
     private static ProjectRecord.Task MapToRecord(ProjectDto.TaskDto dto)

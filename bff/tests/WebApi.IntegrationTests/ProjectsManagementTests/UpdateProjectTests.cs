@@ -5,8 +5,8 @@ using System.Net.Http.Json;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects.ProjectsModels;
 
-public sealed class UpdateProjectTests(
-    WebApiFactory webApiFactory) : TestBase(webApiFactory)
+public sealed class UpdateProjectTests(WebApiFactory webApiFactory)
+    : TestBase(webApiFactory, "create-project", "update-project")
 {
     private Guid projectId;
 

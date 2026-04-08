@@ -19,6 +19,7 @@ public sealed class CreateProjectCommandHandler(
             command.ProjectId,
             command.Title,
             command.Description,
+            command.UserId,
             command.CreatedAt);
         logger.StoringNewStream(command.ProjectId.Value);
         await streamsRepository.StoreStreamAsync(project, cancellationToken);

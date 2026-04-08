@@ -1,5 +1,6 @@
 namespace ProjectFollowUp.BFF.WebApi.IntegrationTests;
 
+using System.Collections.ObjectModel;
 using System.Security.Claims;
 
 /// <summary>
@@ -7,17 +8,15 @@ using System.Security.Claims;
 /// </summary>
 public sealed class TestUserBuilder
 {
-    private string userId = Guid.NewGuid().ToString();
+    private Guid userId = Guid.NewGuid();
+
     private string userName = "test.user@example.com";
+
+    private string email = string.Empty;
+
     private readonly List<(string Type, string Value)> claims = [];
 
     public TestUserBuilder WithUserId(Guid userId)
-    {
-        this.userId = userId.ToString();
-        return this;
-    }
-
-    public TestUserBuilder WithUserId(string userId)
     {
         this.userId = userId;
         return this;
@@ -32,6 +31,7 @@ public sealed class TestUserBuilder
     public TestUserBuilder WithEmail(string email)
     {
         this.claims.Add((ClaimTypes.Email, email));
+        this.email = email;
         return this;
     }
 
@@ -47,7 +47,12 @@ public sealed class TestUserBuilder
         return this;
     }
 
-    public string Build()
+    public TestUser BuildUser()
+    {
+        return new(this.userId, this.userName, this.email, [.. this.claims]);
+    }
+
+    public string BuildToken()
     {
         return TestAuthTokenGenerator.GenerateToken(this.userId, this.userName, [.. this.claims]);
     }
@@ -74,4 +79,10 @@ public sealed class TestUserBuilder
             .WithEmail(userName)
             .WithRole("user");
     }
+
+    public record class TestUser(
+        Guid UserId,
+        string UserName,
+        string Email,
+        ReadOnlyCollection<(string Type, string Value)> Claims);
 }

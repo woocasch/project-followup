@@ -16,6 +16,8 @@ public sealed class CreateCustomRoles(
     {
         { "create-user", "Can create application users." },
         { "search-user", "Can search for application users." },
+        { "create-project", "Can create new project." },
+        { "update-project", "Can update any project." }
     };
 
     public int Order => 2;

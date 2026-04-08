@@ -1,6 +1,9 @@
 services:
   otel-collector.projectfollowup.local:
-    image: otel/opentelemetry-collector-contrib:latest
+    image: project-follow-up/otel-collector:local
+    build:
+      context: ./otel-collector
+      dockerfile: Dockerfile
     container_name: otel-collector.projectfollowup.local
     hostname: otel-collector.projectfollowup.local
     restart: unless-stopped
@@ -16,11 +19,20 @@ services:
       - services
       - setup
       - applications
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:13133/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
   keycloak.projectfollowup.local:
     container_name: keycloak.projectfollowup.local
     hostname: keycloak.projectfollowup.local
-    image: quay.io/keycloak/keycloak:26.5
+    image: project-follow-up/keycloak:local
+    build:
+      context: ./keycloak
+      dockerfile: Dockerfile
     command:
       - start
       - --hostname=https://localhost:5000/auth
@@ -28,19 +40,22 @@ services:
       - --proxy-headers=xforwarded
       - --telemetry-endpoint=http://otel-collector.projectfollowup.local:4317
       - --telemetry-service-name=project-follow-up-keycloak
-      - --features=opentelemetry-logs
-      - --telemetry-logs-enabled=true
       - --telemetry-logs-level=all
-      # - --optimized
+      - --telemetry-resource-attributes=deployment_environment=project-followup-local
+      - --optimized
     depends_on:
-      - keycloak.storage.projectfollowup.local
+      keycloak.storage.projectfollowup.local:
+        condition: service_healthy
+        restart: true
+      otel-collector.projectfollowup.local:
+        condition: service_healthy
+        restart: true
     environment:
       KEYCLOAK_ADMIN: admin
       KEYCLOAK_ADMIN_PASSWORD: admin
       KC_HTTP_ENABLED: true
       KC_HOSTNAME_STRICT: false
       KC_HOSTNAME_BACKCHANNEL_DYNAMIC: true
-      KC_DB: mysql
       KC_DB_URL_HOST: keycloak.storage.projectfollowup.local
       KC_DB_URL_PROPERTIES : '?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true'
       KC_DB_SCHEMA: keycloak
@@ -54,6 +69,12 @@ services:
       - services
       - setup
       - applications
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:9000/health/ready"]
+      timeout: 10s
+      retries: 10
+      interval: 30s
+      start_period: 300s
 
   rabbitmq.projectfollowup.local:
     image: rabbitmq:4.2.3-management
@@ -75,6 +96,12 @@ services:
       - services
       - setup
       - applications
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "status"]
+      timeout: 30s
+      retries: 10
+      interval: 30s
+      start_period: 60s
 
   mailpit.projectfollowup.local:
     image: axllent/mailpit
@@ -96,3 +123,9 @@ services:
       - services
       - setup
       - applications
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8025/"]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+      start_period: 30s

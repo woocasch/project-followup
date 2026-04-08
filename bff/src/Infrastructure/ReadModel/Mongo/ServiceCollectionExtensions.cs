@@ -3,6 +3,8 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
+using MongoDB.Bson.Serialization;
+using MongoDB.Bson.Serialization.Serializers;
 using MongoDB.Driver;
 
 using ProjectFollowUp.BFF.Application.ActivationLinks.ProjectionWorkers;
@@ -26,6 +28,7 @@ public static class ServiceCollectionExtensions
                 var settings = sp.GetRequiredService<IOptions<MongoSettings>>().Value;
                 return new MongoClient(settings.ConnectionString);
             });
+        BsonSerializer.RegisterSerializer(new GuidSerializer(MongoDB.Bson.GuidRepresentation.Standard));
         return services;
     }
 
@@ -45,7 +48,8 @@ public static class ServiceCollectionExtensions
     {
         services
             .AddTransient<Application.ActivationLinks.IReadModel, ActivationLinksReadModel>()
-            .AddTransient<Application.Projects.IReadModel, ProjectsReadModel>();
+            .AddTransient<Application.Projects.IReadModel, ProjectsReadModel>()
+            .AddTransient<Application.Users.IReadModel, UsersReadModel>();
         return services;
     }
 }

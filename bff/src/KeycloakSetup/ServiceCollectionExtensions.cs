@@ -1,7 +1,6 @@
 ﻿namespace ProjectFollowUp.BFF.KeycloakSetup;
 
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 
 using ProjectFollowUp.BFF.KeycloakSetup.Operations;
@@ -12,6 +11,7 @@ public static class ServiceCollectionExtensions
     {
         services.AddTransient<IOperation, CreateRealm>();
         services.AddTransient<IOperation, CreateCustomRoles>();
+        services.AddTransient<IOperation, CreateUserIdAttribute>();
         services.AddTransient<IOperation, CreateAdminUser>();
         services.AddTransient<IOperation, CreateUIClient>();
         services.AddTransient<IOperation, CreateBffClient>();

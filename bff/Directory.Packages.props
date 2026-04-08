@@ -6,6 +6,7 @@
   </PropertyGroup>
   <!-- Central Package Management: move package versions here. Projects should reference packages without the Version attribute. -->
   <ItemGroup>
+    <PackageVersion Include="Bogus" Version="35.6.5" />
     <PackageVersion Include="coverlet.collector" Version="6.0.4" />
     <PackageVersion Include="FluentValidation" Version="12.1.0" />
     <PackageVersion Include="Keycloak.Net.Core" Version="1.0.38" />

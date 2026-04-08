@@ -15,6 +15,7 @@ COPY ["src/Infrastructure/Infrastructure.csproj", "src/Infrastructure/"]
 COPY ["src/KeycloakSetup/KeycloakSetup.csproj", "src/KeycloakSetup/"]
 COPY ["src/RabbitMqSetup/RabbitMqSetup.csproj", "src/RabbitMqSetup/"]
 COPY ["src/WebApi/WebApi.csproj", "src/WebApi/"]
+COPY ["src/WebApiSetup/WebApiSetup.csproj", "src/WebApiSetup/"]
 COPY ["tests/Domain.UnitTests/Domain.UnitTests.csproj", "tests/Domain.UnitTests/"]
 COPY ["tests/WebApi.IntegrationTests/WebApi.IntegrationTests.csproj", "tests/WebApi.IntegrationTests/"]
 

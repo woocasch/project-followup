@@ -8,7 +8,8 @@ using Newtonsoft.Json;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects.ProjectsModels;
 using ProjectFollowUp.BFF.WebApi.Validation;
 
-public sealed class ProjectCreationTests(WebApiFactory webApiFactory) : TestBase(webApiFactory)
+public sealed class ProjectCreationTests(WebApiFactory webApiFactory)
+    : TestBase(webApiFactory, "create-project")
 {
     private CreateInput payload = null!;
 

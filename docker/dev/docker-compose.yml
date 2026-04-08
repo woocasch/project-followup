@@ -5,7 +5,7 @@ services:
     container_name: keycloak.storage.projectfollowup.dev
     hostname: keycloak.storage.projectfollowup.dev
     image: mysql:8.0
-    restart: unless-stopped
+    restart: always
     environment:
       - MYSQL_ROOT_PASSWORD=secret-password
       - MYSQL_DATABASE=keycloak
@@ -17,49 +17,21 @@ services:
         target: /var/lib/mysql
     networks:
       - keycloak-network
-
-  keycloak.projectfollowup.dev:
-    container_name: keycloak.projectfollowup.dev
-    hostname: keycloak.projectfollowup.dev
-    image: quay.io/keycloak/keycloak:26.5
-    command:
-      - start
-      - --hostname=http://localhost:4002
-      - --hostname-strict=false
-      - --proxy-headers=xforwarded
-      - --telemetry-endpoint=http://otel-collector.projectfollowup.dev:4317
-      - --telemetry-service-name=project-follow-up-keycloak
-      - --features=opentelemetry-logs
-      - --telemetry-logs-enabled=true
-      - --telemetry-logs-level=all
-      - --telemetry-resource-attributes=deployment_environment=dev
-      # - --optimized
-    ports:
-      - "4002:8080"
-    depends_on:
-      - keycloak.storage.projectfollowup.dev
-    environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
-      KC_HTTP_ENABLED: true
-      KC_HOSTNAME_STRICT: false
-      KC_DB: mysql
-      KC_DB_URL_HOST: keycloak.storage.projectfollowup.dev
-      KC_DB_URL_PROPERTIES : '?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true'
-      KC_DB_SCHEMA: keycloak
-      KC_DB_USERNAME: keycloak
-      KC_DB_PASSWORD: 'keycloak-password'
-    restart: unless-stopped
-    networks:
-      - keycloak-network
-      - nginx-network
-      - monitoring
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "keycloak", "-pkeycloak-password"]
+      timeout: 20s
+      retries: 10
+      interval: 10s
+      start_period: 30s
 
   otel-collector.projectfollowup.dev:
-    image: otel/opentelemetry-collector-contrib:0.144.0
+    image: project-follow-up/otel-collector:local
+    build:
+      context: ./otel-collector
+      dockerfile: Dockerfile
     container_name: otel-collector.projectfollowup.dev
     hostname: otel-collector.projectfollowup.dev
-    restart: unless-stopped
+    restart: always
     command: ["--config=/etc/otel-collector-config.yml"]
     volumes:
       - ./otel-collector/otel-collector-config.yml:/etc/otel-collector-config.yml
@@ -74,13 +46,67 @@ services:
     #   - "8889:8889"   # Prometheus exporter metrics
     networks:
       - nginx-network
+      - keycloak-network
       - monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:13133/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  keycloak.projectfollowup.dev:
+    container_name: keycloak.projectfollowup.dev
+    hostname: keycloak.projectfollowup.dev
+    image: project-follow-up/keycloak:local
+    build:
+      context: ./keycloak
+      dockerfile: Dockerfile
+    command:
+      - start
+      - --hostname=http://localhost:4002
+      - --hostname-strict=false
+      - --proxy-headers=xforwarded
+      - --telemetry-endpoint=http://otel-collector.projectfollowup.dev:4317
+      - --telemetry-service-name=project-follow-up-keycloak
+      - --telemetry-logs-level=all
+      - --telemetry-resource-attributes=deployment_environment=project-followup-dev
+      - --optimized
+    ports:
+      - "4002:8080"
+    depends_on:
+      keycloak.storage.projectfollowup.dev:
+        condition: service_healthy
+        restart: true
+      otel-collector.projectfollowup.dev:
+        condition: service_healthy
+        restart: true
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HTTP_ENABLED: true
+      KC_HOSTNAME_STRICT: false
+      KC_DB_URL_HOST: keycloak.storage.projectfollowup.dev
+      KC_DB_URL_PROPERTIES : '?autoReconnect=true&useSSL=false&allowPublicKeyRetrieval=true'
+      KC_DB_SCHEMA: keycloak
+      KC_DB_USERNAME: keycloak
+      KC_DB_PASSWORD: 'keycloak-password'
+    restart: always
+    networks:
+      - keycloak-network
+      - nginx-network
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:9000/health/ready"]
+      timeout: 10s
+      retries: 10
+      interval: 30s
+      start_period: 300s
 
   kurrent.projectfollowup.dev:
     image: docker.kurrent.io/kurrent-latest/kurrentdb:26.0.0
     container_name: kurrent.projectfollowup.dev
     hostname: kurrent.projectfollowup.dev
-    restart: unless-stopped
+    restart: always
     command:
       - --insecure
       - --run-projections=All
@@ -99,16 +125,20 @@ services:
     networks:
       - nginx-network
       - monitoring
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:2113/health/live"]
+      timeout: 10s
+      retries: 10
+      interval: 30s
+      start_period: 45s
 
   rabbitmq.projectfollowup.dev:
     image: rabbitmq:4.2.3-management
     container_name: rabbitmq.projectfollowup.dev
     hostname: rabbitmq.projectfollowup.dev
-    restart: unless-stopped
+    restart: always
     ports:
-      # AMQP – do komunikacji aplikacji (.NET / MassTransit)
       - "4006:5672"
-      # Panel administracyjny RabbitMQ (UI)
       - "4007:15672"
     environment:
       RABBITMQ_DEFAULT_USER: admin
@@ -118,12 +148,18 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - monitoring
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "status"]
+      timeout: 30s
+      retries: 10
+      interval: 30s
+      start_period: 60s
 
   mailpit.projectfollowup.dev:
     image: axllent/mailpit:v1.28
     container_name: mailpit.projectfollowup.dev
     hostname: mailpit.projectfollowup.dev
-    restart: unless-stopped
+    restart: always
     environment:
       - MP_SMTP_AUTH_FILE=/passwords.txt
       - MP_SMTP_REQUIRE_STARTTLS=true
@@ -134,12 +170,18 @@ services:
       - "4009:1025"  # SMTP
     volumes:
       - ./mailpit/passwords.txt:/passwords.txt
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://localhost:8025/"]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+      start_period: 30s
 
   mongo.projectfollowup.dev:
     container_name: mongo.projectfollowup.dev
     hostname: mongo.projectfollowup.dev
     image: mongo:8.2.4
-    restart: unless-stopped
+    restart: always
     networks:
       - mongo-network
     environment:
@@ -150,6 +192,12 @@ services:
     volumes:
       - mongo-configdb:/data/configdb
       - mongo-volume:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      timeout: 10s
+      retries: 10
+      interval: 30s
+      start_period: 40s
 
   mongo-express.projectfollowup.dev:
     container_name: mongo-express.projectfollowup.dev
@@ -157,9 +205,10 @@ services:
     image: mongo-express:1.0.2-20-alpine3.19
     ports:
       - 4011:8081
-    restart: unless-stopped
+    restart: always
     depends_on:
-      - mongo.projectfollowup.dev
+      mongo.projectfollowup.dev:
+        condition: service_healthy
     networks:
       - mongo-network
     environment:
@@ -172,6 +221,12 @@ services:
       - ME_CONFIG_MONGODB_ADMINPASSWORD=password
       - ME_CONFIG_BASICAUTH_USERNAME=admin
       - ME_CONFIG_BASICAUTH_PASSWORD=admin
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:8081/status"]
+      timeout: 10s
+      retries: 5
+      interval: 30s
+      start_period: 30s
 
 networks:
   keycloak-network:

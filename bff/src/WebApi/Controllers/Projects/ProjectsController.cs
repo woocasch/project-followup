@@ -2,12 +2,14 @@
 
 using System.Security.Claims;
 
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 using ProjectFollowUp.BFF.Application.Cqrs;
 using ProjectFollowUp.BFF.Application.Projects;
 using ProjectFollowUp.BFF.Domain.Project;
+using ProjectFollowUp.BFF.Domain.User;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects.ProjectsModels;
 
 [Route("api/[controller]")]
@@ -22,14 +24,14 @@ public sealed class ProjectsController(
     public async Task<IResult> FetchList(CancellationToken cancellationToken)
     {
         logger.FetchListStarted();
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
-        if (userIdClaim is null || !Guid.TryParse(userIdClaim.Value, out var userId))
+        var userId = this.GetUserId();
+        if (!userId.HasValue)
         {
             logger.FetchListUserNotAuthorized();
             return Results.Unauthorized();
         }
 
-        var query = new FetchProjectsQuery(userId);
+        var query = new FetchProjectsQuery(userId.Value);
         logger.FetchListFetchingData();
         var result = await mediator.Fetch(query, cancellationToken);
         var projects = result.Projects
@@ -78,13 +80,14 @@ public sealed class ProjectsController(
     }
 
     [HttpPost]
+    [Authorize(Roles = Roles.ProjectManagement.CreateProject)]
     public async Task<IResult> Create(
         CreateInput payload,
         CancellationToken cancellationToken)
     {
         logger.CreateStarted();
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
-        if (userIdClaim is null || !Guid.TryParse(userIdClaim.Value, out var userId))
+        var userId = this.GetUserId();
+        if (!userId.HasValue)
         {
             logger.CreateUserNotAuthorized();
             return Results.Unauthorized();
@@ -96,7 +99,7 @@ public sealed class ProjectsController(
             ProjectId.FromGuid(projectId),
             payload.Title,
             payload.Description,
-            userId,
+            UserId.FromGuid(userId.Value),
             DateTimeOffset.UtcNow);
         var result = await mediator.Send(command, cancellationToken);
         if (!result.IsSuccess)
@@ -116,8 +119,15 @@ public sealed class ProjectsController(
         CancellationToken cancellationToken)
     {
         logger.UpdateStarted();
-        var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier) ?? User.FindFirst("sub");
-        if (userIdClaim is null || !Guid.TryParse(userIdClaim.Value, out var userId))
+        var userId = this.GetUserId();
+        if (userId is null)
+        {
+            logger.UpdateUserNotAuthorized();
+            return Results.Unauthorized();
+        }
+
+        var canEditAllProjects = User.IsInRole(Roles.ProjectManagement.UpdateProject);
+        if (!canEditAllProjects)
         {
             logger.UpdateUserNotAuthorized();
             return Results.Unauthorized();
@@ -128,7 +138,7 @@ public sealed class ProjectsController(
             ProjectId.FromGuid(projectId),
             payload.Title,
             payload.Description,
-            userId,
+            userId.Value,
             DateTimeOffset.UtcNow);
         var result = await mediator.Send(command, cancellationToken);
         if (!result.IsSuccess)

@@ -12,7 +12,7 @@ services:
       - mailpit.projectfollowup.local
     environment:
       - Keycloak__baseAddress=http://keycloak.projectfollowup.local:8080
-      - Keycloak__clientSecret=3kyXOUuBUAjn8oUV8AKjCj23lRmemg1I
+      - Keycloak__clientSecret=6znFAwHjTmR2MGG1vFbLaGGMsb5VhXdn
       - Keycloak__validIssuer=https://localhost:5000/auth/realms/project-follow-up
       - OpenTelemetry__OtlpEndpoint=http://otel-collector.projectfollowup.local:4317
       - OpenTelemetry__Environment=LocalDocker

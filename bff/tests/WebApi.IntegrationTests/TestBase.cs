@@ -6,6 +6,11 @@ using Bogus;
 
 using Microsoft.AspNetCore.Mvc.Testing;
 
+using MongoDB.Driver;
+
+using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo;
+using ProjectFollowUp.BFF.Infrastructure.ReadModel.Mongo.UserProjection;
+
 [Collection(IntegrationTestsFixture.CollectionName)]
 public abstract class TestBase
 {
@@ -13,6 +18,7 @@ public abstract class TestBase
         .CustomInstantiator(f => new TestUserBuilder.TestUser(
             Guid.NewGuid(),
             f.Internet.UserName(),
+            f.Internet.Email(),
             []));
 
     private readonly WebApiFactory webApiFactory;
@@ -54,6 +60,23 @@ public abstract class TestBase
         clientInstance.Timeout = TimeSpan.FromSeconds(30);
         var user = this.GenerateUser();
         clientInstance.WithTestUser(user.UserId, user.UserName, [.. user.Claims]);
+        this.StoreUserInReadModel(user);
         return clientInstance;
+    }
+
+    private void StoreUserInReadModel(TestUserBuilder.TestUser user)
+    {
+        var mongoClient = new MongoClient(this.webApiFactory.MongoDb.ConnectionString);
+        var database = mongoClient.GetDatabase("ProjectFollowUpIntegrationTests");
+        var collection = database.GetCollection<UserDto>(CollectionProvider.UsersCollectionName);
+        var userDto = new UserDto()
+        {
+            Id = user.UserId,
+            CredentialsId = user.UserId,
+            Email = user.Email,
+            DisplayName = user.UserName,
+            CreatedAt = DateTimeOffset.UtcNow,
+        };
+        collection.InsertOne(userDto);
     }
 }

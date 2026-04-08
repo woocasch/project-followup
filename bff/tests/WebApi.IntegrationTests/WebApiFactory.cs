@@ -20,6 +20,8 @@ public sealed class WebApiFactory : WebApplicationFactory<WebApiProgram>, IAsync
 
     private readonly MailPitFixture mailPitFixture = MailPitFixture.Instance;
 
+    public MongoDbFixture MongoDb => this.mongoDbFixture;
+
     public async Task InitializeAsync()
     {
         await Task.WhenAll(

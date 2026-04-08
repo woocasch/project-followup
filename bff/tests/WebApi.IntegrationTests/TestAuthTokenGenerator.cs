@@ -9,7 +9,10 @@ public static class TestAuthTokenGenerator
         string userName,
         params (string Type, string Value)[] claims)
     {
-        var testClaims = claims.Select(c => new TestClaim(c.Type, c.Value)).ToList();
+        var testClaims = claims
+            .Concat([new ("projectfollowup-userid", userId)])
+            .Select(c => new TestClaim(c.Type, c.Value))
+            .ToList();
         var token = new TestToken(userId, userName, testClaims.Count > 0 ? testClaims : null);
         return JsonSerializer.Serialize(token);
     }

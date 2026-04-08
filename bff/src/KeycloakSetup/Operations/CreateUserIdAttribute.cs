@@ -1,5 +1,6 @@
 ﻿namespace ProjectFollowUp.BFF.KeycloakSetup.Operations;
 
+using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Nodes;
 
@@ -24,7 +25,7 @@ public sealed class CreateUserIdAttribute(
 
     public int Order => 3;
 
-    public string Description => "Create roles in the realm";
+    public string Description => "Create attribute for storing user id";
 
     private SetupSettings Settings => setupSettingsOptions.Value;
 
@@ -162,21 +163,21 @@ public sealed class CreateUserIdAttribute(
         await UpdateUserProfile(realmId, profileObject, cancellationToken);
     }
 
-    private static async Task UpdateUserProfile(string realmId, JsonObject profileObject, CancellationToken cancellationToken)
+    private async Task UpdateUserProfile(string realmId, JsonObject profileObject, CancellationToken cancellationToken)
     {
-        await new Url("http://localhost:4002")
+        await new Url(this.Settings.KeycloakBaseUrl)
             .AppendPathSegment($"/admin/realms/{realmId}/users/profile")
             .WithSettings(s => { })
-            .WithAuthentication(null, "http://localhost:4002", "master", "admin", "admin", null)
+            .WithAuthentication(null, this.Settings.KeycloakBaseUrl, "master", "admin", "admin", null)
             .PutJsonAsync(profileObject, cancellationToken: cancellationToken);
     }
 
-    private static async Task<IFlurlResponse> GetUserProfile(string realmId, CancellationToken cancellationToken)
+    private async Task<IFlurlResponse> GetUserProfile(string realmId, CancellationToken cancellationToken)
     {
-        return await new Url("http://localhost:4002")
+        return await new Url(this.Settings.KeycloakBaseUrl)
             .AppendPathSegment($"/admin/realms/{realmId}/users/profile")
             .WithSettings(s => { })
-            .WithAuthentication(null, "http://localhost:4002", "master", "admin", "admin", null)
+            .WithAuthentication(null, this.Settings.KeycloakBaseUrl, "master", "admin", "admin", null)
             .GetAsync(HttpCompletionOption.ResponseContentRead, cancellationToken);
     }
 }

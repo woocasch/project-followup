@@ -12,6 +12,8 @@ public sealed class TestUserBuilder
 
     private string userName = "test.user@example.com";
 
+    private string email = string.Empty;
+
     private readonly List<(string Type, string Value)> claims = [];
 
     public TestUserBuilder WithUserId(Guid userId)
@@ -29,6 +31,7 @@ public sealed class TestUserBuilder
     public TestUserBuilder WithEmail(string email)
     {
         this.claims.Add((ClaimTypes.Email, email));
+        this.email = email;
         return this;
     }
 
@@ -46,7 +49,7 @@ public sealed class TestUserBuilder
 
     public TestUser BuildUser()
     {
-        return new(this.userId, this.userName, [.. this.claims]);
+        return new(this.userId, this.userName, this.email, [.. this.claims]);
     }
 
     public string BuildToken()
@@ -80,5 +83,6 @@ public sealed class TestUserBuilder
     public record class TestUser(
         Guid UserId,
         string UserName,
+        string Email,
         ReadOnlyCollection<(string Type, string Value)> Claims);
 }

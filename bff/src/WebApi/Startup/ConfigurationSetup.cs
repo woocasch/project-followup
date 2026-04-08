@@ -17,6 +17,7 @@ using ProjectFollowUp.BFF.WebApi.Controllers.Projects;
 using ProjectFollowUp.BFF.WebApi.Controllers.Projects.ProjectsModels;
 using ProjectFollowUp.BFF.WebApi.EventsSubscriptions;
 using ProjectFollowUp.BFF.WebApi.Middleware;
+using ProjectFollowUp.BFF.WebApi.Validation;
 
 public static class ConfigurationSetup
 {
